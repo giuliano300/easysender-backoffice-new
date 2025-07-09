@@ -1,0 +1,198 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li aria-current="page" class="breadcrumb-item active">Invii</li>
+    </ol>
+</nav>
+<mat-card class="trinta-card to-do-list-card mb-10 bg-white border-none d-block">
+    <mat-card-content>
+        <form [formGroup]="form">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="input-wrapper position-relative">
+                            <mat-form-field>
+                                <i-feather name="users"></i-feather>
+                                <mat-label>Inserisci nominativo o partita IVA</mat-label>
+                                <input matInput formControlName="nominativo" type="text" />
+                            </mat-form-field>
+                        </div>
+                    </div>                    
+                    <div class="col-lg-2">
+                         <button mat-button class="filter" type="submit" [disabled]="form.invalid" (click)="onSubmit()">
+                            Filtra utenti
+                        </button>               
+                    </div>
+                    <div class="col-lg-2">
+                         <button mat-button class="filterRemove" type="submit" [disabled]="!isFiltered" (click)="filterRemove()">
+                            Rimuovi filtro
+                        </button>               
+                    </div>
+                </div>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>
+
+<mat-card
+    class="trinta-card to-do-list-card mb-25 bg-white border-none d-block"
+>
+    <mat-card-content>
+        <div class="to-do-list-table">
+            <div class="table-responsive">
+                <table mat-table [dataSource]="dataSource">
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Id
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    &nbsp;&nbsp;{{element.id}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Tipo
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.type}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Data
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{utils.getDateFormatted(element.insertDate)}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="userComplete">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Cliente
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0 truncate" matTooltip="{{element.userComplete}}" matTooltipPosition="right">
+                                    {{element.userComplete}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sender">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Mittente
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0 truncate" matTooltip="{{element.senderComplete}}" matTooltipPosition="right">
+                                    {{element.senderComplete}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="recipient">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Destinatario
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative line-big" [matTooltip]="getTooltipContent(element)" matTooltipPosition="right">
+                                <h6 class="mt-0 mb-0 truncate" [innerHTML]="getRecipientHtml(element)">
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="currentState">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Stato
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.currentState}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="code">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Codice
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.codice}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="message">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Messaggio
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative" matTooltip="{{element.stato}}" matTooltipPosition="right">
+                                <h6 class="mt-0 mb-0 truncate">
+                                    {{element.stato}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="edit">
+                        <th mat-header-cell *matHeaderCellDef class="text-center pr-0">
+                            Modifica
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center pr-0">
+                            <div class="action">
+                                <button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto" (click)="UpdateItem(element)">
+                                    <i class="{{element.action.edit}}"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="delete">
+                        <th mat-header-cell *matHeaderCellDef class="text-center pr-0">
+                            Elimina
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center pr-0">
+                            <div class="action">
+                                <button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto" (click)="DeleteItem(element)">
+                                    <i class="{{element.action.delete}}"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="getRowClass(row)"></tr>
+                    <!-- Riga nessun dato -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell text-center no-data" [attr.colspan]="displayedColumns.length">
+                            Nessun invio disponibile
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[20, 50, 100]"></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
