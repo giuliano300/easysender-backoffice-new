@@ -8,23 +8,67 @@
         <form [formGroup]="form">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div class="input-wrapper position-relative">
-                            <mat-form-field>
-                                <i-feather name="users"></i-feather>
-                                <mat-label>Inserisci nominativo o partita IVA</mat-label>
-                                <input matInput formControlName="nominativo" type="text" />
-                            </mat-form-field>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Intervallo date</mat-label>
+                                <i-feather name="Calendar"></i-feather>
+                                <mat-date-range-input [rangePicker]="picker">
+                                    <input matStartDate formControlName="start" placeholder="Inizio">
+                                    <input matEndDate formControlName="end" placeholder="Fine">
+                                </mat-date-range-input>
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-date-range-picker #picker></mat-date-range-picker>
+                            </mat-form-field>                        
                         </div>
                     </div>                    
                     <div class="col-lg-2">
+                        <div class="input-wrapper position-relative">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Tipo spedizione</mat-label>
+                                <i-feather name="command"></i-feather>
+                                <mat-select formControlName="sendType">
+                                    <mat-option *ngFor="let option of productTypeList" [value]="option.id">
+                                    {{ option.name }}
+                                </mat-option>
+                            </mat-select>
+                            </mat-form-field>                        
+                        </div>
+                    </div>                    
+                    <div class="col-lg-2">
+                        <div class="input-wrapper position-relative">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Stato corrente</mat-label>
+                                <i-feather name="settings"></i-feather>
+                                <mat-select formControlName="currentState">
+                                    <mat-option *ngFor="let option of currentState" [value]="option.id">
+                                    {{ option.name }}
+                                </mat-option>
+                            </mat-select>
+                            </mat-form-field>                        
+                        </div>
+                    </div>                    
+                    <div class="col-lg-2">
+                        <div class="input-wrapper position-relative">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Utente</mat-label>
+                                <i-feather name="user"></i-feather>
+                                <mat-select formControlName="userId">
+                                    <mat-option *ngFor="let option of users" [value]="option.user.id">
+                                    {{ option.user.businessName }}
+                                </mat-option>
+                            </mat-select>
+                            </mat-form-field>                        
+                        </div>
+                    </div>                    
+                    <div class="col-lg-1">
                          <button mat-button class="filter" type="submit" [disabled]="form.invalid" (click)="onSubmit()">
-                            Filtra utenti
+                            Filtra
                         </button>               
                     </div>
-                    <div class="col-lg-2">
+                    <div class="col-lg-1">
                          <button mat-button class="filterRemove" type="submit" [disabled]="!isFiltered" (click)="filterRemove()">
-                            Rimuovi filtro
+                            Rimuovi
                         </button>               
                     </div>
                 </div>
@@ -109,8 +153,9 @@
                             Destinatario
                         </th>
                         <td mat-cell *matCellDef="let element" class="pl-0">
-                            <div class="position-relative line-big" [matTooltip]="getTooltipContent(element)" matTooltipPosition="right">
-                                <h6 class="mt-0 mb-0 truncate" [innerHTML]="getRecipientHtml(element)">
+                            <div class="position-relative line-big">
+                                <h6 class="mt-0 mb-0 truncate" matTooltip="{{element.recipient}}" matTooltipPosition="right">
+                                    {{element.recipient}}
                                 </h6>
                             </div>
                         </td>
@@ -151,6 +196,32 @@
                                 <h6 class="mt-0 mb-0 truncate">
                                     {{element.stato}}
                                 </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ctrl">
+                        <th mat-header-cell *matHeaderCellDef class="text-center pr-0">
+                            Aggiorna stato
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center pr-0">
+                            <div class="action">
+                                <button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto" (click)="checkStatus(element)">
+                                    <i class="{{element.action.ctrl}}"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="det">
+                        <th mat-header-cell *matHeaderCellDef class="text-center pr-0">
+                            Dettaglio
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center pr-0">
+                            <div class="action">
+                                <button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto" (click)="gotoDetails(element)">
+                                    <i class="{{element.action.det}}"></i>
+                                </button>
                             </div>
                         </td>
                     </ng-container>

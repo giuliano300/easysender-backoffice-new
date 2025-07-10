@@ -43,6 +43,7 @@ export class SignInComponent {
     // Form
     authForm: FormGroup;
     onSubmit() {
+        this.isError = false;
         if (this.authForm.valid) {
 
             let login: Login = {
@@ -50,16 +51,17 @@ export class SignInComponent {
                 "pwd" : this.authForm.value["password"]
             };
 
-            this.AdministratorService.login(login).subscribe((data: AuthResponse) => {
-                if(data == null)
-                    this.isError = true;
-                else
-                {
+            this.AdministratorService.login(login).subscribe({
+                next: (data: AuthResponse) => {
                     localStorage.setItem('loginName', data!.administator.username);
                     localStorage.setItem('authToken', this.utilsService.generateToken());
                     this.authService.setLoginName(data!.administator.username);
                     this.router.navigate(['/dashboard']);
-                };
+                },
+                error: (error) => {
+                    if (error.status === 404) 
+                        this.isError = true;
+                }
             });
 
         } else {

@@ -1,0 +1,285 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb" style="justify-content: space-between;">
+        <li aria-current="page" class="breadcrumb-item active">Report generale</li>
+        <li>Invii totali: <span>{{totaleInvii}}</span> - Costo totale: <span>{{ costoTotale | number:'1.2-2' }}€</span></li>
+    </ol>
+</nav>
+<mat-card class="trinta-card to-do-list-card mb-10 bg-white border-none d-block">
+    <mat-card-content>
+        <form [formGroup]="form">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="input-wrapper position-relative">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Intervallo date</mat-label>
+                                <i-feather name="Calendar"></i-feather>
+                                <mat-date-range-input [rangePicker]="picker">
+                                    <input matStartDate formControlName="start" placeholder="Inizio">
+                                    <input matEndDate formControlName="end" placeholder="Fine">
+                                </mat-date-range-input>
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-date-range-picker #picker></mat-date-range-picker>
+                            </mat-form-field>                        
+                        </div>
+                    </div>                    
+                    <div class="col-lg-2">
+                        <div class="input-wrapper position-relative">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Utente</mat-label>
+                                <i-feather name="user"></i-feather>
+                                <mat-select formControlName="userId">
+                                    <mat-option *ngFor="let option of users" [value]="option.user.id">
+                                    {{ option.user.businessName }}
+                                </mat-option>
+                            </mat-select>
+                            </mat-form-field>                        
+                        </div>
+                    </div>                    
+                    <div class="col-lg-1">
+                         <button mat-button class="filter" type="submit" [disabled]="form.invalid" (click)="onSubmit()">
+                            Filtra
+                        </button>               
+                    </div>
+                    <div class="col-lg-1">
+                         <button mat-button class="filterRemove" type="submit" [disabled]="!isFiltered" (click)="filterRemove()">
+                            Rimuovi
+                        </button>               
+                    </div>
+                </div>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>
+
+<mat-card
+    class="trinta-card to-do-list-card mb-25 bg-white border-none d-block"
+>
+    <mat-card-content>
+        <div class="to-do-list-table">
+            <div class="table-responsive">
+                <table mat-table [dataSource]="dataSource">
+
+                    <ng-container matColumnDef="userComplete">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Cliente
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0 truncate" matTooltip="{{element.userComplete}}" matTooltipPosition="right">
+                                    {{element.userComplete}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rol">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            ROL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.rol}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rolPrice">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Prezzo ROL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative line-big">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.rolPrice}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="lol">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            LOL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.lol}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="lolPrice">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Prezzo LOL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.lolPrice}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tol">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            TOL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.tol}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tolPrice">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Prezzo TOL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.tolPrice}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="mol">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            MOL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.mol}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="molPrice">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Prezzo MOL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.molPrice}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="col">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            COL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.col}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="colPrice">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Prezzo COL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.colPrice}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="vol">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            VOL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.vol}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="volPrice">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Prezzo VOL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.volPrice}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="agol">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            AGOL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.agol}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="agolPrice">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Prezzo AGOL
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.agolPrice}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sends">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Totale invii
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="pl-0">
+                            <div class="position-relative">
+                                <h6 class="mt-0 mb-0">
+                                    {{element.sends}}
+                                </h6>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    <!-- Riga nessun dato -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell text-center no-data" [attr.colspan]="displayedColumns.length">
+                            Nessun invio disponibile
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[20, 50, 100]"></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>

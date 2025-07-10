@@ -1,0 +1,129 @@
+<mat-dialog-content class="scrollable-content">
+  <h1 mat-dialog-title class="bg-grey">Riepilogo invio - {{data.type}} {{data.ar}}</h1>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <h5>id</h5>: <label>{{data.id}}</label>
+      </div>
+      <div class="col-lg-4">
+        <h5>Data</h5>: <label>{{utils.getDateFormatted(data.insertDate)}}</label>
+      </div>
+      <div class="col-lg-4">
+        <h5>Utente</h5>: <label>{{data.userComplete}}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4">
+        <h5>Mittente</h5>: <label>{{data.senderComplete}}</label>
+      </div>
+      <div class="col-lg-4">
+        <h5>Destinatario</h5>: <label>{{data.recipient}}</label>
+      </div>
+      <div class="col-lg-4">
+        <h5>Codice</h5>: <label>{{data.codice}}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8">
+        <h5>Id Richiesta</h5>: <label>{{data.requestId}}</label>
+      </div>
+      <div class="col-lg-4">
+        <h5>Stato corrente</h5>: <label>{{data.currentState}}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <h5>Messaggio</h5>: <label>{{data.stato}}</label>
+      </div>
+    </div>
+    <div class="divider"></div>
+  </div>
+  <h2 mat-dialog-title class="bg-grey">Mittente </h2>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <h5>Mittente</h5>: <label>{{data.sender}}</label>
+      </div>
+      <div class="col-lg-8">
+        <h5>Indirizzo</h5>: <label>{{data.addressSender}}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4">
+        <h5>Cap</h5>: <label>{{data.zipCodeSender}}</label>
+      </div>
+      <div class="col-lg-4">
+        <h5>Città</h5>: <label>{{data.citySender}}</label>
+      </div>
+      <div class="col-lg-4">
+        <h5>Stato</h5>: <label>{{data.stateSender}}</label>
+      </div>
+    </div>
+    <div class="divider"></div>
+  </div>
+  <span *ngIf="data.arBool">
+    <h2 mat-dialog-title class="bg-grey">Destinatario ricevuta di ritorno </h2>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4">
+          <h5>Mittente</h5>: <label>{{data.senderAR}}</label>
+        </div>
+        <div class="col-lg-8">
+          <h5>Indirizzo</h5>: <label>{{data.addressSenderAR}}</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4">
+          <h5>Cap</h5>: <label>{{data.zipCodeSenderAR}}</label>
+        </div>
+        <div class="col-lg-4">
+          <h5>Città</h5>: <label>{{data.citySenderAR}}</label>
+        </div>
+        <div class="col-lg-4">
+          <h5>Stato</h5>: <label>{{data.stateSenderAR}}</label>
+        </div>
+      </div>
+      <div class="divider"></div>
+    </div>
+  </span>
+  <h2 mat-dialog-title class="bg-grey">Spedizione </h2>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <h5>Destinatario</h5>: <label>{{data.recipient}}</label>
+      </div>
+      <div class="col-lg-8">
+        <h5>Indirizzo</h5>: <label>{{data.address}}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4">
+        <h5>Cap</h5>: <label>{{data.zipCode}}</label>
+      </div>
+      <div class="col-lg-4">
+        <h5>Città</h5>: <label>{{data.city}}</label>
+      </div>
+      <div class="col-lg-4">
+        <h5>Stato</h5>: <label>{{data.state}}</label>
+      </div>
+    </div>
+    <div class="divider"></div>
+  </div>
+  <h2 mat-dialog-title class="bg-grey">File della spedizione </h2>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <h5>Nome del file:</h5> &nbsp;&nbsp;<label>{{data.fileName}}</label>
+      </div>
+      <div class="col-lg-4">
+        <h5>File caricato:</h5> &nbsp;&nbsp;<label (click)="downloadFile(data, 'file')"><i class="ri-file-download-line"></i></label>
+      </div>
+      <div class="col-lg-4">
+        <h5>File convertito(inviato al cliente):</h5> &nbsp;&nbsp;<label (click)="downloadFile(data, 'fileConvertito')"><i class="ri-file-download-line"></i></label>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()" class="btn confirm-button">Chiudi</button>
+</mat-dialog-actions>
