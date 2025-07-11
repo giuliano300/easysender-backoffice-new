@@ -8,6 +8,7 @@ import { UsersComponent } from './pages/users/users.component';
 import { ReportComponent } from './pages/sends/report/report.component';
 import { TotalReportComponent } from './pages/sends/total-report/total-report.component';
 import { SendsComponent } from './pages/sends/sends/sends.component';
+import { AddUserComponent } from './pages/users/add-user/add-user.component';
 
 export const routes: Routes = [
     { path: '', redirectTo : '/dashboard', pathMatch: 'full' },
@@ -41,6 +42,11 @@ export const routes: Routes = [
     {
         path: 'users',
         component: UsersComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'users/add',
+        component: AddUserComponent,
         canActivate: [AuthGuard]
     },
     {

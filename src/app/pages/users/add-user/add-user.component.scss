@@ -1,0 +1,51 @@
+.main-label {
+    margin-bottom: 12px;
+}
+
+.mat-step-text-label{
+    font-family: var(--fontFamily)!important;
+}
+
+mat-stepper {
+  font-family: var(--fontFamily)!important;
+}
+
+
+::ng-deep .mat-step-text-label {
+  font-family: var(--fontFamily)!important;
+  font-weight: 400;
+}
+
+.next {
+    height: auto;
+    min-width: 120px;
+    margin-top: 0px;
+    border-radius: 6px;
+    padding: 18px 25px;
+    color: var(--whiteColor)!important;
+    background-color: var(--primaryColor);
+    font-size: 14px;
+    font-weight: 400;
+    font-family: var(--headingFontFamily);
+
+    &:disabled{
+        opacity: 0.6;
+    }
+}
+
+.back {
+    height: auto;
+    min-width: 120px;
+    margin-top: 0px;
+    border-radius: 6px;
+    padding: 18px 25px;
+    color: var(--whiteColor)!important;
+    background-color: var(--dangerColor)!important;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: var(--headingFontFamily);
+
+    &:disabled{
+        opacity: 0.6;
+    }
+}

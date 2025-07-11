@@ -26,6 +26,10 @@ import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { CompleteUser } from '../../../interfaces/CompleteUser';
 import { UsersService } from '../../../services/users.service';
+import { HistoricRecipientStatusDialogComponent } from '../../../dialogs/historic-recipient-status/historic-recipient-status-dialog.component';
+import { RecipientService } from '../../../services/recipient.service';
+import { GetDettaglioDestinatario } from '../../../interfaces/GetDettaglioDestinatario';
+import { SendUpdateDialogComponent } from '../../../dialogs/send-update-dialog/send-update-dialog.component';
 
 export const IT_DATE_FORMATS = {
   parse: {
@@ -103,6 +107,9 @@ export class SendsComponent {
 
   isFiltered: boolean = false;
 
+  date = new Date();
+  daysToAdd = 1;
+  newDate = new Date(this.date);
 
   constructor(
       private dialog: MatDialog, 
@@ -110,9 +117,12 @@ export class SendsComponent {
       private fb: FormBuilder,
       private sendService: SendsService,
       public utils: UtilsService,
-      private usersService: UsersService
+      private usersService: UsersService,      
+      private recipientService: RecipientService
   ) 
   {
+    this.newDate.setDate(this.newDate.getDate() + this.daysToAdd);
+
     this.form = this.fb.group({
       start: [new Date()],
       end: [new Date()],
@@ -128,7 +138,7 @@ export class SendsComponent {
       this.router.navigate(['/']);
 
     const startRaw = this.form.value.start;
-    const endRaw = this.form.value.end;
+    const endRaw = this.newDate;
 
     const startDate = startRaw ? new Date(startRaw) : new Date();
     const endDate = endRaw ? new Date(endRaw) : new Date();
@@ -241,7 +251,22 @@ export class SendsComponent {
   }
 
   UpdateItem(item:Sends){
-     this.router.navigate(["/sends/edit/" + item.id]);
+     this.sendService.getSend(item.id).subscribe({
+      next: (data: Sends) => {
+
+        const dialogRef = this.dialog.open(SendUpdateDialogComponent, {
+          data: data,
+          width: '1000px',
+          minWidth: '1000px'
+        });
+         // 👇 Quando il dialog viene chiuso
+        dialogRef.afterClosed().subscribe(result => {
+          if (result)
+            this.onSubmit();
+        });
+
+      }
+    });
   }
 
 
@@ -299,6 +324,20 @@ export class SendsComponent {
 
 
   checkStatus(send: Sends){
+
+  }
+
+  getStati(send: Sends){
+    this.recipientService.getDettaglioDestinatario(send.id).subscribe({
+      next: (data: GetDettaglioDestinatario) => {
+
+        const dialogRef = this.dialog.open(HistoricRecipientStatusDialogComponent, {
+          data: data,
+          width: '600px',
+          minWidth: '600px'
+        });
+      }
+    });
 
   }
 

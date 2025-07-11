@@ -1,0 +1,105 @@
+h1{
+    padding:12px 0 5px 25px;
+    color: var(--primaryColor)!important;
+    font-weight: 400!important;
+    border-bottom: solid 1px #ccc;
+    margin-bottom: 0px;
+    font-family: var(--fontFamily)!important;
+}
+
+h2{
+    padding: 5px 25px;
+    color: var(--primaryColor)!important;
+    font-weight: 400!important;
+    margin-top: -21px;
+    margin-bottom: -1px;
+    border-top: solid 0 #ccc;
+    border-bottom: solid 1px #ccc;
+}
+
+
+.container{
+    max-width: 96% !important;
+    margin: 30px 2%;
+}
+
+h6{
+    font-weight: 500!important;
+    font-size: 14px!important;
+}
+
+.row{
+    padding: 0!important;
+}
+
+.text-right{
+    text-align: right !important;
+
+    span{
+        font-weight: 500!important;
+        color: var(--primaryColor);
+    }
+}
+.text-left{
+    text-align: left !important;
+
+    span{
+        font-weight: 500!important;
+        color: var(--primaryColor);
+    }
+}
+
+h5{
+    float: left;
+    padding: 0;
+    margin: 0;
+    font-family: var(--fontFamily)!important;
+    font-weight: 400;
+}
+
+label{
+    font-weight: 500!important;
+    color: var(--primaryColor);
+}
+
+.bg-grey{
+    background: var(--colorGrey);
+}
+
+.ri-file-download-line{
+    font-size: 25px;
+    margin: 1px 0 0 5px;
+    float: left;
+    cursor: pointer;
+}
+
+.divider{
+    border: none !important; 
+    padding: 15px!important;
+}
+
+.mat-mdc-dialog-content {
+    display: block;
+    flex-grow: 1;
+    box-sizing: border-box;
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 52vh;
+    padding: 0;
+}
+
+.close-button{
+    background: var(--dangerColor);
+}
+
+.mat-mdc-card{
+    border-radius: 0;
+    border: 0!important;
+    box-shadow:0 0 0 #fff;
+    padding: 0 0 30px 0;
+}
+
+input:disabled, textarea:disabled{
+    color: var(--blackColor)!important;
+}

@@ -8,11 +8,10 @@ import { FeathericonsModule } from '../../icons/feathericons/feathericons.module
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { AdministratorService } from '../../services/Administrators.service';
 import { Login } from '../../interfaces/Login';
-import { Administrators } from '../../interfaces/administrators';
 import { UtilsService } from '../../services/utils.service';
 import { AuthResponse } from '../../interfaces/AuthResponse';
+import { AdministratorService } from '../../services/administrators.service';
 
 @Component({
     selector: 'app-sign-in',
@@ -27,7 +26,7 @@ export class SignInComponent {
         private router: Router,
         private authService: AuthService,
         private utilsService: UtilsService,
-        private AdministratorService: AdministratorService
+        private administratorService: AdministratorService
     ) {
         this.authForm = this.fb.group({
             email: ['', [Validators.required]],
@@ -51,7 +50,7 @@ export class SignInComponent {
                 "pwd" : this.authForm.value["password"]
             };
 
-            this.AdministratorService.login(login).subscribe({
+            this.administratorService.login(login).subscribe({
                 next: (data: AuthResponse) => {
                     localStorage.setItem('loginName', data!.administator.username);
                     localStorage.setItem('authToken', this.utilsService.generateToken());

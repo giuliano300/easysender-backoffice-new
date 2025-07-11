@@ -8,7 +8,7 @@
         <mat-card class="trinta-card annual-profit-card mb-25 bg-success border-none d-block">
             <mat-card-content>
                 <h3 class="text-white">
-                    381
+                    {{g?.daySend}}
                 </h3>
                 <span class="sub-title text-white d-block">
                     Invii del giorno
@@ -20,7 +20,7 @@
         <mat-card class="trinta-card annual-profit-card mb-25 bg-success border-none d-block">
             <mat-card-content>
                 <h3 class="text-white">
-                    38000
+                    {{g?.weekSend}}
                 </h3>
                 <span class="sub-title text-white d-block">
                     Invii della settimana
@@ -32,7 +32,7 @@
         <mat-card class="trinta-card annual-profit-card mb-25 bg-success border-none d-block">
             <mat-card-content>
                 <h3 class="text-white">
-                    3810000
+                    {{g?.monthSend}}
                 </h3>
                 <span class="sub-title text-white d-block">
                     Invii del mese
@@ -44,7 +44,7 @@
         <mat-card class="trinta-card annual-profit-card mb-25 bg-info border-none d-block">
             <mat-card-content>
                 <h3 class="text-white">
-                    381
+                    {{g?.previousMonthSends}}
                 </h3>
                 <span class="sub-title text-white d-block">
                     Invii del mese precendete
@@ -63,7 +63,7 @@
         <mat-card class="trinta-card annual-profit-card mb-25 bg-warning border-none d-block">
             <mat-card-content>
                 <h3 class="text-white">
-                    381
+                    {{g?.att}}
                 </h3>
                 <span class="sub-title text-white d-block">
                    In attesa online (c.s.0)
@@ -75,7 +75,7 @@
         <mat-card class="trinta-card annual-profit-card mb-25 bg-warning border-none d-block">
             <mat-card-content>
                 <h3 class="text-white">
-                    38000
+                    {{g?.acc}}
                 </h3>
                 <span class="sub-title text-white d-block">
                     Accettate online (c.s.9)
@@ -87,7 +87,7 @@
         <mat-card class="trinta-card annual-profit-card mb-25 bg-warning border-none d-block">
             <mat-card-content>
                 <h3 class="text-white">
-                    3810000
+                    {{g?.val}}
                 </h3>
                 <span class="sub-title text-white d-block">
                     Documento validato (c.s.11)
@@ -99,7 +99,7 @@
         <mat-card class="trinta-card annual-profit-card mb-25 bg-warning border-none d-block">
             <mat-card-content>
                 <h3 class="text-white">
-                    381
+                    {{g?.ins}}
                 </h3>
                 <span class="sub-title text-white d-block">
                    In accettazione finale se MOL o COL (c.s.1)
@@ -118,7 +118,7 @@
         <mat-card class="trinta-card annual-profit-card mb-25 bg-danger border-none d-block">
             <mat-card-content>
                 <h3 class="text-white">
-                    381
+                    {{g?.dayErrors}}
                 </h3>
                 <span class="sub-title text-white d-block">
                     Errori del giorno 
@@ -130,7 +130,7 @@
         <mat-card class="trinta-card annual-profit-card mb-25 bg-danger border-none d-block">
             <mat-card-content>
                 <h3 class="text-white">
-                    38000
+                    {{g?.weekErrors}}
                 </h3>
                 <span class="sub-title text-white d-block">
                     Errori della settimana
@@ -142,7 +142,7 @@
         <mat-card class="trinta-card annual-profit-card mb-25 bg-danger border-none d-block">
             <mat-card-content>
                 <h3 class="text-white">
-                    3810000
+                    {{g?.monthErrors}}
                 </h3>
                 <span class="sub-title text-white d-block">
                     Errori del mese
@@ -154,7 +154,7 @@
         <mat-card class="trinta-card annual-profit-card mb-25 bg-danger border-none d-block">
             <mat-card-content>
                 <h3 class="text-white">
-                    381
+                    {{g?.previousMonthErrors}}
                 </h3>
                 <span class="sub-title text-white d-block">
                    Errori del mese precedente

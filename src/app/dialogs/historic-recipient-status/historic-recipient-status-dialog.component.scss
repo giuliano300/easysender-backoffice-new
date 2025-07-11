@@ -1,3 +1,101 @@
+h1{
+    padding:12px 0 5px 25px;
+    color: var(--primaryColor)!important;
+    font-weight: 400!important;
+    border-bottom: solid 1px #ccc;
+    margin-bottom: -1px;
+    font-family: var(--fontFamily)!important;
+}
+
+h2{
+    padding: 5px 25px;
+    color: var(--primaryColor)!important;
+    font-weight: 400!important;
+    margin-top: -21px;
+    margin-bottom: -1px;
+    border-top: solid 1px #ccc;
+    border-bottom: solid 1px #ccc;
+}
+
+
+.container{
+    max-width: 95% !important;
+    margin: 0 2.5%;
+}
+
+h6{
+    font-weight: 500!important;
+    font-size: 14px!important;
+}
+
+.row{
+    padding: 15px 0!important;
+    border-top: solid 1px #ccc;
+
+    &:last-child{
+        margin-bottom: 20px;
+    }
+}
+
+.text-right{
+    text-align: right !important;
+
+    span{
+        font-weight: 500!important;
+        color: var(--primaryColor);
+    }
+}
+.text-left{
+    text-align: left !important;
+
+    span{
+        font-weight: 500!important;
+        color: var(--primaryColor);
+    }
+}
+
+h5{
+    float: left;
+    padding: 0;
+    margin: 0;
+    font-family: var(--fontFamily)!important;
+    font-weight: 400;
+}
+
+label{
+    font-weight: 500!important;
+    color: var(--primaryColor);
+}
+
+.bg-grey{
+    background: var(--colorGrey);
+}
+
+.ri-file-download-line{
+    font-size: 25px;
+    margin: 1px 0 0 5px;
+    float: left;
+    cursor: pointer;
+}
+
+.divider{
+    border: none !important; 
+    padding: 15px!important;
+}
+
+.mat-mdc-dialog-content {
+    display: block;
+    flex-grow: 1;
+    box-sizing: border-box;
+    margin: 0;
+    overflow: auto;
+    max-height: 92vh;
+    padding: 0;
+}
+
+
+
+
 .trinta-card {
     &.to-do-list-card {
         .search-box {
@@ -52,7 +150,7 @@
                         text-align: start;
                         white-space: nowrap;
                         line-height: initial;
-                        padding: 0 15px 15px;
+                        padding: 0 15px 15px 15px;
                         letter-spacing: normal;
                         background: transparent;
                         border-bottom: 2px solid #edeff5;
@@ -151,7 +249,6 @@
                     }
 
                     .mat-mdc-cell {
-                        padding: 15px 0!important;
                         h6{
                             font-weight: 500!important;
                             font-size: 14px!important;
@@ -378,7 +475,15 @@
     background-color: var(--row-danger)!important;
 }
 
-.hover-underline:hover{
-    color: var(--primaryColor);
-    text-decoration: underline;
+.breadcrumb {
+    span{
+        color: var(--primaryColor);
+        font-weight: 600;
+    }
 }
+
+
+.mat-mdc-card.trinta-card{
+    padding: 0;
+}
+

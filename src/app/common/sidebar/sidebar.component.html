@@ -35,35 +35,26 @@
                     <span class="sub-title text-body">
                         INVII
                     </span>
-                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                <i-feather name="send"></i-feather>
-                                <span class="title">
-                                    Invii
-                                </span>
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <ul class="sidebar-sub-menu">
-                            <li class="sidemenu-item">
-                                <a routerLink="/sends" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
-                                    Invii
-                                </a>
-                            </li>
-                            <li class="sidemenu-item">
-                                <a routerLink="/sends/report" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
-                                    Report
-                                </a>
-                            </li>
-                            <li class="sidemenu-item">
-                                <a routerLink="/sends/total-report" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
-                                   Report generale
-                                </a>
-                            </li>
-                        </ul>
-                    </mat-expansion-panel>
+                    <a routerLink="/sends" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i-feather name="send"></i-feather>
+                        <span class="title">
+                            Invii
+                        </span>
+                    </a>
+                    <a routerLink="/sends/report" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i-feather name="bar-chart-2"></i-feather>
+                        <span class="title">
+                            Report invii
+                        </span>
+                    </a>
+                    <a routerLink="/sends/total-report" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i-feather name="bar-chart-2"></i-feather>
+                        <span class="title">
+                            Report generale
+                        </span>
+                    </a>
                     <span class="sub-title text-body">
-                        UTENTI
+                        AMMINISTRAZIONE
                     </span>
                     <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
                         <mat-expansion-panel-header>
@@ -76,7 +67,7 @@
                         </mat-expansion-panel-header>
                         <ul class="sidebar-sub-menu">
                             <li class="sidemenu-item">
-                                <a routerLink="/users/New" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                <a routerLink="/users/add" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
                                     Nuovo utente
                                 </a>
                             </li>
