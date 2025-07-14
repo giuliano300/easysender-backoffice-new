@@ -89,7 +89,9 @@ export class UsersComponent {
   getUsers(filter: string = "") {
     this.usersService.getUsers(filter).subscribe({
       next: (data: CompleteUser[]) => {
-          this.completeUser = data.map(c => ({
+          this.completeUser = data
+          .sort((a, b) => b.user.id - a.user.id)
+          .map(c => ({
             ...c, 
             action: {
                 edit: 'ri-edit-line',
@@ -110,7 +112,7 @@ export class UsersComponent {
   }
 
   UpdateItem(item:CompleteUser){
-     this.router.navigate(["/users/add/" + item.user.id]);
+     this.router.navigate(["/users/edit/" + item.user.id]);
   }
 
 
@@ -123,10 +125,8 @@ export class UsersComponent {
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.usersService.deleteUser(item.user.id)
-          .subscribe((data: boolean) => {
-            if(data){
-              this.getUsers();
-            }
+          .subscribe((data: any) => {
+            this.getUsers();
           });
       } 
       else 

@@ -1,6 +1,7 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li aria-current="page" class="breadcrumb-item active">Aggiungi utente</li>
+        <li aria-current="page" class="breadcrumb-item"  (click)="goToUsers()">Utenti</li>
+        <li aria-current="page" class="breadcrumb-item active">{{label}}</li>
     </ol>
 </nav>
 <mat-card class="trinta-card mb-25 bg-white border-none d-block">
@@ -9,305 +10,391 @@
         <mat-stepper #stepper>
             <mat-step>
                 <ng-template matStepLabel>
-                    Step 1
+                    Dati azienda
                 </ng-template>
-                <form [formGroup]="form1">
+                <form [formGroup]="form1" (ngSubmit)="saveForm1()">
                     <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="mb-20">
-                                <label class="main-label d-block lh-1 text-black mb-10">
-                                    First Name
-                                </label>
-                                <mat-form-field>
-                                    <i-feather name="user"></i-feather>
-                                    <mat-label>
-                                        Enter first name
-                                    </mat-label>
-                                    <input matInput placeholder="E.g. Mateo" formControlName="firstName">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="mb-20">
-                                <label class="main-label d-block lh-1 text-black mb-10">
-                                    Last Name
-                                </label>
-                                <mat-form-field>
-                                    <i-feather name="user"></i-feather>
-                                    <mat-label>
-                                        Enter last name
-                                    </mat-label>
-                                    <input matInput placeholder="E.g. Luca">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="mb-20">
-                                <label class="main-label d-block lh-1 text-black mb-10">
-                                    Email Address
-                                </label>
-                                <mat-form-field>
-                                    <i-feather name="mail"></i-feather>
-                                    <mat-label>
-                                        Enter email address
-                                    </mat-label>
-                                    <input matInput placeholder="E.g. hello@trinta.com">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="mb-20">
-                                <label class="main-label d-block lh-1 text-black mb-10">
-                                    Phone Number
-                                </label>
-                                <mat-form-field>
-                                    <i-feather name="phone"></i-feather>
-                                    <mat-label>
-                                        Enter phone number
-                                    </mat-label>
-                                    <input matInput placeholder="E.g. +123 452183">
-                                </mat-form-field>
-                            </div>
-                        </div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="mb-20 relative">
+                                <label class="main-label d-block lh-1 text-black mb-10">
+                                    Partita iva
+                                </label>
+                                <mat-form-field>
+                                    <i-feather name="user"></i-feather>
+                                    <mat-label>
+                                        Inserisci la tua partita iva(solo i numeri che la compongono)
+                                    </mat-label>
+                                    <input matInput formControlName="vatNumber" (blur)="checkVatNumber()" maxlength="11"
+                                        pattern="\d*"
+                                        (keypress)="allowOnlyNumbers($event)">
+                                    <div class="loader-absolute" *ngIf="ctrlVat">
+                                        <i class='bx bx-loader bx-spin bx-rotate-90'></i>
+                                    </div>
+                                </mat-form-field>
+                                <div *ngIf="form1.controls['vatNumber'].invalid && form1.controls['vatNumber'].touched" class="error sub-input">
+                                    Partita iva non valida o non esistente.
+                                </div>
+                                <div *ngIf="errorMessageExistVatNumber" class="error sub-input">
+                                    {{ errorMessageExistVatNumber }}
+                                </div>
+                                <div *ngIf="checkVatNumberValid" class="valid sub-input">
+                                    {{ checkVatNumberValid }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    Address
+                                    Ragione sociale
+                                </label>
+                                <mat-form-field>
+                                    <i-feather name="user"></i-feather>
+                                    <mat-label>
+                                        Inserisci la ragione sociale
+                                    </mat-label>
+                                    <input matInput formControlName="businessName">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="mb-20">
+                                <label class="main-label d-block lh-1 text-black mb-10">
+                                    Indirizzo
                                 </label>
                                 <mat-form-field>
                                     <i-feather name="map-pin"></i-feather>
                                     <mat-label>
-                                        Enter address
+                                        Inserisci l'indirizzo della sede
                                     </mat-label>
-                                    <input matInput placeholder="E.g. Amsterdam">
+                                    <input matInput formControlName="address">
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    Country
+                                    Città
                                 </label>
                                 <mat-form-field>
                                     <i-feather name="map"></i-feather>
                                     <mat-label>
-                                        Enter country
+                                        Inserisci la città
                                     </mat-label>
-                                    <input matInput placeholder="E.g. Netherlands">
+                                    <input matInput formControlName="city">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="mb-20">
+                                <label class="main-label d-block lh-1 text-black mb-10">
+                                    Cap
+                                </label>
+                                <mat-form-field>
+                                    <i-feather name="map-pin"></i-feather>
+                                    <mat-label>
+                                        Inserisci il cap
+                                    </mat-label>
+                                    <input matInput formControlName="zipCode">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="mb-20">
+                                <label class="main-label d-block lh-1 text-black mb-10">
+                                    Pec
+                                </label>
+                                <mat-form-field>
+                                    <i-feather name="mail"></i-feather>
+                                    <mat-label>
+                                        Inserisci la pec
+                                    </mat-label>
+                                    <input matInput type="email" formControlName="pec">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="mb-20">
+                                <label class="main-label d-block lh-1 text-black mb-10">
+                                    Telefono
+                                </label>
+                                <mat-form-field>
+                                    <i-feather name="phone"></i-feather>
+                                    <mat-label>
+                                        Inserisci il telefono
+                                    </mat-label>
+                                    <input matInput formControlName="mobile">
                                 </mat-form-field>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <button mat-button class="next" matStepperNext [disabled]="!form1.valid">Next</button>
+                        <button mat-button class="next" matStepperNext [disabled]="!form1.valid">Avanti</button>
                     </div>
                 </form>
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>
-                    Step 2
+                    Dati di login
                 </ng-template>
-                <form>
+                <form [formGroup]="form2" (ngSubmit)="saveForm2()">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    First Name
+                                    Username poste
                                 </label>
                                 <mat-form-field>
                                     <i-feather name="user"></i-feather>
                                     <mat-label>
-                                        Enter first name
+                                        Inserisci la username poste
                                     </mat-label>
-                                    <input matInput placeholder="E.g. Mateo">
+                                    <input matInput  formControlName="usernamePoste" placeholder="Username poste" (blur)="checkPosteAccesses()"
+                                        [ngClass]="{
+                                            'is-valid': accessValid,
+                                            'is-invalid': accessNotValid
+                                        }">
+                                    <div class="loader-absolute" *ngIf="ctrlPosteaccesses">
+                                        <i class='bx bx-loader bx-spin bx-rotate-90'></i>
+                                    </div>
                                 </mat-form-field>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    Last Name
+                                    Password poste
                                 </label>
                                 <mat-form-field>
-                                    <i-feather name="user"></i-feather>
+                                    <i-feather name="lock"></i-feather>
                                     <mat-label>
-                                        Enter last name
+                                        Inserisci la password poste
                                     </mat-label>
-                                    <input matInput placeholder="E.g. Luca">
+                                    <input matInput formControlName="passwordPoste" placeholder="Password Poste" (blur)="checkPosteAccesses()"
+                                        [ngClass]="{
+                                            'is-valid': accessValid,
+                                            'is-invalid': accessNotValid
+                                        }"/>
+                                    <div class="loader-absolute" *ngIf="ctrlPosteaccesses">
+                                        <i class='bx bx-loader bx-spin bx-rotate-90'></i>
+                                    </div>
                                 </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div *ngIf="form2.controls['passwordPoste'].invalid && form2.controls['passwordPoste'].touched" class="error sub-input">
+                                Username e Password poste obbligatoria
+                            </div>
+                            <div *ngIf="accessNotValid" class="error sub-input">
+                                Validazione poste errata. Controllare i dati inseriti.
+                            </div>
+                            <div *ngIf="accessValid" class="valid sub-input">
+                                Validazione POSTE completata.
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    Email Address
+                                    Email
                                 </label>
                                 <mat-form-field>
                                     <i-feather name="mail"></i-feather>
                                     <mat-label>
-                                        Enter email address
+                                        Inserisci indirizzo email
                                     </mat-label>
-                                    <input matInput placeholder="E.g. hello@trinta.com">
+                                    <input matInput  formControlName="email">
+                                </mat-form-field>
+                                <div *ngIf="form2.controls['email'].invalid && form2.controls['email'].touched" class="error sub-input">
+                                    Email non valida
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="mb-20">
+                                <label class="main-label d-block lh-1 text-black mb-10">
+                                    Password
+                                </label>
+                                <mat-form-field>
+                                    <i-feather name="lock"></i-feather>
+                                    <mat-label>
+                                        Inserisci la password
+                                    </mat-label>
+                                    <input matInput type="password" placeholder="Password" formControlName="password" (input)="onPasswordInput()">
+                                </mat-form-field>
+                                <div *ngIf="form2.controls['password'].invalid && form2.controls['password'].touched" class="error sub-input">
+                                    Password obbligatoria
+                                </div>
+                                <div *ngIf="password && showStrength" [ngClass]="getPasswordClass()">
+                                    Forza password: <strong>{{ FncUtils.checkPasswordStrength(password) }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button mat-button class="back mr-15" matStepperPrevious>Indietro</button>
+                        <button mat-button class="next" matStepperNext [disabled]="!form2.valid || !accessValid || (passwordStrength !== 'forte' && !update)">Avanti</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>
+                    Prodotti
+                </ng-template>
+                <form [formGroup]="form3" (ngSubmit)="saveForm3()">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="mb-20">
+                                <label class="main-label d-block lh-1 text-black mb-10">
+                                    Codice Contratto Mol
+                                </label>
+                                <mat-form-field>
+                                    <i-feather name="code"></i-feather>
+                                    <mat-label>
+                                        Inserisci il codice contratto MOL(se utente MOL)
+                                    </mat-label>
+                                    <input matInput formControlName="molContractCode">
                                 </mat-form-field>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    Phone Number
+                                    Codice Contratto Col
                                 </label>
                                 <mat-form-field>
-                                    <i-feather name="phone"></i-feather>
+                                    <i-feather name="code"></i-feather>
                                     <mat-label>
-                                        Enter phone number
+                                        Inserisci il codice contratto COL(se utente COL)
                                     </mat-label>
-                                    <input matInput placeholder="E.g. +123 452183">
+                                    <input matInput formControlName="colContractCode">
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    Address
+                                    Codice Contratto Vol
                                 </label>
                                 <mat-form-field>
-                                    <i-feather name="map-pin"></i-feather>
+                                    <i-feather name="code"></i-feather>
                                     <mat-label>
-                                        Enter address
+                                        Inserisci il codice contratto VOL(se utente VOL)
                                     </mat-label>
-                                    <input matInput placeholder="E.g. Amsterdam">
+                                    <input matInput formControlName="volContractCode">
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    Country
+                                    Codice Contratto Agol
                                 </label>
                                 <mat-form-field>
-                                    <i-feather name="map"></i-feather>
+                                    <i-feather name="code"></i-feather>
                                     <mat-label>
-                                        Enter country
+                                        Inserisci il codice contratto AGOL(se utente AGOL)
                                     </mat-label>
-                                    <input matInput placeholder="E.g. Netherlands">
+                                    <input matInput formControlName="agolContractCode">
                                 </mat-form-field>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <button mat-button class="back mr-15" matStepperPrevious>Back</button>
-                        <button mat-button class="next" matStepperNext>Next</button>
+                        <button mat-button class="back mr-15" matStepperPrevious>Indietro</button>
+                        <button mat-button  class="next" matStepperNext color="primary">Avanti</button>
                     </div>
                 </form>
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>
-                    Step 3
+                   Opzioni
                 </ng-template>
-                <form>
+                <form [formGroup]="form4" (ngSubmit)="saveForm4()">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    First Name
+                                    Nascondi i prezzi
                                 </label>
                                 <mat-form-field>
-                                    <i-feather name="user"></i-feather>
+                                    <i-feather name="code"></i-feather>
                                     <mat-label>
-                                        Enter first name
+                                        Seleziona si se vuoi che vengano nascosti i prezzi all'utente
                                     </mat-label>
-                                    <input matInput placeholder="E.g. Mateo">
+                                    <mat-select formControlName="hidePrice">
+                                        <mat-option value="0">NO</mat-option>
+                                        <mat-option value="1">SI</mat-option>
+                                    </mat-select>
                                 </mat-form-field>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    Last Name
+                                    Ricevuta di ritorno
                                 </label>
                                 <mat-form-field>
-                                    <i-feather name="user"></i-feather>
+                                    <i-feather name="code"></i-feather>
                                     <mat-label>
-                                        Enter last name
+                                        Se vuoi che l'utente abbia la ricevuta di ritorno
                                     </mat-label>
-                                    <input matInput placeholder="E.g. Luca">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="mb-20">
-                                <label class="main-label d-block lh-1 text-black mb-10">
-                                    Email Address
-                                </label>
-                                <mat-form-field>
-                                    <i-feather name="mail"></i-feather>
-                                    <mat-label>
-                                        Enter email address
-                                    </mat-label>
-                                    <input matInput placeholder="E.g. hello@trinta.com">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="mb-20">
-                                <label class="main-label d-block lh-1 text-black mb-10">
-                                    Phone Number
-                                </label>
-                                <mat-form-field>
-                                    <i-feather name="phone"></i-feather>
-                                    <mat-label>
-                                        Enter phone number
-                                    </mat-label>
-                                    <input matInput placeholder="E.g. +123 452183">
+                                    <mat-select formControlName="rr">
+                                        <mat-option value="0">NO</mat-option>
+                                        <mat-option value="1">SI</mat-option>
+                                    </mat-select>
                                 </mat-form-field>
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    Address
+                                    Ged
                                 </label>
                                 <mat-form-field>
-                                    <i-feather name="map-pin"></i-feather>
+                                    <i-feather name="code"></i-feather>
                                     <mat-label>
-                                        Enter address
+                                        Seleziona si se l'utente ha la ged
                                     </mat-label>
-                                    <input matInput placeholder="E.g. Amsterdam">
+                                    <mat-select formControlName="ged">
+                                        <mat-option value="0">NO</mat-option>
+                                        <mat-option value="1">SI</mat-option>
+                                    </mat-select>
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    Country
+                                   Username ged poste
                                 </label>
                                 <mat-form-field>
-                                    <i-feather name="map"></i-feather>
+                                    <i-feather name="code"></i-feather>
                                     <mat-label>
-                                        Enter country
+                                        Inserisci la username di poste
                                     </mat-label>
-                                    <input matInput placeholder="E.g. Netherlands">
+                                    <input matInput formControlName="usernamePosteGed">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="mb-20">
+                                <label class="main-label d-block lh-1 text-black mb-10">
+                                   Password ged poste
+                                </label>
+                                <mat-form-field>
+                                    <i-feather name="code"></i-feather>
+                                    <mat-label>
+                                        Inserisci la password di poste
+                                    </mat-label>
+                                    <input matInput formControlName="passwordPosteGed">
                                 </mat-form-field>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <button mat-button class="back mr-15" matStepperPrevious>Back</button>
-                        <button mat-button  class="next" matStepperNext color="primary">Next</button>
+                        <button mat-button class="back mr-15" matStepperPrevious>Indietro</button>
+                        <button mat-button  class="next" matStepperNext color="primary">Fine</button>
                     </div>
                 </form>
-            </mat-step>
-            <mat-step>
-                <ng-template matStepLabel>
-                    Step 4
-                </ng-template>
-                <p>
-                    You are now done.
-                </p>
-                <div>
-                        <button mat-button class="back mr-15" matStepperPrevious>Back</button>
-                    <button mat-button  class="next" (click)="stepper.reset()">Reset</button>
-                </div>
             </mat-step>
         </mat-stepper>
 

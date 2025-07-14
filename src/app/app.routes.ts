@@ -50,6 +50,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: 'users/edit/:id',
+        component: AddUserComponent,
+        canActivate: [AuthGuard]
+    },
+    {
         path: '**', 
         component: NotFoundComponent,  
         canActivate: [AuthGuard]} 

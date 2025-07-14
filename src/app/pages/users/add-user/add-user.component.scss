@@ -49,3 +49,26 @@ mat-stepper {
         opacity: 0.6;
     }
 }
+
+.sub-input{
+    margin-top: -15px;
+    margin-bottom: 15px;
+}
+
+.valid{
+    color: var(--successColor);
+}
+
+.loader-absolute{
+    top: 26px;
+    left: 120px;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+
+    i{
+        font-size: 18px;
+        font-weight: 300;
+        color: var(--primaryColor);
+    }
+}
