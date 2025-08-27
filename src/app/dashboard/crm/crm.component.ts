@@ -35,8 +35,8 @@ export class CrmComponent {
 
   getDashboard() {
     this.dashboardService.getDashboard().subscribe({
-      next: (data: GetDashboardStats[]) => {
-          this.g = data[0];
+      next: (data: GetDashboardStats) => {
+          this.g = data;
       },
       error: (error) => {
         if (error.status === 404) {

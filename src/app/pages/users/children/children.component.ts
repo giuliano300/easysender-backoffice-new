@@ -1,19 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
-import { CompleteUser } from '../../interfaces/CompleteUser';
+import { CompleteUser } from '../../../interfaces/CompleteUser';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { UsersService } from '../../services/users.service';
-import { Router } from '@angular/router';
+import { UsersService } from '../../../services/users.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FeathericonsModule } from '../../icons/feathericons/feathericons.module';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
@@ -28,17 +27,15 @@ import { MatInputModule } from '@angular/material/input';
     MatTableModule, 
     MatCheckboxModule, 
     FeathericonsModule,
-    MatFormField, 
-    MatLabel,
     ReactiveFormsModule,
     MatInputModule
   ],
-  templateUrl: './users.component.html',
-  styleUrl: './users.component.scss'
+  templateUrl: './children.component.html',
+  styleUrl: './children.component.scss'
 })
-export class UsersComponent {
+export class ChildrenComponent {
 
-  displayedColumns: string[] = ['businessName', 'vatNumber', 'email', 'address', 'usernamePoste', 'passwordPoste', 'enabled', 'users', 'edit', 'delete'];
+  displayedColumns: string[] = ['userTypes', 'businessName', 'email', 'address', 'usernamePoste', 'passwordPoste', 'enabled', 'edit', 'delete'];
 
   completeUser: CompleteUser[] = [];
 
@@ -50,12 +47,16 @@ export class UsersComponent {
 
   isFiltered: boolean = false;
 
+  utente: string = "";
+
+  id?: string = "";
 
   constructor(
       private dialog: MatDialog, 
       private router: Router,
       private fb: FormBuilder,
-      private usersService: UsersService
+      private usersService: UsersService,
+      private route: ActivatedRoute
   ) 
   {
     this.form = this.fb.group({
@@ -68,8 +69,21 @@ export class UsersComponent {
     if (!token) 
       this.router.navigate(['/']);
 
-    this.getUsers();
+    this.route.paramMap.subscribe(params => {
+          this.id = params.get('id')!;
+          if(this.id){
+              this.getUsers();
+              this.usersService.getUserById(parseInt(this.id!))
+                .subscribe((res: CompleteUser) => {     
+                  this.utente = res.user.businessName;
+                });
+          }
+      });   
 
+  }
+
+  AddChildren(){
+      this.router.navigate(['/users/add-children/' + this.id]);
   }
 
   onSubmit(){
@@ -87,14 +101,13 @@ export class UsersComponent {
   }
 
   getUsers(filter: string = "") {
-    this.usersService.getUsers(filter).subscribe({
+    this.usersService.getUsers(filter, parseInt(this.id!)).subscribe({
       next: (data: CompleteUser[]) => {
           this.completeUser = data
           .sort((a, b) => b.user.id - a.user.id)
           .map(c => ({
             ...c, 
             action: {
-                users: 'ri-menu-search-line',
                 edit: 'ri-edit-line',
                 delete: 'ri-delete-bin-line'
             }
@@ -112,12 +125,12 @@ export class UsersComponent {
     });
   }
 
-  UpdateItem(item:CompleteUser){
-     this.router.navigate(["/users/edit/" + item.user.id]);
+  goToUsers() {
+      this.router.navigate(['/users']);
   }
 
-  UsersItem(item:CompleteUser){
-     this.router.navigate(["/users/children/" + item.user.id]);
+  UpdateItem(item:CompleteUser){
+     this.router.navigate(["/users/edit-children/" + this.id + "/" + item.user.id]);
   }
 
 

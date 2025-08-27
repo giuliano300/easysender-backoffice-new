@@ -1,0 +1,63 @@
+<nav aria-label="breadcrumb">
+    <div class="flex-beteween">
+        <ol class="breadcrumb">
+            <li aria-current="page" class="breadcrumb-item"  (click)="goToUsers()">Utenti</li>
+            <li aria-current="page" class="breadcrumb-item active">utenti di {{utente}}</li>
+        </ol>
+        <button (click)="goToUser()" class="btn cancel-button">torna indietro</button>
+    </div>
+</nav>
+<mat-card class="trinta-card basic-form mb-25 bg-white border-none d-block">
+    <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="saveUser()">
+            <label class="label d-block fw-medium mb-10">
+                Tipo di utente
+            </label>
+            <mat-form-field>
+                <i-feather name="code"></i-feather>
+                <mat-label>
+                    Seleziona il tipo di utente
+                </mat-label>
+                <mat-select formControlName="userTypes">
+                    <mat-option value="2">Visualizzatore</mat-option>
+                    <mat-option value="3">Inseritore</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <label class="label d-block fw-medium mb-10">
+                Nominativo
+            </label>
+            <mat-form-field>
+                <i-feather name="user"></i-feather>
+                <mat-label>Inserisci il Nominativo</mat-label>
+                <input matInput formControlName="businessName">
+            </mat-form-field>
+            <label class="label d-block fw-medium mb-10">
+                Indirizzo
+            </label>
+            <mat-form-field>
+                <i-feather name="map-pin"></i-feather>
+                <mat-label>Inserisci l'indirizzo</mat-label>
+                <input matInput formControlName="address">
+            </mat-form-field>
+            <label class="label d-block fw-medium mb-10">
+                Email
+            </label>
+            <mat-form-field>
+                <i-feather name="mail"></i-feather>
+                <mat-label>Inserisci l'indirizzo email</mat-label>
+                <input matInput formControlName="email">
+            </mat-form-field>
+            <label class="label d-block fw-medium mb-10">
+                Password (minimo 6 caratteri)
+            </label>
+            <mat-form-field>
+                <i-feather name="lock"></i-feather>
+                <mat-label>Inserisci la password</mat-label>
+                <input matInput formControlName="password" type="password">
+            </mat-form-field>
+            <button mat-button type="submit" class="mat-mdc-button" [disabled]="!form.valid">
+               Salva
+            </button>
+        </form>
+    </mat-card-content>
+</mat-card>

@@ -6,6 +6,7 @@ import { CompleteUser } from '../interfaces/CompleteUser';
 import { Responses } from '../interfaces/Responses';
 import { OpenApiVatReponses } from '../interfaces/OpenApiResponse/OpenApiVatReponses';
 import { CompleteUserRegistration } from '../interfaces/UserRegistration/completeUserRegistration';
+import { Child } from '../interfaces/Child';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +25,19 @@ export class UsersService {
     return this.http.post<number>(this.apiUrl + "/UpdateCompleteUser", completeUser);
   }
 
-  getUsers(filter?: string): Observable<CompleteUser[]> {
-    return this.http.get<CompleteUser[]>(this.apiUrl + "/GetCompleteUsers?filter=" + filter);
+  setChildren(child?: Child): Observable<number> {
+    return this.http.post<number>(this.apiUrl + "/SaveChildren", child);
+  }
+
+  updateChildren(child?: Child): Observable<number> {
+    return this.http.post<number>(this.apiUrl + "/UpdateChildren", child);
+  }
+
+  getUsers(filter?: string, id?: number): Observable<CompleteUser[]> {
+    const safeFilter = filter ?? '';
+    const safeId = id ?? 0;
+
+    return this.http.get<CompleteUser[]>(`${this.apiUrl}/GetCompleteUsers?filter=${safeFilter}&id=${safeId}`);
   }
 
   getUserById(userId: number): Observable<CompleteUser> {

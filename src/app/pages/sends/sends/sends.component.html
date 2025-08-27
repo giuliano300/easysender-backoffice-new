@@ -76,6 +76,9 @@
         </form>
     </mat-card-content>
 </mat-card>
+<div class="progress">
+    <mat-progress-bar *ngIf="firstLoading" mode="indeterminate"></mat-progress-bar>
+</div>
 
 <mat-card
     class="trinta-card to-do-list-card mb-25 bg-white border-none d-block"
@@ -263,7 +266,16 @@
 
                 </table>
             </div>
-            <mat-paginator [pageSizeOptions]="[20, 50, 100]"></mat-paginator>
+
+            <!-- Paginazione -->
+            <mat-paginator [length]="totalRecords" *ngIf="dataSource.data.length > 0"
+               [pageSize]="20"
+               (page)="onPaginateChange($event)">
+            </mat-paginator>
+
+            <div *ngIf="firstLoading" #fullHeightDiv class="text-center loading">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
         </div>
     </mat-card-content>
 </mat-card>

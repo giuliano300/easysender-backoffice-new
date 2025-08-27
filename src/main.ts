@@ -11,7 +11,7 @@ import { LOCALE_ID } from '@angular/core';
 registerLocaleData(localeIt);
 
 // Definisci l'URL globale dell'API
-export const API_URL_DOC = 'http://localhost:5105/';
+export const API_URL_DOC = 'https://backendnew.easysender.it/';
 export const API_URL = API_URL_DOC + 'api/';
 export const exceedsLimit = 3;
 

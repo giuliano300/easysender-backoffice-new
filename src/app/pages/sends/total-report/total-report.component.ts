@@ -26,6 +26,7 @@ import { CompleteUser } from '../../../interfaces/CompleteUser';
 import { UsersService } from '../../../services/users.service';
 import { Reports } from '../../../interfaces/Reports';
 import { TotalReport } from '../../../interfaces/TotalReport';
+import { MatProgressBar } from "@angular/material/progress-bar";
 
 export const IT_DATE_FORMATS = {
   parse: {
@@ -42,15 +43,15 @@ export const IT_DATE_FORMATS = {
   standalone: true,
   selector: 'app-sends',
   imports: [
-    MatCardModule, 
-    MatButtonModule, 
-    MatSlideToggleModule, 
-    MatMenuModule, 
-    MatPaginatorModule, 
-    MatTableModule, 
-    MatCheckboxModule, 
+    MatCardModule,
+    MatButtonModule,
+    MatSlideToggleModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatCheckboxModule,
     FeathericonsModule,
-    MatFormField, 
+    MatFormField,
     MatLabel,
     ReactiveFormsModule,
     MatInputModule,
@@ -59,8 +60,9 @@ export const IT_DATE_FORMATS = {
     MatDatepickerModule,
     MatFormFieldModule,
     MatNativeDateModule,
-    MatSelectModule 
-  ],
+    MatSelectModule,
+    MatProgressBar
+],
   templateUrl: './total-report.component.html',
   styleUrl: './total-report.component.scss',
   providers: [
@@ -76,6 +78,8 @@ export class TotalReportComponent {
   reports: TotalReport[] = [];
 
   form: FormGroup;
+
+  firstLoading: boolean = false;  
 
   productTypeList = Object.entries(ProductTypes)
     .filter(([key, value]) => typeof value === 'number')
@@ -202,11 +206,14 @@ export class TotalReportComponent {
   }
 
   getTotalReports(filter: any = "") {
+    this.firstLoading = true;
     this.sendService.getTotalReport(filter).subscribe({
       next: (data: TotalReport[]) => {
         this.reports = data;
         this.dataSource = new MatTableDataSource<TotalReport>(this.reports);
         this.dataSource.paginator = this.paginator;
+
+        this.firstLoading = false;
 
         // Totali
         this.totaleInvii = this.reports.reduce((sum, r) => sum + r.sends, 0);

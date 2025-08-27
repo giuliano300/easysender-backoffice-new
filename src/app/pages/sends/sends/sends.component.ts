@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -30,6 +30,8 @@ import { HistoricRecipientStatusDialogComponent } from '../../../dialogs/histori
 import { RecipientService } from '../../../services/recipient.service';
 import { GetDettaglioDestinatario } from '../../../interfaces/GetDettaglioDestinatario';
 import { SendUpdateDialogComponent } from '../../../dialogs/send-update-dialog/send-update-dialog.component';
+import { MatProgressBar } from "@angular/material/progress-bar";
+import { fakeAsync } from '@angular/core/testing';
 
 export const IT_DATE_FORMATS = {
   parse: {
@@ -46,15 +48,15 @@ export const IT_DATE_FORMATS = {
   standalone: true,
   selector: 'app-sends',
   imports: [
-    MatCardModule, 
-    MatButtonModule, 
-    MatSlideToggleModule, 
-    MatMenuModule, 
-    MatPaginatorModule, 
-    MatTableModule, 
-    MatCheckboxModule, 
+    MatCardModule,
+    MatButtonModule,
+    MatSlideToggleModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatCheckboxModule,
     FeathericonsModule,
-    MatFormField, 
+    MatFormField,
     MatLabel,
     ReactiveFormsModule,
     MatInputModule,
@@ -63,8 +65,9 @@ export const IT_DATE_FORMATS = {
     MatDatepickerModule,
     MatFormFieldModule,
     MatNativeDateModule,
-    MatSelectModule 
-  ],
+    MatSelectModule,
+    MatProgressBar
+],
   templateUrl: './sends.component.html',
   styleUrl: './sends.component.scss',
   providers: [
@@ -79,6 +82,12 @@ export class SendsComponent {
   sends: Sends[] = [];
 
   form: FormGroup;
+
+  firstLoading: boolean = false;
+
+  pageIndex = 0;
+  pageSize = 20;
+  totalRecords: number = 0;
 
   productTypeList = Object.entries(ProductTypes)
     .filter(([key, value]) => typeof value === 'number')
@@ -101,7 +110,7 @@ export class SendsComponent {
 
   users: CompleteUser[] = [];
 
-  dataSource = new MatTableDataSource<Sends>(this.sends);
+  dataSource = new MatTableDataSource<any>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -144,6 +153,8 @@ export class SendsComponent {
     const endDate = endRaw ? new Date(endRaw) : new Date();
 
     let params = {
+      pageIndex: this.pageIndex,
+      pageSize: this.pageSize,
       startDate: startDate,
       endDate: endDate,
     };
@@ -191,6 +202,8 @@ export class SendsComponent {
     const endDate = endRaw ? new Date(endRaw) : new Date();
 
     let params = {
+      pageIndex: this.pageIndex,
+      pageSize: this.pageSize,
       userId: userId,
       startDate: startDate,
       endDate: endDate,
@@ -216,6 +229,8 @@ export class SendsComponent {
     const endDate = endRaw ? new Date(endRaw) : new Date();
 
     let params = {
+      pageIndex: this.pageIndex,
+      pageSize: this.pageSize,
       startDate: startDate,
       endDate: endDate,
     };
@@ -226,9 +241,11 @@ export class SendsComponent {
   }
 
   getSends(filter: any = "") {
+    this.firstLoading = true;
     this.sendService.getSends(filter).subscribe({
-      next: (data: Sends[]) => {
-          this.sends = data.map(c => ({
+      next: (response: { data: Sends[]; totalCount: number }) => {
+
+          this.sends = response.data.map(c => ({
             ...c, 
             action: {
                 ctrl: 'ri-mail-check-line',
@@ -238,18 +255,44 @@ export class SendsComponent {
             }
           })
         )
-        this.dataSource = new MatTableDataSource<Sends>(this.sends);
-        this.dataSource.paginator = this.paginator;
+        this.dataSource.data = this.sends;
+        this.totalRecords = response.totalCount;
+        this.firstLoading = false;
       },
       error: (error) => {
         if (error.status === 404) {
           this.sends = [];
           this.dataSource = new MatTableDataSource<Sends>(this.sends);
         }
+        this.firstLoading = false;
       }
     });
   }
 
+
+  onPaginateChange(event: PageEvent) {
+    const userId = this.form.value.userId ?? '';
+    const startRaw = this.form.value.start;
+    const endRaw = this.form.value.end;
+    const sendType = this.form.value.sendType ?? '';
+    const currentState = this.form.value.currentState ?? '';
+
+    const startDate = startRaw ? new Date(startRaw) : new Date();
+    const endDate = endRaw ? new Date(endRaw) : new Date();
+
+    let params = {
+      pageIndex: event.pageIndex,
+      pageSize: event.pageSize,
+      totalCounts: this.totalRecords,
+      userId: userId,
+      startDate: startDate,
+      endDate: endDate,
+      sendType: sendType,
+      currentState: currentState
+    };
+    this.getSends(params);
+  }
+  
   UpdateItem(item:Sends){
      this.sendService.getSend(item.id).subscribe({
       next: (data: Sends) => {

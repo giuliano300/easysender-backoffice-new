@@ -9,6 +9,8 @@ import { ReportComponent } from './pages/sends/report/report.component';
 import { TotalReportComponent } from './pages/sends/total-report/total-report.component';
 import { SendsComponent } from './pages/sends/sends/sends.component';
 import { AddUserComponent } from './pages/users/add-user/add-user.component';
+import { ChildrenComponent } from './pages/users/children/children.component';
+import { AddChildrenComponent } from './pages/users/add-children/add-children.component';
 
 export const routes: Routes = [
     { path: '', redirectTo : '/dashboard', pathMatch: 'full' },
@@ -52,6 +54,21 @@ export const routes: Routes = [
     {
         path: 'users/edit/:id',
         component: AddUserComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'users/children/:id',
+        component: ChildrenComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'users/add-children/:id',
+        component: AddChildrenComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'users/edit-children/:id/:id2',
+        component: AddChildrenComponent,
         canActivate: [AuthGuard]
     },
     {

@@ -13,8 +13,8 @@ export class DashboardService {
 
   constructor(private http: HttpClient) { }
   
-  getDashboard(filter?: string): Observable<GetDashboardStats[]> {
-    return this.http.get<GetDashboardStats[]>(this.apiUrl + "/Dashboard");
+  getDashboard(filter?: string): Observable<GetDashboardStats> {
+    return this.http.get<GetDashboardStats>(this.apiUrl + "/Dashboard");
   }
 
 }

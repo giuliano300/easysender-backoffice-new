@@ -21,9 +21,15 @@ export class SendsService {
     endDate?: Date;
     sendType?: number;
     currentState?: number;
-    } = {}): Observable<Sends[]> {
+    pageIndex?: number;
+    pageSize?: number;
+    totalCounts?: number;
+    } = {}): Observable<{ data: Sends[]; totalCount: number }> {
 
     const params = new HttpParams({ fromObject: {
+      ...(filters.totalCounts !== undefined && { totalCounts: filters.totalCounts }),
+      ...(filters.pageIndex !== undefined && { pageIndex: filters.pageIndex }),
+      ...(filters.pageSize !== undefined && { pageSize: filters.pageSize }),
       ...(filters.userId !== undefined && { userId: filters.userId }),
       ...(filters.startDate && { startDate: filters.startDate.toISOString() }),
       ...(filters.endDate && { endDate: filters.endDate.toISOString() }),
@@ -31,7 +37,7 @@ export class SendsService {
       ...(filters.currentState !== undefined && { currentState: filters.currentState }),
     }});
 
-    return this.http.get<Sends[]>(this.apiUrl + '/GetSends', { params });
+    return this.http.get<{ data: Sends[]; totalCount: number }>(this.apiUrl + '/GetSends', { params });
   }
 
   getSend(recipientId: number): Observable<Sends> {

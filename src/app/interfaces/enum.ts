@@ -32,4 +32,9 @@ export enum Options
   GedPoste = 4
 }
 
-
+export enum UserTypes
+{
+    Administrator = 1,
+    Visualizzatore = 2,
+    Inseritore = 3
+}
