@@ -123,11 +123,13 @@
     </div>
     <div class="row">
       <div class="col-lg-12">
-        <span *ngIf="data.fileConvertito">
-          <h5>File convertito(inviato al cliente):</h5> &nbsp;&nbsp;<label (click)="downloadFile(data, 'fileConvertito')"><i class="ri-file-download-line"></i></label>
+        <span *ngIf="data.attacchedFileRA">
+          <h5>File convertito(inviato al cliente):</h5> &nbsp;&nbsp;<label (click)="downloadFile(data, 'fileRA')"><i class="ri-file-download-line"></i></label>
         </span>      
-        <span *ngIf="!data.fileConvertito">
-          <h5>File convertito(inviato al cliente) non disponibile:</h5> &nbsp;&nbsp;<label (click)="creaDocumentoFinale(data)">Richiedi la creazione</label>
+        <span *ngIf="!data.attacchedFileRA">
+          <h5>File convertito(inviato al cliente) non disponibile:</h5> 
+          &nbsp;&nbsp;
+          <label (click)="creaDocumentoFinale(data)">Richiedi la creazione</label>
         </span>      
       </div>
     </div>

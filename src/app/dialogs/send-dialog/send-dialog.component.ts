@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { UtilsService } from '../../services/utils.service';
 import { Sends } from '../../interfaces/Sends';
 import { NgIf } from '@angular/common';
+import { RecipientService } from '../../services/recipient.service';
 
 @Component({
   selector: 'app-send-dialog',
@@ -14,10 +15,9 @@ export class SendDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<SendDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public utils: UtilsService
+    public utils: UtilsService,
+    private recipientService: RecipientService
   ) {}
-
-  isRaccomandata: boolean = false;
 
   onCancel(): void {
     this.dialogRef.close(false); // L'utente ha annullato
@@ -35,6 +35,11 @@ export class SendDialogComponent {
     let add = "";
     if(type == "fileConvertito")
       file = encoder.encode(element.pathFile);
+    if(type == "fileRA")
+    {
+      add = "RA-";
+      file = element.attacchedFileRA;
+    }
     if(type == "fileRR")
     {
       add = "RR-";
@@ -49,8 +54,18 @@ export class SendDialogComponent {
     link.click();
   }
 
-  creaDocumentoFinale(element: Sends){
-    
+  creaDocumentoFinale(send: any){
+    this.recipientService.requestFinalDoc(send).subscribe({
+      next: (res) => {
+        send.attacchedFileRR = res.file;
+      },
+      error: (err) => {
+        console.error("Errore durante l'aggiornamento dello stato:", err);
+      },
+      complete: () => {
+        send.loading = false; 
+      }
+    })
   }
 
 }

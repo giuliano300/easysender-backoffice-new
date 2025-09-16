@@ -31,7 +31,7 @@ import { RecipientService } from '../../../services/recipient.service';
 import { GetDettaglioDestinatario } from '../../../interfaces/GetDettaglioDestinatario';
 import { SendUpdateDialogComponent } from '../../../dialogs/send-update-dialog/send-update-dialog.component';
 import { MatProgressBar } from "@angular/material/progress-bar";
-import { fakeAsync } from '@angular/core/testing';
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 export const IT_DATE_FORMATS = {
   parse: {
@@ -66,7 +66,8 @@ export const IT_DATE_FORMATS = {
     MatFormFieldModule,
     MatNativeDateModule,
     MatSelectModule,
-    MatProgressBar
+    MatProgressBar,
+    MatProgressSpinnerModule
 ],
   templateUrl: './sends.component.html',
   styleUrl: './sends.component.scss',
@@ -366,8 +367,19 @@ export class SendsComponent {
   }
 
 
-  checkStatus(send: Sends){
-
+  checkStatus(send: any){
+    send.loading = true;
+    var response = this.recipientService.statusRetrive(send).subscribe({
+      next: (res) => {
+        send.stato = res.message;
+      },
+      error: (err) => {
+        console.error("Errore durante l'aggiornamento dello stato:", err);
+      },
+      complete: () => {
+        send.loading = false; 
+      }
+    });
   }
 
   getStati(send: Sends){
