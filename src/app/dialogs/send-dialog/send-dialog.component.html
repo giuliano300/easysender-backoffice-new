@@ -112,14 +112,33 @@
   <h2 mat-dialog-title class="bg-grey">File della spedizione </h2>
   <div class="container">
     <div class="row">
-      <div class="col-lg-4">
+      <div class="col-lg-12">
         <h5>Nome del file:</h5> &nbsp;&nbsp;<label>{{data.fileName}}</label>
       </div>
-      <div class="col-lg-4">
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
         <h5>File caricato:</h5> &nbsp;&nbsp;<label (click)="downloadFile(data, 'file')"><i class="ri-file-download-line"></i></label>
       </div>
-      <div class="col-lg-4">
-        <h5>File convertito(inviato al cliente):</h5> &nbsp;&nbsp;<label (click)="downloadFile(data, 'fileConvertito')"><i class="ri-file-download-line"></i></label>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <span *ngIf="data.fileConvertito">
+          <h5>File convertito(inviato al cliente):</h5> &nbsp;&nbsp;<label (click)="downloadFile(data, 'fileConvertito')"><i class="ri-file-download-line"></i></label>
+        </span>      
+        <span *ngIf="!data.fileConvertito">
+          <h5>File convertito(inviato al cliente) non disponibile:</h5> &nbsp;&nbsp;<label (click)="creaDocumentoFinale(data)">Richiedi la creazione</label>
+        </span>      
+      </div>
+    </div>
+    <div class="row" *ngIf="data.arBool">
+      <div class="col-lg-12">
+        <span *ngIf="data.attacchedFileRR">
+          <h5>Ricevuta di ritorno:</h5> &nbsp;&nbsp;<label (click)="downloadFile(data, 'fileRR')"><i class="ri-file-download-line"></i></label>
+        </span>      
+        <span *ngIf="!data.attacchedFileRR">
+          <h5>Ricevuta di ritorno non ancora disponibile:</h5> &nbsp;&nbsp;<label>-</label>
+        </span>      
       </div>
     </div>
   </div>

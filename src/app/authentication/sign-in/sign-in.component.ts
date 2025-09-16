@@ -12,10 +12,11 @@ import { Login } from '../../interfaces/Login';
 import { UtilsService } from '../../services/utils.service';
 import { AuthResponse } from '../../interfaces/AuthResponse';
 import { AdministratorService } from '../../services/administrators.service';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-sign-in',
-    imports: [MatButton, MatIconButton, FormsModule, MatFormFieldModule, MatInputModule, FeathericonsModule, MatCheckboxModule, ReactiveFormsModule, NgIf],
+    imports: [MatButton, MatIconButton, FormsModule, MatFormFieldModule, MatInputModule, FeathericonsModule, MatCheckboxModule, ReactiveFormsModule, NgIf, MatProgressSpinnerModule],
     templateUrl: './sign-in.component.html',
     styleUrl: './sign-in.component.scss'
 })
@@ -38,12 +39,16 @@ export class SignInComponent {
 
     // Password Hide
     hide = true;
+    
+    sendLogin: boolean = false;
 
     // Form
     authForm: FormGroup;
     onSubmit() {
         this.isError = false;
         if (this.authForm.valid) {
+
+            this.sendLogin = true;
 
             let login: Login = {
                 "email": this.authForm.value["email"],
@@ -60,10 +65,13 @@ export class SignInComponent {
                 error: (error) => {
                     if (error.status === 404) 
                         this.isError = true;
+
+                    this.sendLogin = false;
                 }
             });
 
-        } else {
+        } else 
+        {
             console.log('Form is invalid. Please check the fields.');
         }
     }

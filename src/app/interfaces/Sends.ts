@@ -24,6 +24,7 @@ export interface Sends {
   pathFile: string;
   fileName: string;
   attacchedFile: Uint8Array; // oppure `string` se arriva base64 dal backend
+  attacchedFileRR: Uint8Array; // oppure `string` se arriva base64 dal backend
   dataConsegna: string | null; // o `Date | null` se converti in runtime
 
   sender: string;

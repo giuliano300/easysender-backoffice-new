@@ -17,6 +17,7 @@ export class SendDialogComponent {
     public utils: UtilsService
   ) {}
 
+  isRaccomandata: boolean = false;
 
   onCancel(): void {
     this.dialogRef.close(false); // L'utente ha annullato
@@ -31,15 +32,25 @@ export class SendDialogComponent {
   downloadFile(element: Sends, type: string) {
     const encoder = new TextEncoder();
     let file = element.attacchedFile;
+    let add = "";
     if(type == "fileConvertito")
       file = encoder.encode(element.pathFile);
+    if(type == "fileRR")
+    {
+      add = "RR-";
+      file = element.attacchedFileRR;
+    }
     
   if (!file || !file) return;
 
     const link = document.createElement('a');
     link.href = `data:application/pdf;base64,${file}`;
-    link.download = element.fileName;
+    link.download = add + element.fileName;
     link.click();
+  }
+
+  creaDocumentoFinale(element: Sends){
+    
   }
 
 }
