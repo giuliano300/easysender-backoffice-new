@@ -129,7 +129,14 @@
         <span *ngIf="!data.attacchedFileRA">
           <h5>File convertito(inviato al cliente) non disponibile:</h5> 
           &nbsp;&nbsp;
-          <label (click)="creaDocumentoFinale(data)">Richiedi la creazione</label>
+          <a (click)="creaDocumentoFinale(data)" [hidden]="data.loading" class="request">Scarica il documento finale <i class="ri-skip-down-fill"></i></a>
+           <mat-progress-spinner 
+              *ngIf="data.loading" 
+              class="spinner-right"
+              mode="indeterminate"
+              diameter="20"
+              strokeWidth="3">
+          </mat-progress-spinner>
         </span>      
       </div>
     </div>

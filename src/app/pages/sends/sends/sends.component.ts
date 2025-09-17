@@ -16,7 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { Sends } from '../../../interfaces/Sends';
 import { SendsService } from '../../../services/sends.service';
 import { UtilsService } from '../../../services/utils.service';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { CurrentState, ProductTypes } from '../../../interfaces/enum';
 import { SendDialogComponent } from '../../../dialogs/send-dialog/send-dialog.component';
@@ -249,7 +249,7 @@ export class SendsComponent {
           this.sends = response.data.map(c => ({
             ...c, 
             action: {
-                ctrl: 'ri-mail-check-line',
+                ctrl: 'ri-restart-line',
                 det: 'ri-menu-search-line',
                 edit: 'ri-edit-line',
                 delete: 'ri-delete-bin-line'
@@ -394,6 +394,10 @@ export class SendsComponent {
       }
     });
 
+  }
+
+  isTruncated(element: HTMLElement): boolean {
+    return element.offsetWidth < element.scrollWidth;
   }
 
 }

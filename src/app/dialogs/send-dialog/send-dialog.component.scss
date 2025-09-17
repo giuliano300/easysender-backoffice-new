@@ -79,6 +79,18 @@ label{
     cursor: pointer;
 }
 
+.ri-skip-down-fill{
+    font-size: 25px;
+    padding: 1px 0 0;
+    float: right;
+    cursor: pointer;
+}
+
+.request{
+    color: var(--primaryColor);
+    cursor: pointer;
+}
+
 .divider{
     border: none !important; 
     padding: 15px!important;
@@ -92,4 +104,9 @@ label{
     overflow: auto;
     max-height: 92vh;
     padding: 0;
+}
+
+.spinner-right {
+  float: right;
+  margin-right: 10px; /* opzionale */
 }

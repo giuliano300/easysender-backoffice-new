@@ -382,3 +382,19 @@
     color: var(--primaryColor);
     text-decoration: underline;
 }
+
+::ng-deep .mat-tooltip {
+  background: linear-gradient(90deg, #4c73f3f3, #3b64ecde) !important;
+  color: #fff;
+  font-size: 13px;
+  padding: 2px 5px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.14);
+  max-width: 300px;
+  white-space: normal; /* permette wrap */
+  text-align: left;
+}
+
+::ng-deep .mat-tooltip .mdc-tooltip__surface{
+    background: none;
+}

@@ -45,8 +45,14 @@ export class RecipientService {
 
   requestFinalDoc(s: Sends): Observable<StatusFileResponses>{
     switch(s.type.toUpperCase()){
+       case "ROL":
+        return this.http.get<StatusFileResponses>(this.apiUrlStatus + "/DOCROL/" + s.id)
        case "MOL":
         return this.http.get<StatusFileResponses>(this.apiUrlStatus + "/DOCMOL/" + s.id)
+       case "COL":
+        return this.http.get<StatusFileResponses>(this.apiUrlStatus + "/DOCCOL/" + s.id)
+       case "AGOL":
+        return this.http.get<StatusFileResponses>(this.apiUrlStatus + "/DOCAGOL/" + s.id)
       default:
         return of({ state: 400, message: "Errore generico", file: undefined } as StatusFileResponses);
     }

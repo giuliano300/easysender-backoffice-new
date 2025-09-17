@@ -1,13 +1,15 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { UtilsService } from '../../services/utils.service';
 import { Sends } from '../../interfaces/Sends';
 import { NgIf } from '@angular/common';
 import { RecipientService } from '../../services/recipient.service';
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { alertDialogComponent } from '../../alert-dialog/alert-dialog.component';
 
 @Component({
   selector: 'app-send-dialog',
-  imports: [MatDialogModule, NgIf],
+  imports: [MatDialogModule, NgIf, MatProgressSpinnerModule],
   templateUrl: './send-dialog.component.html',
   styleUrl: './send-dialog.component.scss'
 })
@@ -16,8 +18,9 @@ export class SendDialogComponent {
     public dialogRef: MatDialogRef<SendDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public utils: UtilsService,
-    private recipientService: RecipientService
-  ) {}
+    private recipientService: RecipientService,
+    private dialog: MatDialog
+ ) {}
 
   onCancel(): void {
     this.dialogRef.close(false); // L'utente ha annullato
@@ -55,12 +58,22 @@ export class SendDialogComponent {
   }
 
   creaDocumentoFinale(send: any){
+    send.loading = true;
     this.recipientService.requestFinalDoc(send).subscribe({
       next: (res) => {
-        send.attacchedFileRR = res.file;
+        send.attacchedFileRA = res.file;
       },
       error: (err) => {
-        console.error("Errore durante l'aggiornamento dello stato:", err);
+        const data = {
+          title: "Errore nella generazione del file",
+          description: err.error.message,
+        }
+        const dialogRef = this.dialog.open(alertDialogComponent, {
+          data: data,
+          width: '600px',
+          minWidth: '600px'
+        });
+        send.loading = false; 
       },
       complete: () => {
         send.loading = false; 
