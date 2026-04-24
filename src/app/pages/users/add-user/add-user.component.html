@@ -126,6 +126,23 @@
                                 </mat-form-field>
                             </div>
                         </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="mb-20">
+                                <label class="main-label d-block lh-1 text-black mb-10">
+                                    Abilitazione due fattori
+                                </label>
+                                <mat-form-field>
+                                    <i-feather name="lock"></i-feather>
+                                    <mat-label>
+                                         Abilitazione due fattori
+                                    </mat-label>
+                                    <mat-select formControlName="doubleFactor">
+                                        <mat-option value="0">NO</mat-option>
+                                        <mat-option value="1">SI</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
                     </div>
                     <div>
                         <button mat-button class="next" matStepperNext [disabled]="!form1.valid">Avanti</button>

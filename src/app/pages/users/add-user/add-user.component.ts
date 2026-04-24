@@ -93,7 +93,8 @@ export class AddUserComponent {
             city: ['', Validators.required],
             zipCode: ['', Validators.required],
             pec: ['', Validators.required],
-            mobile: ['']
+            mobile: [''],
+            doubleFactor: [false, Validators.required]
          });
  
          this.form2 = this.fb.group({
@@ -144,7 +145,8 @@ export class AddUserComponent {
                     zipCode: res.user.zipCode,
                     city: res.user.city,
                     pec: res.user.pec, 
-                    mobile: res.user.mobile
+                    mobile: res.user.mobile,
+                    doubleFactor: res.user.doubleFactor === true ? "1" : "0"
                 });             
                 this.form2.patchValue({
                     usernamePoste: res.user.usernamePoste,
@@ -356,6 +358,7 @@ export class AddUserComponent {
                 ...form3,
                 ...form4
             };        
+            console.log(u);
             if(!this.id)
                 this.userService.setUser(u)
                     .subscribe((data: number) => {                    
