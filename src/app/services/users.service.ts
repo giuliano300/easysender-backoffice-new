@@ -56,6 +56,10 @@ export class UsersService {
     return this.http.get<OpenApiVatReponses>(this.apiUrl + "/CheckVat?vatNumber=" + vatNumber);
   }
 
+  change2F(id:number):Observable<boolean>{
+    return this.http.get<boolean>(this.apiUrl + "/change2F?userId=" + id);
+  }
+
   checkPosteAccess(usernamePoste:string, passwordPoste:string):Observable<boolean>{
     return this.http.get<boolean>(this.apiUrl + "/CheckPosteAccess?userName=" + usernamePoste + "&password=" + passwordPoste);
   }

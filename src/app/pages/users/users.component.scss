@@ -354,3 +354,11 @@
 }
 
 
+.clicks{
+    cursor: pointer;
+    color: var(--primaryColor);
+
+    &:hover{
+        color: var(--blackColor);
+    }
+}

@@ -38,7 +38,7 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class UsersComponent {
 
-  displayedColumns: string[] = ['businessName', 'vatNumber', 'email', 'address', 'usernamePoste', 'passwordPoste', 'enabled', 'users', 'edit', 'delete'];
+  displayedColumns: string[] = ['businessName', 'vatNumber', 'email', 'address', 'usernamePoste', 'passwordPoste', 'enabled', 'doubleFactor', 'users', 'edit', 'delete'];
 
   completeUser: CompleteUser[] = [];
 
@@ -84,6 +84,19 @@ export class UsersComponent {
       nominativo: ''
     });
     this.isFiltered = false;
+  }
+
+  change2F(user:any){
+    this.usersService.change2F(user.id).subscribe({
+      next: (data:boolean) => {
+       if(data)
+       {
+        const f = this.form.value.nominativo;
+        this.getUsers(f);
+        this.isFiltered = true;
+       }
+      }
+    });
   }
 
   getUsers(filter: string = "") {
