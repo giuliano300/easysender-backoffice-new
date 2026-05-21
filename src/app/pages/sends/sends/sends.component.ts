@@ -141,6 +141,7 @@ export class SendsComponent {
       userId: [null]
     });
   }
+  
 
   ngOnInit(): void {
     const token = localStorage.getItem('authToken');
@@ -153,9 +154,12 @@ export class SendsComponent {
     const startDate = startRaw ? new Date(startRaw) : new Date();
     const endDate = endRaw ? new Date(endRaw) : new Date();
 
+    const pageIndex = this.pageIndex;
+    const pageSize = this.pageSize;
+
     let params = {
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
+      pageIndex,
+      pageSize,
       startDate: startDate,
       endDate: endDate,
     };
@@ -258,6 +262,7 @@ export class SendsComponent {
         )
         this.dataSource.data = this.sends;
         this.totalRecords = response.totalCount;
+        //console.log(response.totalCount);
         this.firstLoading = false;
       },
       error: (error) => {

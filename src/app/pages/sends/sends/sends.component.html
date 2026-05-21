@@ -299,6 +299,7 @@
             <!-- Paginazione -->
             <mat-paginator [length]="totalRecords" *ngIf="dataSource.data.length > 0"
                [pageSize]="20"
+               [showFirstLastButtons]="true"
                (page)="onPaginateChange($event)">
             </mat-paginator>
 

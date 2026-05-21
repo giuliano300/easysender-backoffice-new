@@ -81,6 +81,11 @@ export class TotalReportComponent {
 
   firstLoading: boolean = false;  
 
+  date = new Date();
+  daysToAdd = 1;
+  newDate = new Date(this.date);
+
+
   productTypeList = Object.entries(ProductTypes)
     .filter(([key, value]) => typeof value === 'number')
     .map(([key, value]) => ({
@@ -122,6 +127,8 @@ export class TotalReportComponent {
       private usersService: UsersService
   ) 
   {
+    this.newDate.setDate(this.newDate.getDate() + this.daysToAdd);
+
     this.form = this.fb.group({
       start: [new Date()],
       end: [new Date()],
@@ -135,7 +142,7 @@ export class TotalReportComponent {
       this.router.navigate(['/']);
 
     const startRaw = this.form.value.start;
-    const endRaw = this.form.value.end;
+    const endRaw = this.newDate;
 
     const startDate = startRaw ? new Date(startRaw) : new Date();
     const endDate = endRaw ? new Date(endRaw) : new Date();

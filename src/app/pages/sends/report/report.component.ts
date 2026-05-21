@@ -111,6 +111,11 @@ export class ReportComponent {
   isFiltered: boolean = false;
 
 
+  date = new Date();
+  daysToAdd = 1;
+  newDate = new Date(this.date);
+
+
   constructor(
       private dialog: MatDialog, 
       private router: Router,
@@ -120,6 +125,7 @@ export class ReportComponent {
       private usersService: UsersService
   ) 
   {
+    this.newDate.setDate(this.newDate.getDate() + this.daysToAdd);
     this.form = this.fb.group({
       start: [new Date()],
       end: [new Date()],
@@ -134,7 +140,7 @@ export class ReportComponent {
       this.router.navigate(['/']);
 
     const startRaw = this.form.value.start;
-    const endRaw = this.form.value.end;
+    const endRaw = this.newDate;
 
     const startDate = startRaw ? new Date(startRaw) : new Date();
     const endDate = endRaw ? new Date(endRaw) : new Date();

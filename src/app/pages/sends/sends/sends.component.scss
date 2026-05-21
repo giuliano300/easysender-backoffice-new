@@ -398,3 +398,14 @@
 ::ng-deep .mat-tooltip .mdc-tooltip__surface{
     background: none;
 }
+
+.mat-mdc-paginator-navigation-first,
+.mat-mdc-paginator-navigation-last {
+  opacity: 1 !important;
+  display: inline-flex !important;
+  visibility: visible !important;
+}
+
+.mat-mdc-paginator .mat-mdc-icon-button[disabled] {
+  opacity: .5 !important;
+}

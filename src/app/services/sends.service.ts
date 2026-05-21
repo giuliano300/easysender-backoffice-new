@@ -26,16 +26,21 @@ export class SendsService {
     totalCounts?: number;
     } = {}): Observable<{ data: Sends[]; totalCount: number }> {
 
+  const formatDate = (date: Date) =>
+    date.toISOString().split('T')[0];
+
     const params = new HttpParams({ fromObject: {
       ...(filters.totalCounts !== undefined && { totalCounts: filters.totalCounts }),
       ...(filters.pageIndex !== undefined && { pageIndex: filters.pageIndex }),
       ...(filters.pageSize !== undefined && { pageSize: filters.pageSize }),
       ...(filters.userId !== undefined && { userId: filters.userId }),
-      ...(filters.startDate && { startDate: filters.startDate.toISOString() }),
-      ...(filters.endDate && { endDate: filters.endDate.toISOString() }),
+      ...(filters.startDate && { startDate: formatDate(filters.startDate) }),
+      ...(filters.endDate && { endDate: formatDate(filters.endDate) }),
       ...(filters.sendType !== undefined && { sendType: filters.sendType }),
       ...(filters.currentState !== undefined && { currentState: filters.currentState }),
     }});
+
+    //console.log(params.toString());
 
     return this.http.get<{ data: Sends[]; totalCount: number }>(this.apiUrl + '/GetSends', { params });
   }
@@ -55,11 +60,14 @@ export class SendsService {
     sendType?: number;
     } = {}): Observable<Reports[]> {
 
+    const formatDate = (date: Date) =>
+      date.toISOString().split('T')[0];
+
     const params = new HttpParams({ fromObject: {
-      ...(filters.userId !== undefined && { userId: filters.userId }),
-      ...(filters.startDate && { startDate: filters.startDate.toISOString() }),
-      ...(filters.endDate && { endDate: filters.endDate.toISOString() }),
-      ...(filters.sendType !== undefined && { sendType: filters.sendType }),
+        ...(filters.userId !== undefined && { userId: filters.userId }),
+        ...(filters.startDate && { startDate: formatDate(filters.startDate) }),
+        ...(filters.endDate && { endDate: formatDate(filters.endDate) }),
+        ...(filters.sendType !== undefined && { sendType: filters.sendType }),
     }});
 
     return this.http.get<Reports[]>(this.apiUrl + '/GetReport', { params });
@@ -70,12 +78,17 @@ export class SendsService {
     startDate?: Date;
     endDate?: Date;
     } = {}): Observable<TotalReport[]> {
+ 
+    const formatDate = (date: Date) =>
+      date.toISOString().split('T')[0];
 
     const params = new HttpParams({ fromObject: {
       ...(filters.userId !== undefined && { userId: filters.userId }),
-      ...(filters.startDate && { startDate: filters.startDate.toISOString() }),
-      ...(filters.endDate && { endDate: filters.endDate.toISOString() }),
+      ...(filters.startDate && { startDate: formatDate(filters.startDate) }),
+      ...(filters.endDate && { endDate: formatDate(filters.endDate) }),
     }});
+
+    console.log(params.toString());
 
     return this.http.get<TotalReport[]>(this.apiUrl + '/GetTotalReport', { params });
   }
