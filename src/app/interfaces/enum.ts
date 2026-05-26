@@ -38,3 +38,16 @@ export enum UserTypes
     Visualizzatore = 2,
     Inseritore = 3
 }
+
+export enum MassiveActions
+{
+    AssignCodeMOLCOL = 0,
+    SaveAndSend = 1,
+    MarkAsSent = 2,
+}
+
+export const MassiveActionsLabel: Record<MassiveActions, string> = {
+    [MassiveActions.AssignCodeMOLCOL]: 'Assegna codice MOL/COL',
+    [MassiveActions.SaveAndSend]: 'Salva e invia',
+    [MassiveActions.MarkAsSent]: 'Segna come inviato'
+};

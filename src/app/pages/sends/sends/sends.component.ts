@@ -18,7 +18,7 @@ import { SendsService } from '../../../services/sends.service';
 import { UtilsService } from '../../../services/utils.service';
 import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
-import { CurrentState, ProductTypes } from '../../../interfaces/enum';
+import { CurrentState, MassiveActions, MassiveActionsLabel, ProductTypes } from '../../../interfaces/enum';
 import { SendDialogComponent } from '../../../dialogs/send-dialog/send-dialog.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
@@ -32,6 +32,9 @@ import { GetDettaglioDestinatario } from '../../../interfaces/GetDettaglioDestin
 import { SendUpdateDialogComponent } from '../../../dialogs/send-update-dialog/send-update-dialog.component';
 import { MatProgressBar } from "@angular/material/progress-bar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { SelectionModel } from '@angular/cdk/collections';
+import { forkJoin, Observable, tap } from 'rxjs';
+import { StatusResponses } from '../../../interfaces/StatusResponses';
 
 export const IT_DATE_FORMATS = {
   parse: {
@@ -78,7 +81,7 @@ export const IT_DATE_FORMATS = {
 })
 export class SendsComponent {
 
-  displayedColumns: string[] = ['id', 'type', 'date', 'userComplete', 'sender', 'recipient', 'currentState', 'code', 'message', 'ctrl','det', 'edit', 'delete'];
+  displayedColumns: string[] = ['select', 'id', 'type', 'date', 'userComplete', 'sender', 'recipient', 'currentState', 'code', 'message', 'ctrl','det', 'edit', 'delete'];
 
   sends: Sends[] = [];
 
@@ -90,6 +93,13 @@ export class SendsComponent {
   pageSize = 20;
   totalRecords: number = 0;
 
+  actions = Object.values(MassiveActions)
+    .filter(v => typeof v === 'number')
+    .map(v => ({
+      id: v as MassiveActions,
+      name: MassiveActionsLabel[v as MassiveActions]
+    }));
+  
   productTypeList = Object.entries(ProductTypes)
     .filter(([key, value]) => typeof value === 'number')
     .map(([key, value]) => ({
@@ -121,6 +131,8 @@ export class SendsComponent {
   daysToAdd = 1;
   newDate = new Date(this.date);
 
+  selection = new SelectionModel<any>(true, []); // true = multiselect
+
   constructor(
       private dialog: MatDialog, 
       private router: Router,
@@ -138,7 +150,8 @@ export class SendsComponent {
       end: [new Date()],
       sendType: [null],
       currentState: [null],
-      userId: [null]
+      userId: [null],
+      massiveAction: [null]
     });
   }
   
@@ -387,6 +400,30 @@ export class SendsComponent {
     });
   }
 
+
+  assignCode(send: any): Observable<StatusResponses> {
+    return this.recipientService.AssignCode(send).pipe(
+      tap((res: StatusResponses) => {
+        send.stato = res.message;
+      })
+    );
+  }  
+  
+  saveAndSend(params: any): Observable<StatusResponses> {
+    return this.recipientService.SaveAndSend(params).pipe(
+      tap({
+        next: (res) => {
+          this.onSubmit();
+        },
+        error: (err) => {
+          console.error("Errore durante il salvataggio e l'invio:", err);
+        },
+        complete: () => {
+        }
+      })
+    );
+  }
+
   getStati(send: Sends){
     this.recipientService.getDettaglioDestinatario(send.id).subscribe({
       next: (data: GetDettaglioDestinatario) => {
@@ -405,4 +442,60 @@ export class SendsComponent {
     return element.offsetWidth < element.scrollWidth;
   }
 
+  assign(){
+    const action = this.form.value.massiveAction;
+    const selectedRows = this.selection.selected;
+    if(action === null || action === undefined)
+      return;
+
+    this.firstLoading = true;
+
+    //ASSEGNA CODICE MOL/COL
+    if(action === MassiveActions.AssignCodeMOLCOL)
+    {
+      const requests = selectedRows.map(row => this.assignCode(row));
+
+      forkJoin(requests).subscribe({
+        next: () => {
+          // tutte completate
+        },
+        error: (err) => {
+          console.error(err);
+          this.firstLoading = false;
+        },
+        complete: () => {
+          this.firstLoading = false;
+        }
+      });
+    }
+
+    //SALVA E SPEDISCI
+    if(action === MassiveActions.SaveAndSend){
+      let params = {
+       ids: selectedRows.map((r: any) => r.id)
+      };
+      
+      this.saveAndSend(params).subscribe({
+        next: () => {
+          // completato
+        },
+        complete: () => {
+          this.firstLoading = false;
+        }
+      });
+    }
+    
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+      this.isAllSelected()
+          ? this.selection.clear()
+          : this.dataSource.data.forEach(row => this.selection.select(row));
+  }
 }

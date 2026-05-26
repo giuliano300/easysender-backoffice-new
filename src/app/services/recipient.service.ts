@@ -43,6 +43,29 @@ export class RecipientService {
     }
   }
 
+  AssignCode(s: Sends): Observable<StatusResponses>{
+    switch(s.type.toUpperCase()){
+      case "COL":
+        return this.http.get<StatusResponses>(this.apiUrlStatus + "/COL/AssignCode/" + s.id);
+      case "MOL":
+        return this.http.get<StatusResponses>(this.apiUrlStatus + "/MOL/AssignCode/" + s.id);
+      default:
+        return of({ state: 400, message: "Errore generico" } as StatusResponses);
+    }
+  }
+
+  SaveAndSend(ids: number[]): Observable<StatusResponses> {
+    return this.http.post<StatusResponses>(
+      `${this.apiUrl}/UpdateAndResendMultiple`,
+      JSON.stringify(ids),
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+  }
+
   requestFinalDoc(s: Sends): Observable<StatusFileResponses>{
     switch(s.type.toUpperCase()){
        case "ROL":
