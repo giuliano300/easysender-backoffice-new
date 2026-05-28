@@ -20,5 +20,7 @@ export interface CompleteUserRegistration {
   ged: string;
   usernamePosteGed: string;
   passwordPosteGed: string;
+  guidUserOldSite?: string;
+  pwdOldSite?: string;
   doubleFactor: boolean;
 }

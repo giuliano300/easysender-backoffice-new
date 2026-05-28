@@ -101,7 +101,9 @@ export class AddUserComponent {
             usernamePoste: ['', [Validators.required]],
             passwordPoste: ['', [Validators.required]],
             email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required]]
+            password: ['', [Validators.required]],
+            guidUserOldSite: [''],
+            pwdOldSite: ['']
         });
 
          this.form3 = this.fb.group({
@@ -138,6 +140,7 @@ export class AddUserComponent {
     setForms(){
         this.userService.getUserById(parseInt(this.id!))
             .subscribe((res: CompleteUser) => {      
+                console.log(res);
                 this.form1.patchValue({
                     vatNumber: res.user.vatNumber,
                     businessName: res.user.businessName,
@@ -152,7 +155,9 @@ export class AddUserComponent {
                     usernamePoste: res.user.usernamePoste,
                     passwordPoste: res.user.passwordPoste,
                     email: res.user.email,
-                    password: res.user.password
+                    password: res.user.password,
+                    guidUserOldSite: res.user.guidUserOldSite,
+                    pwdOldSite: res.user.pwdOldSite
                 });    
                 this.usrPoste = res.user.usernamePoste;
                 this.pwdPoste = res.user.passwordPoste;         
@@ -309,7 +314,9 @@ export class AddUserComponent {
                 usernamePoste: this.usrPoste!,
                 passwordPoste: this.pwdPoste!,
                 email: this.form2.value.email,
-                password: this.form2.value.password
+                password: this.form2.value.password,
+                pwdOldSite: this.form2.value.pwdOldSite,
+                guidUserOldSite: this.form2.value.guidUserOldSite
             };            
             localStorage.setItem('form2', JSON.stringify(formValues));
             this.isValidForm2 = true;
