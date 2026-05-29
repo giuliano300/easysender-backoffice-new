@@ -13,6 +13,7 @@ export interface CompleteUserRegistration {
   password: string;  
   molContractCode: string;
   colContractCode: string;
+  col4ContractCode: string;
   volContractCode: string;
   agolContractCode: string;  
   hidePrice: string;

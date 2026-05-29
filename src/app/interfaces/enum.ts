@@ -19,9 +19,10 @@ export enum ProductTypes{
   lol = 2,
   tol = 3,
   mol = 4, 
-  col = 5,
+  col4 = 5,
   agol = 6, 
-  vol = 7
+  vol = 7,
+  col1 = 8
 }
 
 export enum Options

@@ -1,6 +1,7 @@
 export interface Form3 {
   molContractCode: string;
-  colContractCode: string;
+  col1ContractCode: string;
+  col4ContractCode: string;
   volContractCode: string;
   agolContractCode: string;
 }

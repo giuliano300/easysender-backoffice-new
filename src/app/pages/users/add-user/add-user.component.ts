@@ -108,7 +108,8 @@ export class AddUserComponent {
 
          this.form3 = this.fb.group({
             molContractCode: [''],
-            colContractCode: [''],
+            col1ContractCode: [''],
+            col4ContractCode: [''],
             volContractCode: [''],
             agolContractCode: ['']
         });
@@ -163,7 +164,8 @@ export class AddUserComponent {
                 this.pwdPoste = res.user.passwordPoste;         
                 this.form3.patchValue({
                     molContractCode: res.products.find(a => a.type === ProductTypes.mol)?.code ?? '',
-                    colContractCode: res.products.find(a => a.type === ProductTypes.col)?.code ?? '',
+                    col1ContractCode: res.products.find(a => a.type === ProductTypes.col1)?.code ?? '',
+                    col4ContractCode: res.products.find(a => a.type === ProductTypes.col4)?.code ?? '', 
                     volContractCode: res.products.find(a => a.type === ProductTypes.vol)?.code ?? '',
                     agolContractCode: res.products.find(a => a.type === ProductTypes.agol)?.code ?? ''                
                 });             
@@ -327,7 +329,8 @@ export class AddUserComponent {
         if (this.form3.valid) {
             const formValues: Form3 = {
                 molContractCode: this.form3.value.molContractCode!,
-                colContractCode: this.form3.value.colContractCode!,
+                col1ContractCode: this.form3.value.col1ContractCode!,
+                col4ContractCode: this.form3.value.col4ContractCode!,
                 volContractCode: this.form3.value.volContractCode!,
                 agolContractCode: this.form3.value.agolContractCode!
             };            
