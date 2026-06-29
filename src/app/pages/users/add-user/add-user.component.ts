@@ -102,7 +102,7 @@ export class AddUserComponent {
             passwordPoste: ['', [Validators.required]],
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required]],
-            guidUserOldSite: [''],
+            usernameOldSite: [''],
             pwdOldSite: ['']
         });
 
@@ -157,7 +157,7 @@ export class AddUserComponent {
                     passwordPoste: res.user.passwordPoste,
                     email: res.user.email,
                     password: res.user.password,
-                    guidUserOldSite: res.user.guidUserOldSite,
+                    usernameOldSite: res.user.usernameOldSite,
                     pwdOldSite: res.user.pwdOldSite
                 });    
                 this.usrPoste = res.user.usernamePoste;
