@@ -1,0 +1,149 @@
+<nav aria-label="breadcrumb" class="bg-white nav">
+  <ol class="breadcrumb">
+    <li aria-current="page" class="breadcrumb-item active">Sistemi automatici</li>
+    <li class="breadcrumb-item refresh" *ngIf="dashboard">
+      Aggiornato: {{ dashboard.generatedAt | date:'dd/MM/yyyy HH:mm:ss' }}
+    </li>
+  </ol>
+</nav>
+
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<div class="error-box" *ngIf="error">{{ error }}</div>
+
+<ng-container *ngIf="dashboard as d">
+  <div class="row summary-grid">
+    <div class="summary-item">
+      <mat-card class="trinta-card annual-profit-card metric-card mb-25 bg-success border-none d-block">
+        <mat-card-content>
+          <h3 class="text-white">{{ d.totals.runningSystems }}/{{ d.totals.systems }}</h3>
+          <span class="sub-title text-white d-block">Code con consumer</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="summary-item">
+      <mat-card class="trinta-card annual-profit-card metric-card mb-25 bg-info border-none d-block">
+        <mat-card-content>
+          <h3 class="text-white">{{ d.totals.rabbitMessages | number:'1.0-0' }}</h3>
+          <span class="sub-title text-white d-block">Messaggi RabbitMQ</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="summary-item">
+      <mat-card class="trinta-card annual-profit-card metric-card mb-25 bg-warning border-none d-block">
+        <mat-card-content>
+          <h3 class="text-white">{{ d.totals.posteCallClaims | number:'1.0-0' }}</h3>
+          <span class="sub-title text-white d-block">PosteCallClaims totali</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="summary-item">
+      <mat-card class="trinta-card annual-profit-card metric-card mb-25 bg-warning border-none d-block">
+        <mat-card-content>
+          <h3 class="text-white">{{ d.totals.posteCallClaims24h | number:'1.0-0' }}</h3>
+          <span class="sub-title text-white d-block">PosteCallClaims ultime 24 ore</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="summary-item">
+      <mat-card class="trinta-card annual-profit-card metric-card mb-25 bg-danger border-none d-block">
+        <mat-card-content>
+          <h3 class="text-white">{{ d.totals.totalErrors | number:'1.0-0' }}</h3>
+          <span class="sub-title text-white d-block">Errori totali prodotto</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <section class="broker-strip" [ngClass]="d.broker.reachable ? 'running' : 'offline'">
+    <div>
+      <span class="status-dot"></span>
+      <strong>RabbitMQ {{ statusLabel(d.broker.status) }}</strong>
+    </div>
+    <span>{{ d.broker.error || 'Consumer totali: ' + d.totals.rabbitConsumers }}</span>
+  </section>
+
+  <section class="product-grid">
+    <mat-card class="trinta-card product-card bg-white border-none d-block" *ngFor="let group of groupedSystems">
+      <mat-card-content>
+        <header>
+          <h3>{{ group.product }}</h3>
+          <span>{{ group.systems.length }} servizi</span>
+        </header>
+        <div class="system-header">
+          <span>Servizio</span>
+          <span>Stato</span>
+          <span>Messaggi RabbitMQ</span>
+          <span>Consumer RabbitMQ</span>
+        </div>
+        <div class="system-row" *ngFor="let system of group.systems">
+          <div class="system-main">
+            <span class="status-dot" [ngClass]="system.status"></span>
+            <div>
+              <strong>{{ system.step }}</strong>
+              <small>{{ system.queueName }}</small>
+            </div>
+          </div>
+          <span class="status-pill" [ngClass]="system.status" [title]="statusDescription(system)">
+            {{ statusLabel(system.status) }}
+            <small>{{ statusDescription(system) }}</small>
+          </span>
+          <span class="metric-value">{{ system.rabbitMessages | number:'1.0-0' }}</span>
+          <span class="metric-value">{{ system.rabbitConsumers | number:'1.0-0' }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <section class="table-grid">
+    <mat-card class="trinta-card bg-white border-none d-block">
+      <mat-card-content>
+        <h3>PosteCallClaims</h3>
+        <div class="empty" *ngIf="d.posteCallClaims.length === 0">Nessuna chiamata Poste registrata.</div>
+        <table *ngIf="d.posteCallClaims.length > 0">
+          <thead>
+            <tr>
+              <th>Prodotto</th>
+              <th>Fase</th>
+              <th class="text-right">Totali</th>
+              <th class="text-right">Ultime 24 ore</th>
+              <th>Ultima chiamata</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of d.posteCallClaims">
+              <td>{{ row.product }}</td>
+              <td>{{ row.step }}</td>
+              <td class="text-right">{{ row.total | number:'1.0-0' }}</td>
+              <td class="text-right">{{ row.last24h | number:'1.0-0' }}</td>
+              <td>{{ row.lastCreatedAt ? (row.lastCreatedAt | date:'dd/MM/yyyy HH:mm') : '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="trinta-card bg-white border-none d-block">
+      <mat-card-content>
+        <h3>Errori per prodotto</h3>
+        <div class="empty" *ngIf="d.productErrors.length === 0">Nessun errore registrato.</div>
+        <table *ngIf="d.productErrors.length > 0">
+          <thead>
+            <tr>
+              <th>Prodotto</th>
+              <th class="text-right">Errori totali</th>
+              <th class="text-right">Errori ultime 24 ore</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of d.productErrors">
+              <td>{{ row.product }}</td>
+              <td class="text-right danger-text">{{ row.totalErrors | number:'1.0-0' }}</td>
+              <td class="text-right danger-text">{{ row.errors24h | number:'1.0-0' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </section>
+</ng-container>

@@ -91,6 +91,7 @@ export class SendsComponent {
 
   pageIndex = 0;
   pageSize = 20;
+  pageSizeOptions: number[] = [20, 50, 100, 200, 500];
   totalRecords: number = 0;
 
   actions = Object.values(MassiveActions)
@@ -117,6 +118,7 @@ export class SendsComponent {
     {id: 6, name : "Errore validazione"},
     {id: 7, name : "Errore confirm"},
     {id: 100, name : "Errore generico"},
+    {id: 999, name : "Errore non gestito"}
   ];
 
   users: CompleteUser[] = [];
@@ -260,6 +262,7 @@ export class SendsComponent {
 
   getSends(filter: any = "") {
     this.firstLoading = true;
+    this.selection.clear();
     this.sendService.getSends(filter).subscribe({
       next: (response: { data: Sends[]; totalCount: number }) => {
 
@@ -290,6 +293,9 @@ export class SendsComponent {
 
 
   onPaginateChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+
     const userId = this.form.value.userId ?? '';
     const startRaw = this.form.value.start;
     const endRaw = this.form.value.end;
@@ -300,8 +306,8 @@ export class SendsComponent {
     const endDate = endRaw ? new Date(endRaw) : new Date();
 
     let params = {
-      pageIndex: event.pageIndex,
-      pageSize: event.pageSize,
+      pageIndex: this.pageIndex,
+      pageSize: this.pageSize,
       totalCounts: this.totalRecords,
       userId: userId,
       startDate: startDate,
@@ -389,7 +395,7 @@ export class SendsComponent {
     send.loading = true;
     var response = this.recipientService.statusRetrive(send).subscribe({
       next: (res) => {
-        send.stato = res.message;
+        this.onSubmit();
       },
       error: (err) => {
         console.error("Errore durante l'aggiornamento dello stato:", err);
@@ -405,6 +411,12 @@ export class SendsComponent {
     return this.recipientService.AssignCode(send).pipe(
       tap((res: StatusResponses) => {
         send.stato = res.message;
+        if(res.message === "Presa in carico Poste"){
+          send.currentState = "In lavorazione";
+          send.codice = "in aggiornamento";
+          send.currentStateInt = CurrentState.inlavorazione;
+          this.getRowClass(send);
+        }
       })
     );
   }  
@@ -458,6 +470,8 @@ export class SendsComponent {
       forkJoin(requests).subscribe({
         next: () => {
           // tutte completate
+          this.onSubmit();
+          console.log("Assegnazione completata per tutte le righe selezionate.");
         },
         error: (err) => {
           console.error(err);
@@ -477,7 +491,7 @@ export class SendsComponent {
       
       this.saveAndSend(params).subscribe({
         next: () => {
-          // completato
+          this.onSubmit();
         },
         complete: () => {
           this.firstLoading = false;

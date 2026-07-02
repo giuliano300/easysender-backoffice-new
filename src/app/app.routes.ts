@@ -11,6 +11,7 @@ import { SendsComponent } from './pages/sends/sends/sends.component';
 import { AddUserComponent } from './pages/users/add-user/add-user.component';
 import { ChildrenComponent } from './pages/users/children/children.component';
 import { AddChildrenComponent } from './pages/users/add-children/add-children.component';
+import { AutomationDashboardComponent } from './dashboard/automation-dashboard/automation-dashboard.component';
 
 export const routes: Routes = [
     { path: '', redirectTo : '/dashboard', pathMatch: 'full' },
@@ -24,6 +25,11 @@ export const routes: Routes = [
     {
         path: 'dashboard', 
         component: CrmComponent,  
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'dashboard/sistemi',
+        component: AutomationDashboardComponent,
         canActivate: [AuthGuard]
     },
     {

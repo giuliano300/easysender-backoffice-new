@@ -23,16 +23,18 @@ export class RecipientService {
   }
 
   UpdateAndResend(s: UpdateRecipient): Observable<boolean> {
-    return this.http.put<boolean>(this.apiUrl + '/UpdateAndResend', s);
+    return this.http.post<boolean>(this.apiUrl + '/UpdateAndResend', s);
   }
 
   statusRetrive(s: Sends): Observable<StatusResponses>{
+    console.log(s);
     switch(s.type.toUpperCase()){
       case "LOL":
         return this.http.get<StatusResponses>(this.apiUrlStatus + "/LOL/" + s.id);
       case "ROL":
         return this.http.get<StatusResponses>(this.apiUrlStatus + "/ROL/" + s.id);
-      case "COL":
+      case "COL4":
+      case "COL1":
         return this.http.get<StatusResponses>(this.apiUrlStatus + "/COL/" + s.id);
       case "MOL":
         return this.http.get<StatusResponses>(this.apiUrlStatus + "/MOL/" + s.id);
@@ -44,8 +46,10 @@ export class RecipientService {
   }
 
   AssignCode(s: Sends): Observable<StatusResponses>{
+    console.log(s);
     switch(s.type.toUpperCase()){
-      case "COL":
+      case "COL4":
+      case "COL1":
         return this.http.get<StatusResponses>(this.apiUrlStatus + "/COL/AssignCode/" + s.id);
       case "MOL":
         return this.http.get<StatusResponses>(this.apiUrlStatus + "/MOL/AssignCode/" + s.id);

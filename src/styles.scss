@@ -54,22 +54,27 @@ $trinta-theme: mat.define-theme((
 :root {
     --fontFamily: "Poppins", sans-serif;
     --headingFontFamily: "Inter", sans-serif;
-    --primaryColor: #3761ee;
-    --dangerColor: #EE368C;
-    --infoColor: #2DB6F5;
-    --warningColor: #ffb264;
-    --successColor: #2ed47e;
-    --darkColor: #262626;
-    --blackColor: #5b5b98;
+    --primaryColor: #9aaaf7;
+    --dangerColor: #f3bdd2;
+    --infoColor: #b8e3f4;
+    --warningColor: #ffe1b8;
+    --successColor: #bde8d1;
+    --darkColor: #273044;
+    --blackColor: #596074;
     --whiteColor: #ffffff;
-    --bodyColor: #a9a9c8;
-    --colorGrey:#a9a9c846;
+    --bodyColor: #8d96aa;
+    --colorGrey:#d8dde8;
     --transition: .5s;
     --fontSize: 14px;
     /*ROW COLORS*/
-    --row-danger: #ad3e7238;
-    --row-success: #87caa99a;
-    --row-info: #6fccf7;
+    --row-danger: #f8dbe6;
+    --row-success: #def3e7;
+    --row-info: #dceff7;
+    --surfaceColor: #ffffff;
+    --pageBackground: #f8f9fc;
+    --borderColor: #edf0f6;
+    --softShadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    --softShadowHover: 0 14px 34px rgba(15, 23, 42, 0.09);
 }
 
 *, ::after, ::before {
@@ -80,7 +85,7 @@ body {
     padding: 0;
     letter-spacing: 0.15px;
     color: var(--darkColor);
-    background-color: #f5f7fa;
+    background-color: var(--pageBackground);
     font: {
         weight: 400;
         size: var(--fontSize);
@@ -467,4 +472,91 @@ h5{
     font-weight: 400;
     font-size: 16px;
 
+}
+
+/* Minimal UI polish */
+.trinta-card,
+.mat-mdc-card {
+    border: 1px solid var(--borderColor) !important;
+    border-radius: 8px !important;
+    box-shadow: var(--softShadow) !important;
+}
+
+.trinta-card.bg-white,
+.mat-mdc-card.bg-white {
+    background: var(--surfaceColor) !important;
+}
+
+.annual-profit-card {
+    border: none !important;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.10) !important;
+
+    .text-white {
+        color: #334155 !important;
+    }
+}
+
+.nav.bg-white,
+.filter-card,
+.to-do-list-card,
+.profile-settings-card,
+.account-settings-card {
+    border: 1px solid var(--borderColor) !important;
+    border-radius: 8px !important;
+    box-shadow: var(--softShadow) !important;
+}
+
+.nav {
+    background: var(--surfaceColor) !important;
+
+    .breadcrumb {
+        margin-bottom: 0 !important;
+    }
+}
+
+.breadcrumb li,
+.breadcrumb-item {
+    color: var(--darkColor);
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.mat-mdc-form-field {
+    --mdc-filled-text-field-container-color: #f8fafc;
+    --mdc-filled-text-field-active-indicator-color: transparent;
+    --mdc-filled-text-field-hover-active-indicator-color: transparent;
+    --mdc-filled-text-field-focus-active-indicator-color: var(--primaryColor);
+}
+
+.mat-mdc-text-field-wrapper {
+    border: 1px solid var(--borderColor);
+    border-radius: 8px !important;
+}
+
+.mat-mdc-form-field-focus-overlay {
+    background: transparent !important;
+}
+
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-outlined-button {
+    border-radius: 7px !important;
+    letter-spacing: 0 !important;
+}
+
+table {
+    th {
+        color: #6b7280 !important;
+        font-weight: 600 !important;
+    }
+
+    td,
+    th {
+        border-color: var(--borderColor) !important;
+    }
+}
+
+.mat-mdc-paginator {
+    border-top: 1px solid var(--borderColor);
 }
