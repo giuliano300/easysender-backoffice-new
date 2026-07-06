@@ -94,7 +94,7 @@ export class AddUserComponent {
             zipCode: ['', Validators.required],
             pec: ['', Validators.required],
             mobile: [''],
-            doubleFactor: [false, Validators.required]
+            doubleFactor: [null, Validators.required]
          });
  
          this.form2 = this.fb.group({
@@ -111,7 +111,8 @@ export class AddUserComponent {
             col1ContractCode: [''],
             col4ContractCode: [''],
             volContractCode: [''],
-            agolContractCode: ['']
+            agolBContractCode: [''],
+            agolMContractCode: ['']
         });
 
          this.form4 = this.fb.group({
@@ -167,7 +168,8 @@ export class AddUserComponent {
                     col1ContractCode: res.products.find(a => a.type === ProductTypes.col1)?.code ?? '',
                     col4ContractCode: res.products.find(a => a.type === ProductTypes.col4)?.code ?? '', 
                     volContractCode: res.products.find(a => a.type === ProductTypes.vol)?.code ?? '',
-                    agolContractCode: res.products.find(a => a.type === ProductTypes.agol)?.code ?? ''                
+                    agolBContractCode: res.products.find(a => a.type === ProductTypes.agolB)?.code ?? '',
+                    agolMContractCode: res.products.find(a => a.type === ProductTypes.agolM)?.code ?? ''                
                 });             
                 const gedOption = res.options.find(a => a.optionId === Options.GedPoste);
                 const gedData = gedOption ? JSON.parse(gedOption.data) as Record<string, any> : undefined;                
@@ -332,7 +334,8 @@ export class AddUserComponent {
                 col1ContractCode: this.form3.value.col1ContractCode!,
                 col4ContractCode: this.form3.value.col4ContractCode!,
                 volContractCode: this.form3.value.volContractCode!,
-                agolContractCode: this.form3.value.agolContractCode!
+                agolBContractCode: this.form3.value.agolBContractCode!,
+                agolMContractCode: this.form3.value.agolMContractCode!
             };            
             localStorage.setItem('form3', JSON.stringify(formValues));
             this.isValidForm3 = true;

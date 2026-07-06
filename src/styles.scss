@@ -54,11 +54,13 @@ $trinta-theme: mat.define-theme((
 :root {
     --fontFamily: "Poppins", sans-serif;
     --headingFontFamily: "Inter", sans-serif;
-    --primaryColor: #9aaaf7;
-    --dangerColor: #f3bdd2;
-    --infoColor: #b8e3f4;
-    --warningColor: #ffe1b8;
-    --successColor: #bde8d1;
+    --primaryColor: #6f83ea;
+    --primaryColorHover: #5f73d6;
+    --dangerColor: #e979a5;
+    --dangerColorHover: #d96594;
+    --infoColor: #6bc6e5;
+    --warningColor: #f4b661;
+    --successColor: #62c88d;
     --darkColor: #273044;
     --blackColor: #596074;
     --whiteColor: #ffffff;
@@ -67,9 +69,9 @@ $trinta-theme: mat.define-theme((
     --transition: .5s;
     --fontSize: 14px;
     /*ROW COLORS*/
-    --row-danger: #f8dbe6;
-    --row-success: #def3e7;
-    --row-info: #dceff7;
+    --row-danger: #f5cadb;
+    --row-success: #c8edd8;
+    --row-info: #c9eaf6;
     --surfaceColor: #ffffff;
     --pageBackground: #f8f9fc;
     --borderColor: #edf0f6;
@@ -259,10 +261,34 @@ h2[mat-dialog-title] {
     cursor: pointer;
     border-radius: 5px;
     font-family: 'Poppins'!important;
+    box-shadow: 0 8px 18px rgba(111, 131, 234, 0.24);
+    transition: background-color .2s ease, box-shadow .2s ease, transform .2s ease;
+
+    &:hover:not(:disabled) {
+        background: var(--primaryColorHover);
+        box-shadow: 0 10px 22px rgba(95, 115, 214, 0.32);
+        transform: translateY(-1px);
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba(111, 131, 234, 0.28);
+        outline-offset: 2px;
+    }
+
+    &:disabled {
+        opacity: .65;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
 }
   
 .cancel-button{
     background:var(--dangerColor);
+
+    &:hover:not(:disabled) {
+        background: var(--dangerColorHover);
+        box-shadow: 0 10px 22px rgba(217, 101, 148, 0.30);
+    }
 }
 
 .logo{

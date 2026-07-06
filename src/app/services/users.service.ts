@@ -22,6 +22,7 @@ export class UsersService {
   }
 
   updateUser(completeUser?: CompleteUserRegistration): Observable<number> {
+    console.log("Updating user:", completeUser);
     return this.http.post<number>(this.apiUrl + "/UpdateCompleteUser", completeUser);
   }
 

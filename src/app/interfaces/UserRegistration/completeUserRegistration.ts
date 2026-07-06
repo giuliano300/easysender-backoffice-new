@@ -15,7 +15,8 @@ export interface CompleteUserRegistration {
   colContractCode: string;
   col4ContractCode: string;
   volContractCode: string;
-  agolContractCode: string;  
+  agolBContractCode: string;
+  agolMContractCode: string;
   hidePrice: string;
   rr: string;
   ged: string;

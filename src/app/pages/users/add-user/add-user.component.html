@@ -277,7 +277,7 @@
                     </div>
                     <div>
                         <button mat-button class="back mr-15" matStepperPrevious>Indietro</button>
-                        <button mat-button class="next" matStepperNext [disabled]="!form2.valid || !accessValid || (passwordStrength !== 'forte' && !update)">Avanti</button>
+                        <button mat-button class="next" matStepperNext [disabled]="!form2.valid || !accessValid">Avanti</button>
                     </div>
                 </form>
             </mat-step>
@@ -304,28 +304,14 @@
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    Codice Contratto Agol
+                                    Codice Contratto Vol
                                 </label>
                                 <mat-form-field>
                                     <i-feather name="code"></i-feather>
                                     <mat-label>
-                                        Inserisci il codice contratto AGOL(se utente AGOL)
+                                        Inserisci il codice contratto VOL(se utente VOL)
                                     </mat-label>
-                                    <input matInput formControlName="agolContractCode">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="mb-20">
-                                <label class="main-label d-block lh-1 text-black mb-10">
-                                    Codice Contratto Col 4
-                                </label>
-                                <mat-form-field>
-                                    <i-feather name="code"></i-feather>
-                                    <mat-label>
-                                        Inserisci il codice contratto COL 4(se utente COL 4)
-                                    </mat-label>
-                                    <input matInput formControlName="col4ContractCode">
+                                    <input matInput formControlName="volContractCode">
                                 </mat-form-field>
                             </div>
                         </div>
@@ -346,28 +332,42 @@
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    Codice Contratto Vol
+                                    Codice Contratto Col 4
                                 </label>
                                 <mat-form-field>
                                     <i-feather name="code"></i-feather>
                                     <mat-label>
-                                        Inserisci il codice contratto VOL(se utente VOL)
+                                        Inserisci il codice contratto COL 4(se utente COL 4)
                                     </mat-label>
-                                    <input matInput formControlName="volContractCode">
+                                    <input matInput formControlName="col4ContractCode">
                                 </mat-form-field>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
-                                    Codice Contratto Agol
+                                    Codice Contratto Agol B
                                 </label>
                                 <mat-form-field>
                                     <i-feather name="code"></i-feather>
                                     <mat-label>
-                                        Inserisci il codice contratto AGOL(se utente AGOL)
+                                        Inserisci il codice contratto AGOL B(se utente AGOL Business)
                                     </mat-label>
-                                    <input matInput formControlName="agolContractCode">
+                                    <input matInput formControlName="agolBContractCode">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="mb-20">
+                                <label class="main-label d-block lh-1 text-black mb-10">
+                                    Codice Contratto Agol M
+                                </label>
+                                <mat-form-field>
+                                    <i-feather name="code"></i-feather>
+                                    <mat-label>
+                                        Inserisci il codice contratto AGOL M(se utente AGOL Market)
+                                    </mat-label>
+                                    <input matInput formControlName="agolMContractCode">
                                 </mat-form-field>
                             </div>
                         </div>
