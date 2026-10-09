@@ -3,6 +3,6 @@ export interface Form2 {
   passwordPoste: string;
   email: string;
   password: string;
-  guidUserOldSite?: string;
-  pwdOldSite?: string;
+  usernameOldSite?: string;
+  passwordOldSite?: string;
 }

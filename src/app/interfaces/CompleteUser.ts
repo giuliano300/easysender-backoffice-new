@@ -6,4 +6,7 @@ export interface CompleteUser {
   user: Users;
   products: UserProducts[];
   options: UserOptions[];
+  childrenCount?: number;
+  linkedUsersCount?: number;
+  gedEnabled?: boolean;
 }

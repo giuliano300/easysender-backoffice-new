@@ -2,7 +2,7 @@
     <div class="flex-beteween">
         <ol class="breadcrumb">
             <li aria-current="page" class="breadcrumb-item"  (click)="goToUsers()">Utenti</li>
-            <li aria-current="page" class="breadcrumb-item active">utenti di {{utente}}</li>
+            <li aria-current="page" class="breadcrumb-item active">{{linkedUser ? 'utenze collegate a' : 'utenti di'}} {{utente}}</li>
         </ol>
         <button (click)="goToUser()" class="btn cancel-button">torna indietro</button>
     </div>
@@ -10,6 +10,7 @@
 <mat-card class="trinta-card basic-form mb-25 bg-white border-none d-block">
     <mat-card-content>
         <form [formGroup]="form" (ngSubmit)="saveUser()">
+            @if (!linkedUser) {
             <label class="label d-block fw-medium mb-10">
                 Tipo di utente
             </label>
@@ -23,6 +24,7 @@
                     <mat-option value="3">Inseritore</mat-option>
                 </mat-select>
             </mat-form-field>
+            }
             <label class="label d-block fw-medium mb-10">
                 Nominativo
             </label>
@@ -52,7 +54,7 @@
             </label>
             <mat-form-field>
                 <i-feather name="lock"></i-feather>
-                <mat-label>Inserisci la password</mat-label>
+                <mat-label>{{id2 ? 'Nuova password (lascia vuoto per non modificarla)' : 'Inserisci la password'}}</mat-label>
                 <input matInput formControlName="password" type="password">
             </mat-form-field>
             <button mat-button type="submit" class="mat-mdc-button" [disabled]="!form.valid">

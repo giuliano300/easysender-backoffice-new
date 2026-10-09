@@ -1,6 +1,7 @@
 export interface Users {
   id: number;
   parentId: number;
+  accountOwnerId?: number;
   userTypes: number;
   guid: string;
   businessName: string;
@@ -15,9 +16,11 @@ export interface Users {
   pec: string;
   usernamePoste: string;
   passwordPoste: string;
+  contractStartDate?: string | null;
+  contractEndDate?: string | null;
   enabled: boolean;
   deleted: boolean;
-  pwdOldSite?: string;
+  passwordOldSite?: string;
   usernameOldSite?: string;
   arraySenderId: string;
   doubleFactor?: boolean;

@@ -362,3 +362,36 @@
         color: var(--blackColor);
     }
 }
+
+.count-link {
+    font-size: 14px !important;
+    font-weight: 600;
+    color: var(--primaryColor) !important;
+}
+
+.truncate {
+    max-width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.truncate-name {
+    max-width: 250px;
+}
+
+::ng-deep .mat-tooltip {
+    background: linear-gradient(90deg, #4c73f3f3, #3b64ecde) !important;
+    color: #fff;
+    font-size: 13px;
+    padding: 2px 5px;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+    max-width: 300px;
+    white-space: normal;
+    text-align: left;
+}
+
+::ng-deep .mat-tooltip .mdc-tooltip__surface {
+    background: none;
+}

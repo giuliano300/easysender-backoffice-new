@@ -78,6 +78,24 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: 'users/linked/:id',
+        component: ChildrenComponent,
+        canActivate: [AuthGuard],
+        data: { linkedUser: true }
+    },
+    {
+        path: 'users/add-linked/:id',
+        component: AddChildrenComponent,
+        canActivate: [AuthGuard],
+        data: { linkedUser: true }
+    },
+    {
+        path: 'users/edit-linked/:id/:id2',
+        component: AddChildrenComponent,
+        canActivate: [AuthGuard],
+        data: { linkedUser: true }
+    },
+    {
         path: '**', 
         component: NotFoundComponent,  
         canActivate: [AuthGuard]} 

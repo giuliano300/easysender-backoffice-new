@@ -9,10 +9,12 @@ export interface CompleteUserRegistration {
   pec: string;
   usernamePoste: string;
   passwordPoste: string;
+  contractStartDate?: string | null;
+  contractEndDate?: string | null;
   email: string;
   password: string;  
   molContractCode: string;
-  colContractCode: string;
+  col1ContractCode: string;
   col4ContractCode: string;
   volContractCode: string;
   agolBContractCode: string;
@@ -23,6 +25,6 @@ export interface CompleteUserRegistration {
   usernamePosteGed: string;
   passwordPosteGed: string;
   usernameOldSite?: string;
-  pwdOldSite?: string;
-  doubleFactor: boolean;
+  passwordOldSite?: string;
+  doubleFactor: string;
 }

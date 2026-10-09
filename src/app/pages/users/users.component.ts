@@ -15,6 +15,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FeathericonsModule } from '../../icons/feathericons/feathericons.module';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   standalone: true,
@@ -31,14 +32,15 @@ import { MatInputModule } from '@angular/material/input';
     MatFormField, 
     MatLabel,
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    MatTooltipModule
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
 export class UsersComponent {
 
-  displayedColumns: string[] = ['businessName', 'vatNumber', 'email', 'address', 'usernamePoste', 'passwordPoste', 'enabled', 'doubleFactor', 'users', 'edit', 'delete'];
+  displayedColumns: string[] = ['businessName', 'vatNumber', 'email', 'address', 'usernamePoste', 'passwordPoste', 'enabled', 'doubleFactor', 'ged', 'users', 'linkedUsers', 'edit', 'delete'];
 
   completeUser: CompleteUser[] = [];
 
@@ -131,6 +133,14 @@ export class UsersComponent {
 
   UsersItem(item:CompleteUser){
      this.router.navigate(["/users/children/" + item.user.id]);
+  }
+
+  LinkedUsersItem(item:CompleteUser){
+     this.router.navigate(["/users/linked/" + item.user.id]);
+  }
+
+  isTruncated(element: HTMLElement): boolean {
+    return element.offsetWidth < element.scrollWidth;
   }
 
 

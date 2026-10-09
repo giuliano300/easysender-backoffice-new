@@ -6,7 +6,9 @@
 </nav>
 <mat-card class="trinta-card mb-25 bg-white border-none d-block">
     <mat-card-content>
-        
+        <div *ngIf="errorMessage" class="error mb-20">
+            {{errorMessage}}
+        </div>
         <mat-stepper #stepper>
             <mat-step>
                 <ng-template matStepLabel>
@@ -124,6 +126,33 @@
                                     </mat-label>
                                     <input matInput formControlName="mobile">
                                 </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="mb-20">
+                                <label class="main-label d-block lh-1 text-black mb-10">
+                                    Data inizio contratto
+                                </label>
+                                <mat-form-field>
+                                    <i-feather name="calendar"></i-feather>
+                                    <mat-label>Data inizio contratto</mat-label>
+                                    <input matInput type="date" formControlName="contractStartDate">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="mb-20">
+                                <label class="main-label d-block lh-1 text-black mb-10">
+                                    Data fine contratto
+                                </label>
+                                <mat-form-field>
+                                    <i-feather name="calendar"></i-feather>
+                                    <mat-label>Data fine contratto</mat-label>
+                                    <input matInput type="date" formControlName="contractEndDate">
+                                </mat-form-field>
+                                <div *ngIf="form1.hasError('contractDateRange')" class="error sub-input">
+                                    La data di fine contratto non può precedere quella di inizio.
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
@@ -270,7 +299,7 @@
                                     <mat-label>
                                         Inserisci la password della vecchia piattaforma
                                     </mat-label>
-                                    <input matInput type="text" placeholder="Password vecchia piattaforma" formControlName="pwdOldSite">
+                                    <input matInput type="text" placeholder="Password vecchia piattaforma" formControlName="passwordOldSite">
                                 </mat-form-field>
                             </div>
                         </div>

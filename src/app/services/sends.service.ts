@@ -21,10 +21,13 @@ export class SendsService {
     endDate?: Date;
     sendType?: number;
     currentState?: number;
+    recipientName?: string;
+    code?: string;
+    noCod?: number;
     pageIndex?: number;
     pageSize?: number;
     totalCounts?: number;
-    } = {}): Observable<{ data: Sends[]; totalCount: number }> {
+    } = {}): Observable<{ data: Sends[]; totalCount: number; arScansCount: number }> {
 
   const formatDate = (date: Date) =>
     date.toISOString().split('T')[0];
@@ -38,11 +41,20 @@ export class SendsService {
       ...(filters.endDate && { endDate: formatDate(filters.endDate) }),
       ...(filters.sendType !== undefined && { sendType: filters.sendType }),
       ...(filters.currentState !== undefined && { currentState: filters.currentState }),
+      ...(filters.recipientName && { recipientName: filters.recipientName }),
+      ...(filters.code && { code: filters.code }),
+      ...(filters.noCod !== undefined && { noCod: filters.noCod }),
     }});
 
     //console.log(params.toString());
 
-    return this.http.get<{ data: Sends[]; totalCount: number }>(this.apiUrl + '/GetSends', { params });
+    return this.http.get<{ data: Sends[]; totalCount: number; arScansCount: number }>(this.apiUrl + '/GetSends', { params });
+  }
+
+  downloadArScan(recipientId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/GetArScan/${recipientId}`, {
+      responseType: 'blob'
+    });
   }
 
   getSend(recipientId: number): Observable<Sends> {

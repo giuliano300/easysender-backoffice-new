@@ -1,11 +1,11 @@
-import { Component, Inject, PLATFORM_ID, TemplateRef, ViewChild } from '@angular/core';
-import { CommonModule, isPlatformBrowser, NgIf } from '@angular/common';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { CommonModule, NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
 import { MatOption, provideNativeDateAdapter } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -14,11 +14,7 @@ import { UsersService } from '../../../services/users.service';
 import { Responses } from '../../../interfaces/Responses';
 import { OpenApiVatReponses } from '../../../interfaces/OpenApiResponse/OpenApiVatReponses';
 import { FncUtils } from '../../../fncUtils/fncUtils';
-import { Form1 } from '../../../interfaces/UserRegistration/form1';
-import { Form2 } from '../../../interfaces/UserRegistration/form2';
-import { Form3 } from '../../../interfaces/UserRegistration/form3';
 import { MatSelectModule } from '@angular/material/select';
-import { Form4 } from '../../../interfaces/UserRegistration/form4';
 import { CompleteUserRegistration } from '../../../interfaces/UserRegistration/completeUserRegistration';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CompleteUser } from '../../../interfaces/CompleteUser';
@@ -94,8 +90,10 @@ export class AddUserComponent {
             zipCode: ['', Validators.required],
             pec: ['', Validators.required],
             mobile: [''],
+            contractStartDate: [''],
+            contractEndDate: [''],
             doubleFactor: [null, Validators.required]
-         });
+         }, { validators: this.contractDateRangeValidator });
  
          this.form2 = this.fb.group({
             usernamePoste: ['', [Validators.required]],
@@ -103,7 +101,7 @@ export class AddUserComponent {
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required]],
             usernameOldSite: [''],
-            pwdOldSite: ['']
+            passwordOldSite: ['']
         });
 
          this.form3 = this.fb.group({
@@ -142,7 +140,11 @@ export class AddUserComponent {
     setForms(){
         this.userService.getUserById(parseInt(this.id!))
             .subscribe((res: CompleteUser) => {      
-                console.log(res);
+                const products = res.products ?? [];
+                const options = res.options ?? [];
+
+                this.form2.get('password')?.setValidators([Validators.minLength(6)]);
+                this.form2.get('password')?.updateValueAndValidity();
                 this.form1.patchValue({
                     vatNumber: res.user.vatNumber,
                     businessName: res.user.businessName,
@@ -151,32 +153,41 @@ export class AddUserComponent {
                     city: res.user.city,
                     pec: res.user.pec, 
                     mobile: res.user.mobile,
+                    contractStartDate: this.toDateInputValue(res.user.contractStartDate),
+                    contractEndDate: this.toDateInputValue(res.user.contractEndDate),
                     doubleFactor: res.user.doubleFactor === true ? "1" : "0"
                 });             
                 this.form2.patchValue({
                     usernamePoste: res.user.usernamePoste,
                     passwordPoste: res.user.passwordPoste,
                     email: res.user.email,
-                    password: res.user.password,
+                    password: '',
                     usernameOldSite: res.user.usernameOldSite,
-                    pwdOldSite: res.user.pwdOldSite
+                    passwordOldSite: res.user.passwordOldSite
                 });    
                 this.usrPoste = res.user.usernamePoste;
                 this.pwdPoste = res.user.passwordPoste;         
                 this.form3.patchValue({
-                    molContractCode: res.products.find(a => a.type === ProductTypes.mol)?.code ?? '',
-                    col1ContractCode: res.products.find(a => a.type === ProductTypes.col1)?.code ?? '',
-                    col4ContractCode: res.products.find(a => a.type === ProductTypes.col4)?.code ?? '', 
-                    volContractCode: res.products.find(a => a.type === ProductTypes.vol)?.code ?? '',
-                    agolBContractCode: res.products.find(a => a.type === ProductTypes.agolB)?.code ?? '',
-                    agolMContractCode: res.products.find(a => a.type === ProductTypes.agolM)?.code ?? ''                
+                    molContractCode: products.find(a => a.type === ProductTypes.mol)?.code ?? '',
+                    col1ContractCode: products.find(a => a.type === ProductTypes.col1)?.code ?? '',
+                    col4ContractCode: products.find(a => a.type === ProductTypes.col4)?.code ?? '',
+                    volContractCode: products.find(a => a.type === ProductTypes.vol)?.code ?? '',
+                    agolBContractCode: products.find(a => a.type === ProductTypes.agolB)?.code ?? '',
+                    agolMContractCode: products.find(a => a.type === ProductTypes.agolM)?.code ?? ''
                 });             
-                const gedOption = res.options.find(a => a.optionId === Options.GedPoste);
-                const gedData = gedOption ? JSON.parse(gedOption.data) as Record<string, any> : undefined;                
+                const gedOption = options.find(a => a.optionId === Options.GedPoste);
+                let gedData: Record<string, any> | undefined;
+                if (gedOption?.data) {
+                    try {
+                        gedData = JSON.parse(gedOption.data) as Record<string, any>;
+                    } catch {
+                        gedData = undefined;
+                    }
+                }
                 this.form4.patchValue({
-                    hidePrice: res.options.find(a => a.optionId === Options.hidePrice) ? '1' : '0',
-                    rr: res.options.find(a => a.optionId === Options.rr) ? '1' : '0',
-                    ged: res.options.find(a => a.optionId === Options.Ged) || res.options.find(a => a.optionId === Options.GedPoste) ? '1' : '0',
+                    hidePrice: options.find(a => a.optionId === Options.hidePrice) ? '1' : '0',
+                    rr: options.find(a => a.optionId === Options.rr) ? '1' : '0',
+                    ged: options.find(a => a.optionId === Options.Ged) || options.find(a => a.optionId === Options.GedPoste) ? '1' : '0',
                     usernamePosteGed: gedData ? gedData!["username"] : '',
                     passwordPosteGed: gedData ? gedData!["password"] : ''
                 });        
@@ -271,8 +282,6 @@ export class AddUserComponent {
 
     saveForm1(){
         if (this.form1.valid) {
-            const formValues: Form1 = this.form1.value as Form1;    
-            localStorage.setItem('form1', JSON.stringify(formValues));
             this.isValidForm1 = true;
         }
     }
@@ -314,44 +323,18 @@ export class AddUserComponent {
 
     saveForm2(){
         if (this.form2.valid) {
-            const formValues: Form2 = {
-                usernamePoste: this.usrPoste!,
-                passwordPoste: this.pwdPoste!,
-                email: this.form2.value.email,
-                password: this.form2.value.password,
-                pwdOldSite: this.form2.value.pwdOldSite,
-                guidUserOldSite: this.form2.value.guidUserOldSite
-            };            
-            localStorage.setItem('form2', JSON.stringify(formValues));
             this.isValidForm2 = true;
         }
     }
 
     saveForm3(){
         if (this.form3.valid) {
-            const formValues: Form3 = {
-                molContractCode: this.form3.value.molContractCode!,
-                col1ContractCode: this.form3.value.col1ContractCode!,
-                col4ContractCode: this.form3.value.col4ContractCode!,
-                volContractCode: this.form3.value.volContractCode!,
-                agolBContractCode: this.form3.value.agolBContractCode!,
-                agolMContractCode: this.form3.value.agolMContractCode!
-            };            
-            localStorage.setItem('form3', JSON.stringify(formValues));
             this.isValidForm3 = true;
         }
     }
 
     saveForm4(){
         if (this.form4.valid) {
-            const formValues: Form4 = {
-                hidePrice: this.form4.value.hidePrice!,
-                rr: this.form4.value.rr!,
-                ged: this.form4.value.ged!,
-                usernamePosteGed: this.form4.value.usernamePosteGed,
-                passwordPosteGed: this.form4.value.passwordPosteGed
-            };            
-            localStorage.setItem('form4', JSON.stringify(formValues));
             this.isValidForm4 = true;
 
             this.sendUser();
@@ -359,36 +342,73 @@ export class AddUserComponent {
     }
 
     sendUser(){
-        if(this.isValidForm1 && this.isValidForm2 && this.isValidForm3 && this.isValidForm4)
+        if(this.isValidForm1 && this.form1.valid && this.isValidForm2 && this.isValidForm3 && this.isValidForm4)
         {
-            var form1 = JSON.parse(localStorage.getItem("form1")!);
-            var form2 = JSON.parse(localStorage.getItem("form2")!);
-            var form3 = JSON.parse(localStorage.getItem("form3")!);
-            var form4 = JSON.parse(localStorage.getItem("form4")!);
-            var u: CompleteUserRegistration = {
-                ...form1,
-                ...form2,
-                ...form3,
-                ...form4
-            };        
-            console.log(u);
+            const form1 = this.form1.getRawValue();
+            const form2 = this.form2.getRawValue();
+            const form3 = this.form3.getRawValue();
+            const form4 = this.form4.getRawValue();
+            const u: CompleteUserRegistration = {
+                vatNumber: form1.vatNumber,
+                businessName: form1.businessName,
+                address: form1.address,
+                city: form1.city,
+                zipCode: form1.zipCode,
+                mobile: form1.mobile ?? '',
+                contractStartDate: form1.contractStartDate || null,
+                contractEndDate: form1.contractEndDate || null,
+                pec: form1.pec,
+                doubleFactor: form1.doubleFactor,
+                usernamePoste: form2.usernamePoste,
+                passwordPoste: form2.passwordPoste,
+                email: form2.email,
+                password: form2.password ?? '',
+                usernameOldSite: form2.usernameOldSite ?? '',
+                passwordOldSite: form2.passwordOldSite ?? '',
+                molContractCode: form3.molContractCode ?? '',
+                col1ContractCode: form3.col1ContractCode ?? '',
+                col4ContractCode: form3.col4ContractCode ?? '',
+                volContractCode: form3.volContractCode ?? '',
+                agolBContractCode: form3.agolBContractCode ?? '',
+                agolMContractCode: form3.agolMContractCode ?? '',
+                hidePrice: form4.hidePrice ?? '0',
+                rr: form4.rr ?? '0',
+                ged: form4.ged ?? '0',
+                usernamePosteGed: form4.usernamePosteGed ?? '',
+                passwordPosteGed: form4.passwordPosteGed ?? '',
+                id: this.id ? parseInt(this.id) : 0
+            };
             if(!this.id)
                 this.userService.setUser(u)
-                    .subscribe((data: number) => {                    
-                        this.router.navigate(['/users']);
-                });
+                    .subscribe({
+                        next: () => this.router.navigate(['/users']),
+                        error: () => this.errorMessage = "Errore durante il salvataggio dell'utente. Nessun dato è stato modificato."
+                    });
             else{
-                u.id = parseInt(this.id!);
                 this.userService.updateUser(u)
-                    .subscribe((data: number) => {                    
-                        this.router.navigate(['/users']);
-                });
+                    .subscribe({
+                        next: () => this.router.navigate(['/users']),
+                        error: () => this.errorMessage = "Errore durante la modifica dell'utente. Nessun dato è stato modificato."
+                    });
             }
         }
         else
         {
             console.log("errore nel salvataggio");
         }
+    }
+
+    private toDateInputValue(value?: string | null): string {
+        return value ? value.substring(0, 10) : '';
+    }
+
+    private contractDateRangeValidator(control: AbstractControl): ValidationErrors | null {
+        const startDate = control.get('contractStartDate')?.value;
+        const endDate = control.get('contractEndDate')?.value;
+
+        return startDate && endDate && endDate < startDate
+            ? { contractDateRange: true }
+            : null;
     }
 
 }

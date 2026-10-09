@@ -5,10 +5,10 @@
 </nav>
 <mat-card class="trinta-card to-do-list-card mb-10 bg-white border-none d-block filter-card">
     <mat-card-content>
-        <form [formGroup]="form">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
                         <div class="input-wrapper position-relative">
                             <mat-form-field appearance="fill">
                                 <mat-label>Intervallo date</mat-label>
@@ -21,7 +21,27 @@
                                 <mat-date-range-picker #picker></mat-date-range-picker>
                             </mat-form-field>                        
                         </div>
-                    </div>                    
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="input-wrapper position-relative">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Nome destinatario</mat-label>
+                                <i-feather name="user"></i-feather>
+                                <input matInput formControlName="recipientName">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="input-wrapper position-relative">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Codice spedizione</mat-label>
+                                <i-feather name="tag"></i-feather>
+                                <input matInput formControlName="code">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-lg-2">
                         <div class="input-wrapper position-relative">
                             <mat-form-field appearance="fill">
@@ -60,14 +80,27 @@
                             </mat-select>
                             </mat-form-field>                        
                         </div>
-                    </div>                    
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="input-wrapper position-relative">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Presenza codice</mat-label>
+                                <i-feather name="tag"></i-feather>
+                                <mat-select formControlName="codePresence">
+                                    <mat-option [value]="null">Tutti</mat-option>
+                                    <mat-option [value]="1">Con codice</mat-option>
+                                    <mat-option [value]="0">Senza codice</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
                     <div class="col-lg-1">
-                         <button mat-button class="filter" type="submit" [disabled]="form.invalid" (click)="onSubmit()">
+                         <button mat-button class="filter" type="submit" [disabled]="form.invalid">
                             Filtra
                         </button>               
                     </div>
                     <div class="col-lg-1">
-                         <button mat-button class="filterRemove" type="submit" [disabled]="!isFiltered" (click)="filterRemove()">
+                         <button mat-button class="filterRemove" type="button" [disabled]="!isFiltered" (click)="filterRemove()">
                             Rimuovi
                         </button>               
                     </div>
@@ -112,6 +145,8 @@
 <div class="progress">
     <mat-progress-bar *ngIf="firstLoading" mode="indeterminate"></mat-progress-bar>
 </div>
+
+<div class="ar-scans-count">Scansioni AR: {{arScansCount ?? 0}}</div>
 
 <mat-card
     class="trinta-card to-do-list-card mb-25 bg-white border-none d-block"
@@ -253,6 +288,32 @@
                         </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="arScan">
+                        <th mat-header-cell *matHeaderCellDef class="text-center pr-0">
+                            AR
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center pr-0">
+                            <div class="action">
+                                <button *ngIf="element.hasArScan"
+                                        type="button"
+                                        mat-button
+                                        class="p-0 min-w-auto lh-1 h-auto"
+                                        aria-label="Scarica scansione AR"
+                                        matTooltip="Scarica scansione AR"
+                                        (click)="downloadArScan(element)"
+                                        [disabled]="element.arScanLoading">
+                                    <mat-progress-spinner *ngIf="element.arScanLoading"
+                                                          mode="indeterminate"
+                                                          diameter="20"
+                                                          strokeWidth="3">
+                                    </mat-progress-spinner>
+                                    <i *ngIf="!element.arScanLoading" class="ri-file-download-line"></i>
+                                </button>
+                                <span *ngIf="!element.hasArScan">—</span>
+                            </div>
+                        </td>
+                    </ng-container>
+
                     <ng-container matColumnDef="message">
                         <th mat-header-cell *matHeaderCellDef class="pl-0">
                             Messaggio
@@ -274,14 +335,17 @@
 
                     <ng-container matColumnDef="ctrl">
                         <th mat-header-cell *matHeaderCellDef class="text-center pr-0">
-                            Aggiorna stato
+                            Agg.
                         </th>
                         <td mat-cell *matCellDef="let element" class="text-center pr-0">
                             <div class="action">
                                 <button type="button"
                                         mat-button
                                         class="p-0 min-w-auto lh-1 h-auto"
-                                        (click)="checkStatus(element)"
+                                        (click)="checkStatus(element)" 
+                                        matTooltip="Aggiorna stato spedizione"
+                                        matTooltipClass="mat-tooltip"
+                                        matTooltipPosition="below"
                                         [disabled]="element.loading">
 
                                     <!-- Spinner se in loading -->
@@ -300,11 +364,15 @@
 
                     <ng-container matColumnDef="det">
                         <th mat-header-cell *matHeaderCellDef class="text-center pr-0">
-                            Dettaglio
+                            Dett.
                         </th>
                         <td mat-cell *matCellDef="let element" class="text-center pr-0">
                             <div class="action">
-                                <button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto" (click)="gotoDetails(element)">
+                                <button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto" 
+                                matTooltip="Dettaglio della spedizione"
+                                matTooltipClass="mat-tooltip"
+                                matTooltipPosition="below"
+                                (click)="gotoDetails(element)">
                                     <i class="{{element.action.det}}"></i>
                                 </button>
                             </div>
@@ -313,11 +381,15 @@
 
                     <ng-container matColumnDef="edit">
                         <th mat-header-cell *matHeaderCellDef class="text-center pr-0">
-                            Modifica
+                            Mod.
                         </th>
                         <td mat-cell *matCellDef="let element" class="text-center pr-0">
                             <div class="action">
-                                <button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto" (click)="UpdateItem(element)">
+                                <button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto" 
+                                matTooltip="Modifica spedizione"
+                                matTooltipClass="mat-tooltip"
+                                matTooltipPosition="below"
+                                (click)="UpdateItem(element)">
                                     <i class="{{element.action.edit}}"></i>
                                 </button>
                             </div>
@@ -326,11 +398,15 @@
 
                     <ng-container matColumnDef="delete">
                         <th mat-header-cell *matHeaderCellDef class="text-center pr-0">
-                            Elimina
+                            Eli.
                         </th>
                         <td mat-cell *matCellDef="let element" class="text-center pr-0">
                             <div class="action">
-                                <button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto" (click)="DeleteItem(element)">
+                                <button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto" 
+                                matTooltip="Elimina spedizione"
+                                matTooltipClass="mat-tooltip"
+                                matTooltipPosition="below"
+                                (click)="DeleteItem(element)">
                                     <i class="{{element.action.delete}}"></i>
                                 </button>
                             </div>

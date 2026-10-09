@@ -81,7 +81,7 @@ export const IT_DATE_FORMATS = {
 })
 export class SendsComponent {
 
-  displayedColumns: string[] = ['select', 'id', 'type', 'date', 'userComplete', 'sender', 'recipient', 'currentState', 'code', 'message', 'ctrl','det', 'edit', 'delete'];
+  displayedColumns: string[] = ['select', 'id', 'type', 'date', 'userComplete', 'sender', 'recipient', 'currentState', 'code', 'arScan', 'message', 'ctrl','det', 'edit', 'delete'];
 
   sends: Sends[] = [];
 
@@ -93,6 +93,7 @@ export class SendsComponent {
   pageSize = 20;
   pageSizeOptions: number[] = [20, 50, 100, 200, 500];
   totalRecords: number = 0;
+  arScansCount: number | null = 0;
 
   actions = Object.values(MassiveActions)
     .filter(v => typeof v === 'number')
@@ -152,6 +153,9 @@ export class SendsComponent {
       end: [new Date()],
       sendType: [null],
       currentState: [null],
+      recipientName: [''],
+      code: [''],
+      codePresence: [null],
       userId: [null],
       massiveAction: [null]
     });
@@ -212,11 +216,18 @@ export class SendsComponent {
   }
 
   onSubmit(){
+    this.pageIndex = 0;
+    if (this.paginator) {
+      this.paginator.pageIndex = 0;
+    }
     const userId = this.form.value.userId ?? '';
     const startRaw = this.form.value.start;
     const endRaw = this.form.value.end;
     const sendType = this.form.value.sendType ?? '';
     const currentState = this.form.value.currentState ?? '';
+    const recipientName = this.form.value.recipientName?.trim() ?? '';
+    const code = this.form.value.code?.trim() ?? '';
+    const codePresence = this.form.value.codePresence;
 
     const startDate = startRaw ? new Date(startRaw) : new Date();
     const endDate = endRaw ? new Date(endRaw) : new Date();
@@ -228,7 +239,10 @@ export class SendsComponent {
       startDate: startDate,
       endDate: endDate,
       sendType: sendType,
-      currentState: currentState
+      currentState: currentState,
+      recipientName: recipientName,
+      code: code,
+      noCod: codePresence ?? undefined
     };
     this.getSends(params);
     this.isFiltered = true;
@@ -240,8 +254,15 @@ export class SendsComponent {
       end: new Date(),
       sendType: '',
       currentState: '',
+      recipientName: '',
+      code: '',
+      codePresence: null,
       userId:  ''
     });
+    this.pageIndex = 0;
+    if (this.paginator) {
+      this.paginator.pageIndex = 0;
+    }
     const startRaw = this.form.value.start;
     const endRaw = this.form.value.end;
 
@@ -264,7 +285,7 @@ export class SendsComponent {
     this.firstLoading = true;
     this.selection.clear();
     this.sendService.getSends(filter).subscribe({
-      next: (response: { data: Sends[]; totalCount: number }) => {
+      next: (response: { data: Sends[]; totalCount: number; arScansCount: number }) => {
 
           this.sends = response.data.map(c => ({
             ...c, 
@@ -278,6 +299,7 @@ export class SendsComponent {
         )
         this.dataSource.data = this.sends;
         this.totalRecords = response.totalCount;
+        this.arScansCount = response.arScansCount ?? 0;
         //console.log(response.totalCount);
         this.firstLoading = false;
       },
@@ -285,9 +307,30 @@ export class SendsComponent {
         if (error.status === 404) {
           this.sends = [];
           this.dataSource = new MatTableDataSource<Sends>(this.sends);
+          this.arScansCount = 0;
         }
         this.firstLoading = false;
       }
+    });
+  }
+
+  downloadArScan(send: Sends): void {
+    if (!send.hasArScan || send.arScanLoading) {
+      return;
+    }
+
+    send.arScanLoading = true;
+    this.sendService.downloadArScan(send.id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `AR-${send.codice || send.id}.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      },
+      complete: () => send.arScanLoading = false,
+      error: () => send.arScanLoading = false
     });
   }
 
@@ -301,6 +344,9 @@ export class SendsComponent {
     const endRaw = this.form.value.end;
     const sendType = this.form.value.sendType ?? '';
     const currentState = this.form.value.currentState ?? '';
+    const recipientName = this.form.value.recipientName?.trim() ?? '';
+    const code = this.form.value.code?.trim() ?? '';
+    const codePresence = this.form.value.codePresence;
 
     const startDate = startRaw ? new Date(startRaw) : new Date();
     const endDate = endRaw ? new Date(endRaw) : new Date();
@@ -313,7 +359,10 @@ export class SendsComponent {
       startDate: startDate,
       endDate: endDate,
       sendType: sendType,
-      currentState: currentState
+      currentState: currentState,
+      recipientName: recipientName,
+      code: code,
+      noCod: codePresence ?? undefined
     };
     this.getSends(params);
   }

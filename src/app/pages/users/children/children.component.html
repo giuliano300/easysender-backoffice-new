@@ -2,9 +2,9 @@
     <div class="flex-beteween">
         <ol class="breadcrumb">
             <li aria-current="page" class="breadcrumb-item"  (click)="goToUsers()">Utenti</li>
-            <li aria-current="page" class="breadcrumb-item active">utenti di {{utente}}</li>
+            <li aria-current="page" class="breadcrumb-item active">{{linkedUser ? 'utenze collegate a' : 'utenti di'}} {{utente}}</li>
         </ol>
-        <button (click)="AddChildren()" class="btn btn-primary">Aggiungi utente</button>
+        <button (click)="AddChildren()" class="btn btn-primary">{{linkedUser ? 'Aggiungi utenza collegata' : 'Aggiungi utente'}}</button>
     </div>
 </nav>
 <mat-card
@@ -34,7 +34,11 @@
                         </th>
                         <td mat-cell *matCellDef="let element" class="pl-0">
                             <div class="position-relative">
-                                <h6 class="mt-0 mb-0">
+                                <h6 class="mt-0 mb-0 truncate truncate-name" #businessName
+                                    matTooltipClass="mat-tooltip"
+                                    matTooltip="{{element.user.businessName}}"
+                                    matTooltipPosition="below"
+                                    [matTooltipDisabled]="!isTruncated(businessName)">
                                     {{element.user.businessName}}
                                 </h6>
                             </div>
@@ -46,7 +50,11 @@
                         </th>
                         <td mat-cell *matCellDef="let element" class="pl-0">
                             <div class="position-relative">
-                                <h6 class="mt-0 mb-0">
+                                <h6 class="mt-0 mb-0 truncate" #email
+                                    matTooltipClass="mat-tooltip"
+                                    matTooltip="{{element.user.email}}"
+                                    matTooltipPosition="below"
+                                    [matTooltipDisabled]="!isTruncated(email)">
                                     {{element.user.email}}
                                 </h6>
                             </div>
@@ -58,34 +66,12 @@
                         </th>
                         <td mat-cell *matCellDef="let element" class="pl-0">
                             <div class="position-relative">
-                                <h6 class="mt-0 mb-0">
+                                <h6 class="mt-0 mb-0 truncate" #address
+                                    matTooltipClass="mat-tooltip"
+                                    matTooltip="{{element.user.address}}"
+                                    matTooltipPosition="below"
+                                    [matTooltipDisabled]="!isTruncated(address)">
                                     {{element.user.address}}
-                                </h6>
-                            </div>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="usernamePoste">
-                        <th mat-header-cell *matHeaderCellDef class="pl-0">
-                            Username Poste
-                        </th>
-                        <td mat-cell *matCellDef="let element" class="pl-0">
-                            <div class="position-relative">
-                                <h6 class="mt-0 mb-0">
-                                    {{element.user.usernamePoste}}
-                                </h6>
-                            </div>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="passwordPoste">
-                        <th mat-header-cell *matHeaderCellDef class="pl-0">
-                            Password Poste
-                        </th>
-                        <td mat-cell *matCellDef="let element" class="pl-0">
-                            <div class="position-relative">
-                                <h6 class="mt-0 mb-0">
-                                    {{element.user.passwordPoste}}
                                 </h6>
                             </div>
                         </td>

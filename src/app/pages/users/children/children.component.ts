@@ -14,6 +14,7 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
 import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   standalone: true,
@@ -28,14 +29,17 @@ import { MatInputModule } from '@angular/material/input';
     MatCheckboxModule, 
     FeathericonsModule,
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    MatTooltipModule
   ],
   templateUrl: './children.component.html',
   styleUrl: './children.component.scss'
 })
 export class ChildrenComponent {
 
-  displayedColumns: string[] = ['userTypes', 'businessName', 'email', 'address', 'usernamePoste', 'passwordPoste', 'enabled', 'edit', 'delete'];
+  displayedColumns: string[] = [];
+
+  linkedUser = false;
 
   completeUser: CompleteUser[] = [];
 
@@ -69,6 +73,11 @@ export class ChildrenComponent {
     if (!token) 
       this.router.navigate(['/']);
 
+    this.linkedUser = this.route.snapshot.data['linkedUser'] === true;
+    this.displayedColumns = this.linkedUser
+      ? ['businessName', 'email', 'address', 'enabled', 'edit', 'delete']
+      : ['userTypes', 'businessName', 'email', 'address', 'enabled', 'edit', 'delete'];
+
     this.route.paramMap.subscribe(params => {
           this.id = params.get('id')!;
           if(this.id){
@@ -83,7 +92,7 @@ export class ChildrenComponent {
   }
 
   AddChildren(){
-      this.router.navigate(['/users/add-children/' + this.id]);
+      this.router.navigate([this.linkedUser ? '/users/add-linked/' + this.id : '/users/add-children/' + this.id]);
   }
 
   onSubmit(){
@@ -101,7 +110,11 @@ export class ChildrenComponent {
   }
 
   getUsers(filter: string = "") {
-    this.usersService.getUsers(filter, parseInt(this.id!)).subscribe({
+    const request = this.linkedUser
+      ? this.usersService.getLinkedUsers(parseInt(this.id!), filter)
+      : this.usersService.getUsers(filter, parseInt(this.id!));
+
+    request.subscribe({
       next: (data: CompleteUser[]) => {
           this.completeUser = data
           .sort((a, b) => b.user.id - a.user.id)
@@ -130,7 +143,12 @@ export class ChildrenComponent {
   }
 
   UpdateItem(item:CompleteUser){
-     this.router.navigate(["/users/edit-children/" + this.id + "/" + item.user.id]);
+     const route = this.linkedUser ? "/users/edit-linked/" : "/users/edit-children/";
+     this.router.navigate([route + this.id + "/" + item.user.id]);
+  }
+
+  isTruncated(element: HTMLElement): boolean {
+    return element.offsetWidth < element.scrollWidth;
   }
 
 

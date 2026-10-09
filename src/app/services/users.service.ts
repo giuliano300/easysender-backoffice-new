@@ -34,6 +34,18 @@ export class UsersService {
     return this.http.post<number>(this.apiUrl + "/UpdateChildren", child);
   }
 
+  setLinkedUser(user?: Child): Observable<number> {
+    return this.http.post<number>(this.apiUrl + "/SaveLinkedUser", user);
+  }
+
+  updateLinkedUser(user?: Child): Observable<number> {
+    return this.http.post<number>(this.apiUrl + "/UpdateLinkedUser", user);
+  }
+
+  getLinkedUsers(ownerId: number, filter: string = ''): Observable<CompleteUser[]> {
+    return this.http.get<CompleteUser[]>(`${this.apiUrl}/GetLinkedUsers/${ownerId}?filter=${encodeURIComponent(filter)}`);
+  }
+
   getUsers(filter?: string, id?: number): Observable<CompleteUser[]> {
     const safeFilter = filter ?? '';
     const safeId = id ?? 0;

@@ -25,6 +25,8 @@ export class AddChildrenComponent {
 
   utente: string = "";
 
+  linkedUser = false;
+
   form: FormGroup;
 
   constructor(
@@ -44,6 +46,10 @@ export class AddChildrenComponent {
   }
 
   ngOnInit(): void {
+    this.linkedUser = this.route.snapshot.data['linkedUser'] === true;
+    if (this.linkedUser) {
+      this.form.patchValue({ userTypes: '1' });
+    }
     this.route.paramMap.subscribe(params => {
         this.id = params.get('id')!;
         this.id2 = params.get('id2')!;
@@ -51,6 +57,9 @@ export class AddChildrenComponent {
           this.usersService.getUserById(parseInt(this.id!))
             .subscribe((res: CompleteUser) => {     
               this.utente = res.user.businessName;
+              if (this.linkedUser && !this.id2) {
+                this.form.patchValue({ address: res.user.address });
+              }
             });
         }
         if(this.id2){
@@ -60,6 +69,9 @@ export class AddChildrenComponent {
   }
   
   setForm() {
+    this.form.get('password')?.clearValidators();
+    this.form.get('password')?.setValidators([Validators.minLength(6)]);
+    this.form.get('password')?.updateValueAndValidity();
     this.usersService.getUserById(parseInt(this.id2!))
       .subscribe((res: CompleteUser) => {     
         this.form.patchValue({
@@ -67,13 +79,13 @@ export class AddChildrenComponent {
           businessName: res.user.businessName,
           address: res.user.address,
           email: res.user.email,
-          password: res.user.password
+          password: ''
         })
     });
   }
   
   goToUser() {
-      this.router.navigate(['/users/children/' + this.id]);
+      this.router.navigate([this.linkedUser ? '/users/linked/' + this.id : '/users/children/' + this.id]);
   }
   
   goToUsers() {
@@ -87,16 +99,23 @@ export class AddChildrenComponent {
         child.parentId = parseInt(this.id!);
         if(this.id2){
           child.id = parseInt(this.id2);
-          this.usersService.updateChildren(child)
+          const request = this.linkedUser
+            ? this.usersService.updateLinkedUser(child)
+            : this.usersService.updateChildren(child);
+          request
             .subscribe((res: number) => {     
               this.goToUser();
             });
         }
-        else
-          this.usersService.setChildren(child)
+        else {
+          const request = this.linkedUser
+            ? this.usersService.setLinkedUser(child)
+            : this.usersService.setChildren(child);
+          request
             .subscribe((res: number) => {     
               this.goToUser();
             });
+        }
       }
   }
 }

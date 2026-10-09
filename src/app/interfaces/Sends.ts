@@ -21,6 +21,8 @@ export interface Sends {
   stato: string;
   pageNumber: number;
   notificato: boolean;
+  hasArScan: boolean;
+  arScanLoading?: boolean;
   pathFile: string;
   fileName: string;
   attacchedFile: Uint8Array; // oppure `string` se arriva base64 dal backend

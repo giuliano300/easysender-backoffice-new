@@ -60,6 +60,7 @@ export class SendDialogComponent {
   creaDocumentoFinale(send: any){
     send.loading = true;
     this.recipientService.requestFinalDoc(send).subscribe({
+      
       next: (res) => {
         send.attacchedFileRA = res.file;
       },
