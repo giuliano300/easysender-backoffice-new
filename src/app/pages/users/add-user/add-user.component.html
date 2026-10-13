@@ -4,6 +4,13 @@
         <li aria-current="page" class="breadcrumb-item active">{{label}}</li>
     </ol>
 </nav>
+<section class="page-head-card">
+    <div>
+        <span class="page-eyebrow">AMMINISTRAZIONE</span>
+        <h1>{{ label }}</h1>
+        <p>Configura dati aziendali, accessi e servizi dell’utenza.</p>
+    </div>
+</section>
 <mat-card class="trinta-card mb-25 bg-white border-none d-block">
     <mat-card-content>
         <div *ngIf="errorMessage" class="error mb-20">
@@ -264,10 +271,10 @@
                                     <mat-label>
                                         Inserisci la password
                                     </mat-label>
-                                    <input matInput type="password" placeholder="Password" formControlName="password" (input)="onPasswordInput()">
+                                    <input matInput [type]="id ? 'text' : 'password'" placeholder="Password" formControlName="password" (input)="onPasswordInput()">
                                 </mat-form-field>
                                 <div *ngIf="form2.controls['password'].invalid && form2.controls['password'].touched" class="error sub-input">
-                                    Password obbligatoria
+                                    {{ form2.controls['password'].hasError('required') ? 'Password obbligatoria' : 'La password deve contenere almeno 3 caratteri' }}
                                 </div>
                                 <div *ngIf="password && showStrength" [ngClass]="getPasswordClass()">
                                     Forza password: <strong>{{ FncUtils.checkPasswordStrength(password) }}</strong>
@@ -305,7 +312,7 @@
                         </div>
                     </div>
                     <div>
-                        <button mat-button class="back mr-15" matStepperPrevious>Indietro</button>
+                        <button mat-button class="filterRemove mr-15" matStepperPrevious>Indietro</button>
                         <button mat-button class="next" matStepperNext [disabled]="!form2.valid || !accessValid">Avanti</button>
                     </div>
                 </form>
@@ -402,7 +409,7 @@
                         </div>
                     </div>
                     <div>
-                        <button mat-button class="back mr-15" matStepperPrevious>Indietro</button>
+                        <button mat-button class="filterRemove mr-15" matStepperPrevious>Indietro</button>
                         <button mat-button  class="next" matStepperNext color="primary">Avanti</button>
                     </div>
                 </form>
@@ -494,7 +501,7 @@
                         </div>
                     </div>
                     <div>
-                        <button mat-button class="back mr-15" matStepperPrevious>Indietro</button>
+                        <button mat-button class="filterRemove mr-15" matStepperPrevious>Indietro</button>
                         <button mat-button  class="next" matStepperNext color="primary">Fine</button>
                     </div>
                 </form>

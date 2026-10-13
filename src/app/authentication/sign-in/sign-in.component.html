@@ -1,63 +1,61 @@
 <div class="sign-in-area">
-    <div class="d-table">
-        <div class="d-table-cell">
-            <div
-                class="trinta-form ml-auto mr-auto bg-white border-radius"
-            >
-                <div class="title text-center">
-                    <h3>
-                        Area backoffice
-                    </h3>
+    <div class="login-shell">
+        <div class="login-shell-inner">
+            <aside class="login-brand-panel">
+                <div class="login-logo">
+                    <img src="images/logo-intro.png" alt="EasySender">
                 </div>
-                <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+                <div class="login-brand-copy">
+                    <span>AMMINISTRAZIONE</span>
+                    <h1>Le tue spedizioni.<br>Sotto controllo.</h1>
+                    <p>Utenti, invii, stati e report in un unico ambiente operativo.</p>
+                </div>
+                <div class="login-benefits">
+                    <span><i-feather name="check"></i-feather> Gestione centralizzata</span>
+                    <span><i-feather name="check"></i-feather> Controllo rapido degli invii</span>
+                </div>
+            </aside>
+
+            <section class="trinta-form">
+                <div class="login-head">
+                    <span>ACCESSO RISERVATO</span>
+                    <h3>EasySender Backoffice</h3>
+                    <p>Usa le credenziali del tuo profilo amministratore.</p>
+                </div>
+
+                <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="login-form">
                     <div class="form-group">
-                        <label class="label d-block fw-medium mb-10">
-                            Username
-                        </label>
+                        <label class="label d-block fw-medium">Username</label>
                         <mat-form-field>
-                            <i-feather name="users"></i-feather>
+                            <i-feather name="user"></i-feather>
                             <mat-label>Inserisci la username</mat-label>
-                            <input matInput type="text" id="email" formControlName="email">
+                            <input matInput type="text" id="email" formControlName="email" autocomplete="username">
                         </mat-form-field>
-                        <div class="error text-danger" *ngIf="authForm.get('email')!.hasError('required') && authForm.get('email')!.touched">
-                            Username è obbligatoria.
-                        </div>
-                        <div class="error text-danger" *ngIf="authForm.get('email')!.hasError('email') && authForm.get('email')!.touched">
-                            Inserisci username.
-                        </div>
+                        <div class="error text-danger" *ngIf="authForm.get('email')!.hasError('required') && authForm.get('email')!.touched">Username è obbligatoria.</div>
+                        <div class="error text-danger" *ngIf="authForm.get('email')!.hasError('email') && authForm.get('email')!.touched">Inserisci username.</div>
                     </div>
+
                     <div class="form-group">
-                        <label class="label d-block fw-medium mb-10">
-                            Password
-                        </label>
+                        <label class="label d-block fw-medium">Password</label>
                         <mat-form-field>
                             <i-feather name="lock"></i-feather>
                             <mat-label>Inserisci la password</mat-label>
-                            <input matInput [type]="hide ? 'password' : 'text'" id="password" formControlName="password">
-                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                                <span class="material-symbols-outlined">
-                                    {{hide ? 'visibility_off' : 'visibility'}}
-                                </span>
+                            <input matInput [type]="hide ? 'password' : 'text'" id="password" formControlName="password" autocomplete="current-password">
+                            <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="hide ? 'Mostra password' : 'Nascondi password'" [attr.aria-pressed]="hide">
+                                <span class="material-symbols-outlined">{{hide ? 'visibility_off' : 'visibility'}}</span>
                             </button>
                         </mat-form-field>
-                        <div class="error text-danger" *ngIf="authForm.get('password')!.hasError('required') && authForm.get('password')!.touched">
-                            Password è obbligatoria.
-                        </div>
-                        <div class="error text-danger" *ngIf="authForm.get('password')!.hasError('minlength') && authForm.get('password')!.touched">
-                            Password deve contenere minimo 4 caratteri.
-                        </div>
-                        <div class="error text-danger mt-10" *ngIf="isError">
-                            Username o password errata.
-                        </div>
+                        <div class="error text-danger" *ngIf="authForm.get('password')!.hasError('required') && authForm.get('password')!.touched">Password è obbligatoria.</div>
+                        <div class="error text-danger" *ngIf="authForm.get('password')!.hasError('minlength') && authForm.get('password')!.touched">Password deve contenere minimo 4 caratteri.</div>
                     </div>
-                    <button mat-button type="submit" [disabled]="authForm.invalid">
-                        <span *ngIf="!sendLogin">Accedi</span>
-                        <span *ngIf="sendLogin">
-                            <mat-spinner class="mat-spinner" diameter="22"></mat-spinner>
-                        </span>
+
+                    <div class="login-error" *ngIf="isError">Username o password errata.</div>
+                    <button mat-button class="login-submit" type="submit" [disabled]="authForm.invalid">
+                        <span *ngIf="!sendLogin">Accedi al backoffice</span>
+                        <mat-spinner *ngIf="sendLogin" class="mat-spinner" diameter="22"></mat-spinner>
                     </button>
                 </form>
-            </div>
+            </section>
         </div>
     </div>
 </div>

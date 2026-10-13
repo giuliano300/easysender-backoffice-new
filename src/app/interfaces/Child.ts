@@ -6,4 +6,6 @@ export interface Child {
   email: string;
   password: string; 
   address?: string;
+  usernameOldSite?: string;
+  passwordOldSite?: string;
 }

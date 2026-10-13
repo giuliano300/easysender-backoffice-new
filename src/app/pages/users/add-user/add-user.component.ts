@@ -48,7 +48,6 @@ export class AddUserComponent {
     form3: FormGroup;
     form4: FormGroup;
     vatNumber: string | undefined;
-    checkingVat: boolean = false;
     ctrlVat: boolean = false;
     ctrlPosteaccesses: boolean = false;
     accessNotValid: boolean = false;
@@ -99,7 +98,7 @@ export class AddUserComponent {
             usernamePoste: ['', [Validators.required]],
             passwordPoste: ['', [Validators.required]],
             email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required]],
+            password: ['', [Validators.required, Validators.minLength(3)]],
             usernameOldSite: [''],
             passwordOldSite: ['']
         });
@@ -143,7 +142,7 @@ export class AddUserComponent {
                 const products = res.products ?? [];
                 const options = res.options ?? [];
 
-                this.form2.get('password')?.setValidators([Validators.minLength(6)]);
+                this.form2.get('password')?.setValidators([Validators.minLength(3)]);
                 this.form2.get('password')?.updateValueAndValidity();
                 this.form1.patchValue({
                     vatNumber: res.user.vatNumber,
@@ -161,7 +160,7 @@ export class AddUserComponent {
                     usernamePoste: res.user.usernamePoste,
                     passwordPoste: res.user.passwordPoste,
                     email: res.user.email,
-                    password: '',
+                    password: this.getVisiblePassword(res.user.password, res.user.passwordOldSite),
                     usernameOldSite: res.user.usernameOldSite,
                     passwordOldSite: res.user.passwordOldSite
                 });    
@@ -201,6 +200,15 @@ export class AddUserComponent {
             });    
     }
 
+    private getVisiblePassword(password?: string, oldSitePassword?: string): string {
+        const value = password?.trim() ?? '';
+        const isPbkdf2Hash = value.length === 44 && /^[A-Za-z0-9+/]{43}=$/.test(value);
+
+        return isPbkdf2Hash || !value
+            ? oldSitePassword ?? ''
+            : value;
+    }
+
     checkVatNumber(){
         const vatCtrl = this.form1.get('vatNumber');
         
@@ -209,53 +217,72 @@ export class AddUserComponent {
             return;
         }
 
-        this.vatNumber = vatCtrl.value!;
-        if (this.vatNumber === "") return;
+        this.vatNumber = vatCtrl.value?.trim();
+        if (!this.vatNumber) return;
+
+        const vatNumber = this.vatNumber;
 
         this.ctrlVat = true;
         this.checkVatNumberValid = null;
         this.errorMessage = null;
         this.errorMessageExistVatNumber = null;
-        this.userService.existUser(this.vatNumber!)
-            .subscribe((data: Responses) => {
-            this.checkingVat = false;
-            if(!data.valid){
-                //SE NON E' GIA' REGISTRATO
-                this.userService.checkVat(this.vatNumber!)
-                .subscribe((data: OpenApiVatReponses) => {
-                this.ctrlVat = false;
-                if(data.success){
-                    this.checkVatNumberValid = "Partita iva correttamente inserita.";
-                    this.openApiResponsesData = data.data;
-                    this.checkingVat = true;
-
-                    this.form1.patchValue({
-                        businessName: this.openApiResponsesData[0].companyName,
-                        address: this.openApiResponsesData[0].address.registeredOffice.streetName,
-                        zipCode: this.openApiResponsesData[0].address.registeredOffice.zipCode,
-                        city: this.openApiResponsesData[0].address.registeredOffice.town,
-                        pec: this.openApiResponsesData[0].pec
-                    });                
-                }      
-                else
-                {
+        this.userService.existUser(vatNumber).subscribe({
+            next: (data: Responses) => {
+                if (data.valid) {
                     this.ctrlVat = false;
-                    this.errorMessageExistVatNumber = data.message + " - Puoi comunque inserire manualmente i dati dell'azienda";
-                    this.form1.patchValue({
-                        businessName: '',
-                        address: '',
-                        zipCode: '',
-                        city: '',
-                        pec: ''
-                    });   
-                }  
+                    this.errorMessageExistVatNumber = "Partita iva già presente nei nostri archivi.";
+                    return;
+                }
+
+                // Se non e' gia' registrata, prova a recuperare i dati aziendali.
+                this.userService.checkVat(vatNumber).subscribe({
+                    next: (vatData: OpenApiVatReponses) => {
+                        this.ctrlVat = false;
+                        const company = vatData.data?.[0];
+
+                        if (vatData.success && company) {
+                            this.checkVatNumberValid = "Partita iva correttamente inserita.";
+                            this.openApiResponsesData = vatData.data;
+                            this.form1.patchValue({
+                                businessName: company.companyName,
+                                address: company.address?.registeredOffice?.streetName ?? '',
+                                zipCode: company.address?.registeredOffice?.zipCode ?? '',
+                                city: company.address?.registeredOffice?.town ?? '',
+                                pec: company.pec ?? ''
+                            });
+                            return;
+                        }
+
+                        this.enableManualCompanyEntry(
+                            vatData.message || "Nessuna corrispondenza trovata per la Partita IVA indicata."
+                        );
+                    },
+                    error: () => {
+                        this.ctrlVat = false;
+                        this.enableManualCompanyEntry(
+                            "Nessuna corrispondenza trovata oppure servizio di verifica non disponibile."
+                        );
+                    }
                 });
-            }      
-            else
-            {
+            },
+            error: () => {
                 this.ctrlVat = false;
-                this.errorMessageExistVatNumber = "Partita iva già presente nei nostri archivi.";
-            }  
+                this.enableManualCompanyEntry(
+                    "Impossibile verificare la Partita IVA nei nostri archivi."
+                );
+            }
+        });
+    }
+
+    private enableManualCompanyEntry(message: string) {
+        const normalizedMessage = message.trim().replace(/[.\s]+$/, '');
+        this.errorMessageExistVatNumber = `${normalizedMessage}. Puoi comunque inserire manualmente i dati dell'azienda.`;
+        this.form1.patchValue({
+            businessName: '',
+            address: '',
+            zipCode: '',
+            city: '',
+            pec: ''
         });
     }
     

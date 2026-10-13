@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { UsersService } from '../../../services/users.service';
 import { CompleteUser } from '../../../interfaces/CompleteUser';
 import { Child } from '../../../interfaces/Child';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-add-children',
@@ -41,7 +42,9 @@ export class AddChildrenComponent {
       businessName: ['', Validators.required],
       address: [''],
       email: ['', [Validators.email, Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(3)]],
+      usernameOldSite: ['', Validators.email],
+      passwordOldSite: ['']
     });
   }
 
@@ -53,7 +56,10 @@ export class AddChildrenComponent {
     this.route.paramMap.subscribe(params => {
         this.id = params.get('id')!;
         this.id2 = params.get('id2')!;
-        if(this.id){
+        if (this.id && this.id2) {
+          this.setForm();
+        }
+        else if(this.id){
           this.usersService.getUserById(parseInt(this.id!))
             .subscribe((res: CompleteUser) => {     
               this.utente = res.user.businessName;
@@ -62,26 +68,40 @@ export class AddChildrenComponent {
               }
             });
         }
-        if(this.id2){
-          this.setForm();
-        }
     });   
   }
   
   setForm() {
     this.form.get('password')?.clearValidators();
-    this.form.get('password')?.setValidators([Validators.minLength(6)]);
+    this.form.get('password')?.setValidators([Validators.minLength(3)]);
     this.form.get('password')?.updateValueAndValidity();
-    this.usersService.getUserById(parseInt(this.id2!))
-      .subscribe((res: CompleteUser) => {     
+    forkJoin({
+      parent: this.usersService.getUserById(parseInt(this.id!)),
+      child: this.usersService.getUserById(parseInt(this.id2!))
+    }).subscribe(({ parent, child }) => {
+        this.utente = parent.user.businessName;
         this.form.patchValue({
-          userTypes: res.user.userTypes.toString(),
-          businessName: res.user.businessName,
-          address: res.user.address,
-          email: res.user.email,
-          password: ''
-        })
+          userTypes: child.user.userTypes.toString(),
+          businessName: child.user.businessName,
+          address: child.user.address,
+          email: child.user.email,
+          password: this.getVisiblePassword(
+            child.user.password,
+            child.user.passwordOldSite ?? parent.user.passwordOldSite
+          ),
+          usernameOldSite: child.user.usernameOldSite ?? parent.user.usernameOldSite ?? '',
+          passwordOldSite: child.user.passwordOldSite ?? parent.user.passwordOldSite ?? ''
+        });
     });
+  }
+
+  private getVisiblePassword(password?: string, oldSitePassword?: string): string {
+    const value = password?.trim() ?? '';
+    const isPbkdf2Hash = value.length === 44 && /^[A-Za-z0-9+/]{43}=$/.test(value);
+
+    return isPbkdf2Hash || !value
+      ? oldSitePassword ?? ''
+      : value;
   }
   
   goToUser() {

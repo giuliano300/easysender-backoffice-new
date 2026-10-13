@@ -3,8 +3,26 @@
         <li aria-current="page" class="breadcrumb-item active">Utenti</li>
     </ol>
 </nav>
-<mat-card class="trinta-card to-do-list-card mb-10 bg-white border-none d-block">
+<section class="page-head-card">
+    <div>
+        <span class="page-eyebrow">AMMINISTRAZIONE</span>
+        <h1>Utenti</h1>
+        <p>Cerca e gestisci clienti, sottoutenti e utenze collegate.</p>
+    </div>
+</section>
+<mat-card class="trinta-card to-do-list-card mb-10 bg-white border-none d-block filter filter-card filters">
     <mat-card-content>
+        <details class="filter-disclosure">
+        <summary class="filters-head">
+            <span class="filters-head-icon"><i class="ri-user-search-line"></i></span>
+            <div>
+                <small>FILTRI</small>
+                <h2>Filtra utenti</h2>
+                <p>Cerca per nominativo o partita IVA.</p>
+            </div>
+            <i class="ri-arrow-down-s-line filters-toggle-icon"></i>
+        </summary>
+        <div class="filter-body">
         <form [formGroup]="form">
             <div class="container">
                 <div class="row">
@@ -30,6 +48,8 @@
                 </div>
             </div>
         </form>
+        </div>
+        </details>
     </mat-card-content>
 </mat-card>
 

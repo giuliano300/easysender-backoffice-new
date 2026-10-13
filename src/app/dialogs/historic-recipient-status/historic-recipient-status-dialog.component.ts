@@ -9,10 +9,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-send-dialog',
-  imports: [MatDialogModule, MatTableModule, MatPaginatorModule, MatSortModule, MatInputModule, MatFormFieldModule, MatIconModule, MatCardModule],
+  imports: [MatDialogModule, MatTableModule, MatPaginatorModule, MatSortModule, MatInputModule, MatFormFieldModule, MatIconModule, MatCardModule, NgIf],
   templateUrl: './historic-recipient-status-dialog.component.html',
   styleUrl: './historic-recipient-status-dialog.component.scss'
 })
@@ -25,8 +26,24 @@ export class HistoricRecipientStatusDialogComponent {
 
   displayedColumns: string[] = ['insertDate', 'message'];
 
-  ngOnInit(): void {
-    console.log(this.data);
+  get sortedStatuses() {
+    return [...(this.data.historicRecipientStatuses ?? [])]
+      .sort((a, b) => new Date(b.insertDate).getTime() - new Date(a.insertDate).getTime());
+  }
+
+  formatDate(value: string): string {
+    if (!value) return 'Data non disponibile';
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return this.utils.getDateFormatted(value) || 'Data non disponibile';
+
+    return new Intl.DateTimeFormat('it-IT', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date);
   }
 
   onCancel(): void {

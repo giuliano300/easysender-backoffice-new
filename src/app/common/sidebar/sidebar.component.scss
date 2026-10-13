@@ -1,723 +1,173 @@
-::ng-deep {
-    .sidebar-area {
-        overflow: hidden;
-        position: fixed;
-        height: 100vh;
-        width: 290px;
-        z-index: 222;
-        left: 0;
-        top: 0;
-        
-        .logo {
-            padding: 25px 25px 25px 25px;
-            position: absolute;
-            z-index: 2;
-            right: 0;
-            left: 0;
-            top: 0;
-            
-            a {
-                span {
-                    font-size: 28px;
-                    margin-left: 5px;
-                    letter-spacing: 0.48px;
-                    color: var(--darkColor);
-                    font-family: var(--headingFontFamily);
-                }
+::ng-deep .sidebar-area {
+    position: fixed; inset: 0 auto 0 0; z-index: 40; display: flex; flex-direction: column;
+    width: 276px; height: 100dvh; padding: 22px 16px 16px; overflow: hidden;
+    background: linear-gradient(180deg, var(--partner-menu-start), var(--partner-menu-end)) !important;
+    color: var(--manager-surface); box-shadow: none !important;
+
+    .logo {
+        position: static; display: flex; align-items: center; min-height: 48px; padding: 0 10px; background: transparent !important;
+        a { min-width: 0; color: var(--manager-surface); font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
+        .logo-icon { flex: 0 0 auto; width: 205px; height: 52px; margin: 0; padding: 0; border-radius: 0; background: transparent; object-fit: contain; object-position: left center; }
+        .compact-logo { display: none; width: 58px; height: 46px; }
+        .compact-logo img { display: block; width: 58px; height: 46px; object-fit: contain; }
+        span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    }
+
+    > .burger-menu { display: none; }
+    .manager-card { display: flex; align-items: center; gap: 11px; margin: 22px 4px 0; padding: 13px; border: 1px solid var(--partner-menu-border); border-radius: 16px; background: var(--partner-menu-surface); }
+    .manager-avatar { display: grid; place-items: center; flex: 0 0 36px; width: 36px; height: 36px; border-radius: 12px; background: var(--manager-accent); color: var(--partner-header-title); font-weight: 800; }
+    .manager-copy { display: grid; min-width: 0; }
+    .manager-copy small { color: var(--partner-menu-muted); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
+    .manager-copy strong { margin-top: 2px; overflow: hidden; color: var(--manager-surface); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+    ng-scrollbar { flex: 1 1 auto; min-height: 0; margin-top: 8px; }
+    .sidebar-inner { padding: 0 2px 8px; }
+
+    .sidebar-menu .sub-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin: 22px 10px 10px;
+        padding: 0 2px;
+        color: var(--partner-menu-muted) !important;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: .13em;
+        line-height: 1;
+        text-transform: uppercase;
+
+        &::before {
+            content: '';
+            display: block;
+            flex: 0 0 5px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--manager-accent);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--manager-accent) 12%, transparent);
+        }
+
+        &::after {
+            content: '';
+            flex: 1 1 auto;
+            height: 1px;
+            background: linear-gradient(90deg, var(--partner-menu-border), transparent);
+        }
+    }
+
+    .sidebar-menu-link, .mat-expansion-panel-header {
+        display: flex; align-items: center; min-height: 48px; margin: 0 0 10px !important; padding: 5px 20px !important;
+        border-radius: 13px !important; color: var(--partner-menu-muted) !important;
+        font-family: var(--fontFamily); font-size: 14px !important; font-weight: 500 !important; letter-spacing: 0; transition: var(--transition);
+        i-feather { position: static !important; width: 19px !important; height: 19px !important; margin-right: 13px !important; color: inherit !important; transform: none !important; }
+        &:hover, &.active { background: var(--partner-menu-hover) !important; color: var(--manager-surface) !important; }
+        &.active i-feather { color: var(--manager-accent) !important; }
+    }
+
+    .mat-accordion .mat-expansion-panel {
+        margin: 0 0 6px !important; border-radius: 13px !important; background: transparent !important; box-shadow: none !important;
+        .mat-expansion-panel-header-title { align-items: center; color: inherit !important; }
+        .mat-expansion-indicator::after { color: currentColor !important; }
+        .mat-expansion-panel-body { padding: 2px 0 7px 15px !important; }
+    }
+
+    .sidebar-sub-menu {
+        position: relative;
+        margin: 0 4px 3px 9px;
+        padding: 4px 0 4px 18px;
+        border-left: 1px solid var(--partner-menu-border);
+        list-style: none;
+
+        .sidemenu-item {
+            position: relative;
+            margin: 3px 0;
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: -21px;
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: var(--partner-menu-border);
+                transform: translateY(-50%);
+                transition: var(--transition);
+            }
+
+            &:has(.sidemenu-link.active)::before {
+                background: var(--manager-accent);
+                box-shadow: 0 0 0 4px color-mix(in srgb, var(--manager-accent) 12%, transparent);
             }
         }
-        .burger-menu {
-            top: 29px;
-            z-index: 3;
-            opacity: 0;
-            right: 19px;
-            visibility: hidden;
-            position: absolute;
-    
-            span {
-                height: 1px;
-                width: 25px;
-                margin: 6px 0;
+
+        .sidemenu-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 40px;
+            padding: 8px 11px;
+            border: 1px solid transparent;
+            border-radius: 11px;
+            color: var(--partner-menu-muted);
+            font-size: 13px;
+            font-weight: 450;
+            transition: var(--transition);
+
+            i-feather {
+                flex: 0 0 16px;
+                width: 16px !important;
+                height: 16px !important;
+                margin: 0 !important;
+                color: color-mix(in srgb, var(--partner-menu-muted) 75%, transparent) !important;
             }
+
+            &:hover {
+                border-color: var(--partner-menu-border);
+                background: color-mix(in srgb, var(--partner-menu-hover) 78%, transparent);
+                color: var(--manager-surface);
+                transform: translateX(2px);
+            }
+
             &.active {
-                opacity: 1;
-                visibility: visible;
-                
-                span {
-                    &.top-bar {
-                        transform: rotate(45deg);
-                        transform-origin: 10% 10%;
-                    }
-                    &.middle-bar {
-                        opacity: 0;
-                    }
-                    &.bottom-bar {
-                        transform: rotate(-45deg);
-                        transform-origin: 10% 90%;
-                        margin-top: 5px;
-                    }
-                }
-            }
-        }
-        .ng-scrollbar {
-            height: 100vh;
+                border-color: color-mix(in srgb, var(--manager-accent) 20%, transparent);
+                background: linear-gradient(90deg, color-mix(in srgb, var(--manager-accent) 14%, transparent), var(--partner-menu-hover));
+                color: var(--manager-surface);
+                font-weight: 600;
 
-            &[visibility=hover] {
-                --_scrollbar-hover-opacity: 1;
-                --_scrollbar-opacity-transition: opacity var(--scrollbar-hover-opacity-transition-enter-duration);
-            }
-            .ng-scroll-content {
-                padding-right: 0;
-            }
-            .ng-scrollbar-track {
-                right: 0;
-            }
-            .ng-scrollbar-thumb {
-                border-radius: 0;
-                background-color: rgba(121, 131, 152, 0.60);
-            }
-        }
-        .sidebar-inner {
-            margin-right: -5px;
-            padding: {
-                top: 90px;
-                left: 40px;
-                right: 35px;
-                bottom: 10px;
-            };
-            .sidebar-menu {
-                .sub-title {
-                    display: block;
-                    position: relative;
-                    padding-left: 22px;
-                    margin-bottom: 14px;
-
-                    &::before {
-                        left: 0;
-                        top: 50%;
-                        content: '';
-                        height: 1px;
-                        width: 12px;
-                        position: absolute;
-                        background: #a6acbe;
-                        transform: translateY(-50%);
-                    }
-                }
-                .mat-accordion {
-                    .mat-expansion-panel {
-                        border-radius: 0;
-                        box-sizing: unset;
-                        margin-bottom: 21px;
-                        color: var(--blackColor);
-                        background-color: transparent;
-            
-                        .mat-expansion-panel-header {
-                            transition: var(--transition);
-                            background-color: transparent;
-                            color: var(--blackColor);
-                            letter-spacing: 0.14px;
-                            position: relative;
-                            display: block;
-                            height: auto;
-                            font: {
-                                family: var(--headingFontFamily);
-                                size: var(--fontSize);
-                                weight: 500;
-                            };
-                            padding: {
-                                right: 35px;
-                                left: 24px;
-                            };
-                            i-feather {
-                                transition: var(--transition);
-                                transform: translateY(-50%);
-                                position: absolute;
-                                margin-top: -1px;
-                                color: #818093;
-                                line-height: 1;
-                                height: 16px;
-                                width: 16px;
-                                top: 50%;
-                                left: 0;
-                            }
-                            .mat-content {
-                                display: block;
-            
-                                .mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
-                                    display: block;
-                                    margin-right: 0;
-                                    color: var(--blackColor);
-                                    transition: var(--transition);
-                                }
-                            }
-                            &.mat-expanded {
-                                color: var(--primaryColor);
-
-                                i-feather {
-                                    color: var(--primaryColor);
-                                }
-                                .mat-content {
-                                    .mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
-                                        color: var(--primaryColor);
-                                    }
-                                }
-                                .mat-expansion-indicator {
-                                    &::before {
-                                        content: "\ea4e";
-                                    }
-                                }
-                            }
-                            .mat-expansion-indicator {
-                                transform: translateY(-50%) !important;
-                                position: absolute;
-                                margin-top: 0.5px;
-                                right: -4px;
-                                top: 50%;
-            
-                                svg {
-                                    display: none;
-                                }
-                                &::before {
-                                    font-size: 17px;
-                                    color: #818093;
-                                    content: "\ea6e";
-                                    position: relative;
-                                    display: inline-block;
-                                    transition: var(--transition);
-                                    font-family: remixicon!important;
-                                }
-                            }
-                            .trinta-badge {
-                                top: 50%;
-                                right: 18px;
-                                width: 17px;
-                                height: 17px;
-                                line-height: 17px;
-                                text-align: center;
-                                border-radius: 50%;
-                                position: absolute;
-                                display: inline-block;
-                                color: var(--primaryColor);
-                                transform: translateY(-50%);
-                                background: rgba(117, 127, 239, 0.1);
-                                font: {
-                                    size: 11px;
-                                    weight: 500;
-                                };
-                                &.two {
-                                    color: #00b69b;
-                                    background: rgba(0, 182, 155, 0.07);
-                                }
-                                &.three {
-                                    color: var(--dangerColor);
-                                    background: rgba(238, 54, 140, 0.1);
-                                }
-                            }
-                            &:hover {
-                                color: var(--primaryColor);
-
-                                i-feather {
-                                    color: var(--primaryColor);
-                                }
-                                .mat-content {
-                                    .mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
-                                        color: var(--primaryColor);
-                                    }
-                                }
-                                .mat-expansion-indicator {
-                                    &::before {
-                                        color: var(--primaryColor);
-                                    }
-                                }
-                            }
-                        }
-                        &:not([class*=mat-elevation-z]) {
-                            box-shadow: unset;
-                        }
-                        &:first-of-type {
-                            border-radius: 0;
-                        }
-                        .mat-expansion-panel-content {
-                            display: block;
-                        }
-                        .mat-expansion-panel-body {
-                            padding: 16px 0 0;
-            
-                            .mat-expansion-panel {
-                                margin-bottom: 0;
-                            }
-                            .mat-expansion-panel-header {
-                                border-radius: 5px;
-                                padding: {
-                                    bottom: 8.5px;
-                                    left: 32px;
-                                    top: 8.5px;
-                                };
-                                &::after {
-                                    top: 50%;
-                                    left: 15px;
-                                    width: 6px;
-                                    height: 6px;
-                                    content: '';
-                                    transition: .3s;
-                                    border-radius: 50%;
-                                    position: absolute;
-                                    transform: translateY(-50%);
-                                    background-color: #818093;
-                                }
-                                .mat-content {
-                                    .mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
-                                        transition: var(--transition);
-                                        color: var(--blackColor) !important;
-                                    }
-                                }
-                                .mat-expansion-indicator {
-                                    right: 11px;
-
-                                    &::before {
-                                        color: #818093 !important;
-                                    }
-                                }
-                                &.mat-expanded, &:hover {
-                                    background-color: var(--primaryColor) !important;
-                                    color: var(--whiteColor);
-            
-                                    .mat-content {
-                                        .mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
-                                            color: var(--whiteColor) !important;
-                                        }
-                                    }
-                                    &::after {
-                                        background-color: var(--whiteColor);
-                                    }
-                                    .mat-expansion-indicator {
-                                        &::before {
-                                            color: var(--whiteColor) !important;
-                                        }
-                                    }
-                                }
-                            }
-                            .mat-expansion-panel-body {
-                                padding: {
-                                    top: 6px;
-                                    left: 20px;
-                                };
-                            }
-                            .sidebar-sub-menu {
-                                padding: 0;
-                                list-style-type: none;
-                                margin: {
-                                    top: 0;
-                                    bottom: 0;
-                                };
-                                .sidemenu-item {
-                                    .sidemenu-link {
-                                        display: block;
-                                        font-weight: 500;
-                                        font-family: var(--fontFamily);
-                                        font-size: 13px;
-                                        position: relative;
-                                        border-radius: 5px;
-                                        color: var(--blackColor);
-                                        transition: var(--transition);
-                                        padding: {
-                                            bottom: 8.5px;
-                                            left: 32px;
-                                            top: 8.5px;
-                                        };
-                                        &::after {
-                                            top: 50%;
-                                            left: 15px;
-                                            width: 6px;
-                                            height: 6px;
-                                            content: '';
-                                            transition: .3s;
-                                            border-radius: 50%;
-                                            position: absolute;
-                                            transform: translateY(-50%);
-                                            background-color: #818093;
-                                        }
-                                        &:hover, &.active {
-                                            background-color: var(--primaryColor);
-                                            color: var(--whiteColor);
-            
-                                            &::after {
-                                                background-color: var(--whiteColor);
-                                            }
-                                            .trinta-badge {
-                                                color: var(--primaryColor);
-                                                background-color: var(--whiteColor);
-                                            }
-                                        }
-                                        .trinta-badge {
-                                            font-size: 11px;
-                                            padding: 2px 8px;
-                                            margin-left: 5px;
-                                            border-radius: 2px;
-                                            color: var(--whiteColor);
-                                            transition: var(--transition);
-                                            background-color: var(--primaryColor);
-                                        }
-                                    }
-                                    .mat-expansion-panel {
-                                        margin-bottom: 0;
-                                    }
-                                }
-                            }
-                        }
-                        &:has(> .mat-expansion-panel-content-wrapper > .mat-expansion-panel-content > .mat-expansion-panel-body > .sidebar-sub-menu > .sidemenu-item > .sidemenu-link.active) {
-                            .mat-expansion-panel-header {
-                                color: var(--primaryColor);
-
-                                i-feather {
-                                    color: var(--primaryColor);
-                                }
-                                .mat-content {
-                                    .mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
-                                        color: var(--primaryColor);
-                                    }
-                                }
-                                .mat-expansion-indicator {
-                                    &::before {
-                                        color: var(--primaryColor);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    .mat-expansion-panel-spacing {
-                        margin-top: 0;
-                    }
-                    .sidebar-menu-link {
-                        transition: var(--transition);
-                        color: var(--blackColor);
-                        letter-spacing: 0.14px;
-                        margin:20px 0 25px;
-                        position: relative;
-                        padding-left: 24px;
-                        display: block;
-                        font: {
-                            family: var(--headingFontFamily);
-                            size: var(--fontSize);
-                            weight: 500;
-                        };
-                        i-feather {
-                            transition: var(--transition);
-                            transform: translateY(-50%);
-                            position: absolute;
-                            margin-top: -.5px;
-                            color: #818093;
-                            line-height: 1;
-                            height: 16px;
-                            width: 16px;
-                            top: 50%;
-                            left: 0;
-                        }
-                        &:hover, &.active {
-                            color: var(--primaryColor);
-
-                            i-feather {
-                                color: var(--primaryColor);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-/* Max width 767px */
-@media only screen and (max-width : 767px) {
-
-    ::ng-deep {
-        .sidebar-area {
-            width: 250px;
-            left: -100%;
-            
-            .logo {
-                padding: 20px 20px 20px 15px;
-            }
-            .burger-menu {
-                top: 23px;
-                right: 14px;
-            }
-            .sidebar-inner {
-                padding: {
-                    top: 80px;
-                    left: 15px;
-                    right: 20px;
-                    bottom: 5px;
-                };
-                .sidebar-menu {
-                    .sub-title {
-                        padding-left: 18px;
-                        margin-bottom: 15px;
-    
-                        &::before {
-                            width: 10px;
-                        }
-                    }
-                    .mat-accordion {
-                        .mat-expansion-panel {
-                            margin-bottom: 22px;
-                
-                            .mat-expansion-panel-header {
-                                font-size: 13px;
-                            }
-                            .mat-expansion-panel-body {
-                                padding: 15px 0 0;
-
-                                .mat-expansion-panel-header {
-                                    padding: {
-                                        top: 11px;
-                                        bottom: 11px;
-                                    };
-                                }
-                                .sidebar-sub-menu {
-                                    .sidemenu-item {
-                                        .sidemenu-link {
-                                            padding: {
-                                                top: 9px;
-                                                bottom: 9px;
-                                            };
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        .sidebar-menu-link {
-                            margin-bottom: 22px;
-                            font-size: 13px;
-                        }
-                    }
-                }
-            }
-            &.active, &.hide-sidebar {
-                left: 0;
+                i-feather { color: var(--manager-accent) !important; }
             }
         }
     }
 
+    .sidebar-menu-link:last-child { margin-top: 22px !important; border-top: 1px solid var(--partner-menu-border); border-radius: 0; color: #f2b7b2 !important; }
+
+    &.active {
+        width: 92px;
+        .logo { justify-content: center; padding: 0; }
+        .logo .logo-icon { display: none; }
+        .logo .compact-logo { display: block; }
+        .logo span, .sub-title, .sidebar-menu-link .title, .mat-expansion-panel-header .title, .mat-expansion-indicator, .mat-expansion-panel-content { display: none !important; }
+        .manager-card { justify-content: center; margin-right: 0; margin-left: 0; padding: 10px 0; }
+        .manager-copy { display: none; }
+        .sidebar-menu-link, .mat-expansion-panel-header { justify-content: center; width: 48px; margin-right: auto !important; margin-left: auto !important; padding: 0 !important; }
+        i-feather { margin-right: 0 !important; }
+    }
 }
 
-/* Min width 576px to Max width 767px */
-@media only screen and (min-width : 576px) and (max-width : 767px) {}
-
-/* Min width 768px to Max width 991px */
-@media only screen and (min-width : 768px) and (max-width : 991px) {
-
-    ::ng-deep {
-        .sidebar-area {
-            left: -100%;
-
-            &.active, &.hide-sidebar {
-                left: 0;
-            }
+@media (max-width: 1199px) {
+    ::ng-deep .sidebar-area {
+        width: 276px; transform: translateX(-100%); visibility: hidden;
+        &.active {
+            width: 276px; transform: translateX(0); visibility: visible;
+            .logo { justify-content: flex-start; padding: 0 10px; }
+            .logo .logo-icon { display: block; width: 205px; margin: 0; object-position: left center; }
+            .logo .compact-logo { display: none; }
+            .logo span, .sidebar-menu-link .title, .mat-expansion-panel-header .title, .mat-expansion-indicator, .mat-expansion-panel-content { display: initial !important; }
+            .sub-title { display: flex !important; }
+            .manager-card { justify-content: flex-start; margin-right: 4px; margin-left: 4px; padding: 13px; }
+            .manager-copy { display: grid; }
+            .sidebar-menu-link, .mat-expansion-panel-header { justify-content: flex-start; width: auto; margin-right: 0 !important; margin-left: 0 !important; padding: 0 12px 0 10px !important; }
+            i-feather { margin-right: 13px !important; }
         }
     }
-
 }
-
-/* Min width 992px to Max width 1199px */
-@media only screen and (min-width : 992px) and (max-width : 1199px) {
-
-    ::ng-deep {
-        .sidebar-area {
-            left: -100%;
-
-            &.active, &.hide-sidebar {
-                left: 0;
-            }
-        }
-    }
-
-}
-
-/* Min width 1200px */
-@media (min-width: 1200px) {
-    
-    ::ng-deep {
-        .sidebar-area {
-            &.active, &.hide-sidebar {
-                width: 60px;
-    
-                .logo {
-                    padding: {
-                        left: 12px;
-                        right: 12px;
-                    };
-                    a {
-                        span {
-                            display: none;
-                        }
-                    }
-                }
-                .burger-menu {
-                    opacity: 0;
-                    visibility: hidden;
-                }
-                .sidebar-inner {
-                    padding: {
-                        top: 80px;
-                        left: 9px;
-                        right: 12px;
-                    };
-                    .sidebar-menu {
-                        .sub-title {
-                            display: none;
-                        }
-                    }
-                    .mat-accordion {
-                        .mat-expansion-panel {
-                            margin-bottom: 5px;
-                
-                            .mat-expansion-panel-header {
-                                padding: 0;
-                                width: 36px;
-                                height: 36px;
-    
-                                i-feather {
-                                    left: 0;
-                                    right: 0;
-                                    text-align: center;
-                                    margin: {
-                                        left: auto;
-                                        right: auto;
-                                    };
-                                }
-                                .title {
-                                    display: none;
-                                }
-                                .mat-expansion-indicator {
-                                    display: none;
-                                }
-                                .trinta-badge {
-                                    display: none;
-                                }
-                            }
-                            .mat-expansion-panel-content {
-                                display: none;
-                            }
-                        }
-                        .sidebar-menu-link {
-                            padding: 0;
-                            width: 36px;
-                            height: 36px;
-                            margin-bottom: 5px;
-    
-                            i-feather {
-                                left: 0;
-                                right: 0;
-                                text-align: center;
-                                margin: {
-                                    left: auto;
-                                    right: auto;
-                                };
-                            }
-                            .title {
-                                display: none;
-                            }
-                        }
-                    }
-                }
-                &:hover {
-                    width: 290px;
-    
-                    .logo {
-                        padding: {
-                            left: 25px;
-                            right: 25px;
-                        };
-                        a {
-                            span {
-                                display: inline-block;
-                            }
-                        }
-                    }
-                    .burger-menu {
-                        opacity: 1;
-                        visibility: visible;
-                    }
-                    .sidebar-inner {
-                        padding: {
-                            top: 90px;
-                            left: 25px;
-                            right: 25px;
-                        };
-                        .sidebar-menu {
-                            .sub-title {
-                                display: block;
-                            }
-                        }
-                        .mat-accordion {
-                            .mat-expansion-panel {
-                                margin-bottom: 25px;
-                    
-                                .mat-expansion-panel-header {
-                                    width: auto;
-                                    height: auto;
-                                    padding: {
-                                        right: 35px;
-                                        left: 24px;
-                                    };
-                                    i-feather {
-                                        right: auto;
-                                        margin: {
-                                            left: 0;
-                                            right: 0;
-                                        };
-                                    }
-                                    .title {
-                                        display: block;
-                                    }
-                                    .mat-expansion-indicator {
-                                        display: inline-block;
-                                    }
-                                    .trinta-badge {
-                                        display: inline-block;
-                                    }
-                                }
-                                .mat-expansion-panel-content {
-                                    display: block;
-                                }
-                            }
-                            .sidebar-menu-link {
-                                width: auto;
-                                height: auto;
-                                padding-left: 24px;
-                                margin-bottom: 25px;
-
-                                i-feather {
-                                    right: auto;
-                                    margin: {
-                                        left: 0;
-                                        right: 0;
-                                    };
-                                }
-                                .title {
-                                    display: block;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-}
-
-.sidebar-shadow{
-    box-shadow: 4px 5px 10px #e7eaf0;
-}
-
-.logo-icon{
-    max-width: 45px;
-}
-
-/* Min width 1200px to Max width 1399px */
-@media only screen and (min-width: 1200px) and (max-width: 1399px) {}
-
-/* Min width 1600px */
-@media only screen and (min-width: 1600px) {}

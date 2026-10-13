@@ -1,39 +1,63 @@
-<mat-card
-    class="trinta-card to-do-list-card mb-25 bg-white border-none d-block"
->
-    <mat-card-content>  
-      <h1 mat-dialog-title class="bg-grey">Storico stati</h1>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="to-do-list-table">
-                <div class="table-responsive">
-                  <table mat-table [dataSource]="data.historicRecipientStatuses" class="mat-elevation-z8">
-
-                    <!-- Data Column -->
-                    <ng-container matColumnDef="insertDate">
-                      <th mat-header-cell *matHeaderCellDef> Data </th>
-                      <td mat-cell *matCellDef="let item"> &nbsp;&nbsp;&nbsp;&nbsp;{{ utils.getDateFormatted(item.insertDate) }} </td>
-                    </ng-container>
-
-                    <!-- Message Column -->
-                    <ng-container matColumnDef="message">
-                      <th mat-header-cell *matHeaderCellDef> Messaggio </th>
-                      <td mat-cell *matCellDef="let item"> &nbsp;&nbsp;&nbsp;&nbsp;{{ item.message }} </td>
-                    </ng-container>
-
-                    <!-- Header and Row Declarations -->
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-                  </table>      
-              </div>
-            </div>
-          </div>
-        </div>
+<div class="dialog-shell status-history">
+  <header class="dialog-header">
+    <div class="dialog-title-group">
+      <span class="dialog-icon"><i class="ri-message-3-line"></i></span>
+      <div>
+        <span class="dialog-eyebrow">AGGIORNAMENTI SPEDIZIONE</span>
+        <h1>Messaggi e storico</h1>
+        <p>{{ data.recipient.businessName || 'Destinatario' }}</p>
       </div>
-  </mat-card-content>
-</mat-card>
-<mat-dialog-actions>
-  <button mat-button (click)="onCancel()" class="btn confirm-button">Chiudi</button>
-</mat-dialog-actions>
+    </div>
+    <button type="button" class="dialog-close" aria-label="Chiudi" (click)="onCancel()"><i class="ri-close-line"></i></button>
+  </header>
+
+  <div class="recipient-strip">
+    <div>
+      <span>Destinatario</span>
+      <strong>{{ data.recipient.businessName || '—' }}</strong>
+    </div>
+    <div>
+      <span>Codice spedizione</span>
+      <strong class="code-value">{{ data.recipient.code || '—' }}</strong>
+    </div>
+    <div>
+      <span>Località</span>
+      <strong>{{ data.recipient.city || '—' }}<ng-container *ngIf="data.recipient.province"> ({{ data.recipient.province }})</ng-container></strong>
+    </div>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    <div class="timeline-heading">
+      <div>
+        <span>CRONOLOGIA</span>
+        <h2>{{ sortedStatuses.length }} aggiornamenti</h2>
+      </div>
+      <i class="ri-time-line"></i>
+    </div>
+
+    <div class="timeline">
+      @for (item of sortedStatuses; track item.id; let first = $first) {
+        <article class="timeline-item" [class.latest]="first">
+          <div class="timeline-marker"><span></span></div>
+          <div class="timeline-card">
+            <div class="message-meta">
+              <span class="date"><i class="ri-calendar-line"></i>{{ formatDate(item.insertDate) }}</span>
+              <span *ngIf="first" class="latest-badge">Più recente</span>
+            </div>
+            <p>{{ item.message || 'Nessun dettaglio disponibile' }}</p>
+          </div>
+        </article>
+      } @empty {
+        <div class="empty-state">
+          <span><i class="ri-inbox-2-line"></i></span>
+          <h3>Nessun messaggio disponibile</h3>
+          <p>Non sono ancora presenti aggiornamenti per questa spedizione.</p>
+        </div>
+      }
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-footer">
+    <button mat-button type="button" (click)="onCancel()" class="close-button">Chiudi</button>
+  </mat-dialog-actions>
+</div>

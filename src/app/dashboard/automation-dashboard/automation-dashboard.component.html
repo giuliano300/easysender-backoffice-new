@@ -6,90 +6,72 @@
     </li>
   </ol>
 </nav>
+<section class="page-head-card">
+  <div>
+    <span class="page-eyebrow">MONITORAGGIO</span>
+    <h1>Sistemi automatici</h1>
+    <p>Controlla code, consumer, chiamate Poste e anomalie dei processi automatici.</p>
+  </div>
+</section>
 
 <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
 <div class="error-box" *ngIf="error">{{ error }}</div>
 
 <ng-container *ngIf="dashboard as d">
-  <div class="row summary-grid">
-    <div class="summary-item">
-      <mat-card class="trinta-card annual-profit-card metric-card mb-25 bg-success border-none d-block">
-        <mat-card-content>
-          <h3 class="text-white">{{ d.totals.runningSystems }}/{{ d.totals.systems }}</h3>
-          <span class="sub-title text-white d-block">Code con consumer</span>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="summary-item">
-      <mat-card class="trinta-card annual-profit-card metric-card mb-25 bg-info border-none d-block">
-        <mat-card-content>
-          <h3 class="text-white">{{ d.totals.rabbitMessages | number:'1.0-0' }}</h3>
-          <span class="sub-title text-white d-block">Messaggi RabbitMQ</span>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="summary-item">
-      <mat-card class="trinta-card annual-profit-card metric-card mb-25 bg-warning border-none d-block">
-        <mat-card-content>
-          <h3 class="text-white">{{ d.totals.posteCallClaims | number:'1.0-0' }}</h3>
-          <span class="sub-title text-white d-block">PosteCallClaims totali</span>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="summary-item">
-      <mat-card class="trinta-card annual-profit-card metric-card mb-25 bg-warning border-none d-block">
-        <mat-card-content>
-          <h3 class="text-white">{{ d.totals.posteCallClaims24h | number:'1.0-0' }}</h3>
-          <span class="sub-title text-white d-block">PosteCallClaims ultime 24 ore</span>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="summary-item">
-      <mat-card class="trinta-card annual-profit-card metric-card mb-25 bg-danger border-none d-block">
-        <mat-card-content>
-          <h3 class="text-white">{{ d.totals.totalErrors | number:'1.0-0' }}</h3>
-          <span class="sub-title text-white d-block">Errori totali prodotto</span>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-
   <section class="broker-strip" [ngClass]="d.broker.reachable ? 'running' : 'offline'">
     <div>
       <span class="status-dot"></span>
       <strong>RabbitMQ {{ statusLabel(d.broker.status) }}</strong>
     </div>
-    <span>{{ d.broker.error || 'Consumer totali: ' + d.totals.rabbitConsumers }}</span>
+    <span class="broker-message" *ngIf="d.broker.error">{{ d.broker.error }}</span>
+    <div class="broker-meta" *ngIf="!d.broker.error">
+      <span>Consumer: <strong>{{ d.totals.rabbitConsumers }}</strong></span>
+      <span>Aggiornato: <strong>{{ d.generatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</strong></span>
+    </div>
   </section>
 
   <section class="product-grid">
     <mat-card class="trinta-card product-card bg-white border-none d-block" *ngFor="let group of groupedSystems">
       <mat-card-content>
         <header>
-          <h3>{{ group.product }}</h3>
-          <span>{{ group.systems.length }} servizi</span>
-        </header>
-        <div class="system-header">
-          <span>Servizio</span>
-          <span>Stato</span>
-          <span>Messaggi RabbitMQ</span>
-          <span>Consumer RabbitMQ</span>
-        </div>
-        <div class="system-row" *ngFor="let system of group.systems">
-          <div class="system-main">
-            <span class="status-dot" [ngClass]="system.status"></span>
-            <div>
-              <strong>{{ system.step }}</strong>
-              <small>{{ system.queueName }}</small>
-            </div>
+          <div>
+            <h3>{{ group.product }}</h3>
           </div>
-          <span class="status-pill" [ngClass]="system.status" [title]="statusDescription(system)">
-            {{ statusLabel(system.status) }}
-            <small>{{ statusDescription(system) }}</small>
-          </span>
-          <span class="metric-value">{{ system.rabbitMessages | number:'1.0-0' }}</span>
-          <span class="metric-value">{{ system.rabbitConsumers | number:'1.0-0' }}</span>
+          <span class="service-count">{{ group.systems.length }} servizi</span>
+        </header>
+        <div class="monitoring-table-wrap">
+          <table class="systems-table">
+            <thead>
+              <tr>
+                <th>Servizio</th>
+                <th>Stato</th>
+                <th class="text-right">Messaggi RabbitMQ</th>
+                <th class="text-right">Consumer RabbitMQ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let system of group.systems">
+                <td>
+                  <div class="system-main">
+                    <span class="status-dot" [ngClass]="system.status"></span>
+                    <div>
+                      <strong>{{ system.step }}</strong>
+                      <small>{{ system.queueName }}</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="status-pill" [ngClass]="system.status" [title]="statusDescription(system)">
+                    {{ statusLabel(system.status) }}
+                    <small>{{ statusDescription(system) }}</small>
+                  </span>
+                </td>
+                <td class="text-right"><strong class="table-number">{{ system.rabbitMessages | number:'1.0-0' }}</strong></td>
+                <td class="text-right"><strong class="table-number">{{ system.rabbitConsumers | number:'1.0-0' }}</strong></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </mat-card-content>
     </mat-card>
@@ -98,9 +80,13 @@
   <section class="table-grid">
     <mat-card class="trinta-card bg-white border-none d-block">
       <mat-card-content>
-        <h3>PosteCallClaims</h3>
+        <header class="monitoring-card-head">
+          <span class="monitoring-card-icon"><i class="ri-phone-line"></i></span>
+          <div><small>CHIAMATE</small><h3>PosteCallClaims</h3></div>
+        </header>
         <div class="empty" *ngIf="d.posteCallClaims.length === 0">Nessuna chiamata Poste registrata.</div>
-        <table *ngIf="d.posteCallClaims.length > 0">
+        <div class="monitoring-table-wrap" *ngIf="d.posteCallClaims.length > 0">
+        <table>
           <thead>
             <tr>
               <th>Prodotto</th>
@@ -120,14 +106,19 @@
             </tr>
           </tbody>
         </table>
+        </div>
       </mat-card-content>
     </mat-card>
 
     <mat-card class="trinta-card bg-white border-none d-block">
       <mat-card-content>
-        <h3>Errori per prodotto</h3>
+        <header class="monitoring-card-head">
+          <span class="monitoring-card-icon danger"><i class="ri-error-warning-line"></i></span>
+          <div><small>ANOMALIE</small><h3>Errori per prodotto</h3></div>
+        </header>
         <div class="empty" *ngIf="d.productErrors.length === 0">Nessun errore registrato.</div>
-        <table *ngIf="d.productErrors.length > 0">
+        <div class="monitoring-table-wrap" *ngIf="d.productErrors.length > 0">
+        <table>
           <thead>
             <tr>
               <th>Prodotto</th>
@@ -143,6 +134,7 @@
             </tr>
           </tbody>
         </table>
+        </div>
       </mat-card-content>
     </mat-card>
   </section>

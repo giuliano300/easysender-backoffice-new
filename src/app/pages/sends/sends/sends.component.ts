@@ -373,8 +373,10 @@ export class SendsComponent {
 
         const dialogRef = this.dialog.open(SendUpdateDialogComponent, {
           data: data,
-          width: '1000px',
-          minWidth: '1000px'
+          width: '960px',
+          maxWidth: '94vw',
+          maxHeight: '92vh',
+          panelClass: 'send-update-dialog'
         });
          // 👇 Quando il dialog viene chiuso
         dialogRef.afterClosed().subscribe(result => {
@@ -431,8 +433,10 @@ export class SendsComponent {
 
         const dialogRef = this.dialog.open(SendDialogComponent, {
           data: data,
-          width: '1000px',
-          minWidth: '1000px'
+          width: '960px',
+          maxWidth: '94vw',
+          maxHeight: '92vh',
+          panelClass: 'send-details-dialog'
         });
       }
     });
@@ -491,8 +495,10 @@ export class SendsComponent {
 
         const dialogRef = this.dialog.open(HistoricRecipientStatusDialogComponent, {
           data: data,
-          width: '600px',
-          minWidth: '600px'
+          width: '680px',
+          maxWidth: '94vw',
+          maxHeight: '90vh',
+          panelClass: 'send-history-dialog'
         });
       }
     });

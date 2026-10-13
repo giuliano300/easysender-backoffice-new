@@ -2,7 +2,7 @@
     margin: 0 0 8px;
     color: #818093;
     font-size: 12px;
-    font-weight: 400;
+    font-weight: 600;
     text-align: right;
 }
 
@@ -327,7 +327,7 @@
 /* Min width 1600px */
 @media only screen and (min-width: 1600px) {}
 
-.filter {
+button.filter {
     width: 100%;
     height: auto;
     display: block;
@@ -389,22 +389,6 @@
 .hover-underline:hover{
     color: var(--primaryColor);
     text-decoration: underline;
-}
-
-::ng-deep .mat-tooltip {
-  background: linear-gradient(90deg, #4c73f3f3, #3b64ecde) !important;
-  color: #fff;
-  font-size: 13px;
-  padding: 2px 5px;
-  border-radius: 8px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.14);
-  max-width: 300px;
-  white-space: normal; /* permette wrap */
-  text-align: left;
-}
-
-::ng-deep .mat-tooltip .mdc-tooltip__surface{
-    background: none;
 }
 
 .mat-mdc-paginator-navigation-first,

@@ -15,6 +15,8 @@ import { AuthService } from '../../services/auth.service';
 })
 export class SidebarComponent {
 
+    loginName = '';
+
     constructor(
         private toggleService: ToggleService,
         private authService: AuthService,
@@ -22,6 +24,9 @@ export class SidebarComponent {
     ) {
         this.toggleService.isToggled$.subscribe(isToggled => {
             this.isToggled = isToggled;
+        });
+        this.authService.loginName$.subscribe(value => {
+            this.loginName = value || (localStorage.getItem('loginName')?.replace(/^"|"$/g, '')) || 'Amministratore';
         });
     }
 

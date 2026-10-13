@@ -2,21 +2,14 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { UtilsService } from '../../services/utils.service';
 import { Sends } from '../../interfaces/Sends';
-import { NgFor, NgIf, TitleCasePipe } from '@angular/common';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { NgFor, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCard, MatCardContent } from '@angular/material/card';
-import { FeathericonsModule } from '../../icons/feathericons/feathericons.module';
 import { RecipientService } from '../../services/recipient.service';
 import { UpdateRecipient } from '../../interfaces/UpdateRecipient';
 
 @Component({
   selector: 'app-send-dialog',
-  imports: [MatDialogModule, NgIf, NgFor, MatFormField, MatCard, MatCardContent, FeathericonsModule, 
-    MatLabel,ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [MatDialogModule, NgIf, NgFor, ReactiveFormsModule],
   templateUrl: './send-update-dialog.component.html',
   styleUrl: './send-update-dialog.component.scss'
 })
@@ -25,6 +18,8 @@ export class SendUpdateDialogComponent {
   form!: FormGroup;
 
   selectedFile: File | null = null;
+
+  saving = false;
 
   attachedFile?: string | null;
 
@@ -112,6 +107,8 @@ export class SendUpdateDialogComponent {
         return;
       }
 
+    this.saving = true;
+
     // Estrarre i valori del form e mappare sull’interfaccia
       const raw = this.form.getRawValue();
       const recipientUpdate: UpdateRecipient = {
@@ -152,6 +149,7 @@ export class SendUpdateDialogComponent {
         },
         error: (error) => {
           console.error('Errore durante il salvataggio:', error);
+          this.saving = false;
         }
       });
   }

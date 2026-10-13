@@ -9,7 +9,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Login } from '../../interfaces/Login';
-import { UtilsService } from '../../services/utils.service';
 import { AuthResponse } from '../../interfaces/AuthResponse';
 import { AdministratorService } from '../../services/administrators.service';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -26,7 +25,6 @@ export class SignInComponent {
         private fb: FormBuilder,
         private router: Router,
         private authService: AuthService,
-        private utilsService: UtilsService,
         private administratorService: AdministratorService
     ) {
         this.authForm = this.fb.group({
@@ -58,7 +56,7 @@ export class SignInComponent {
             this.administratorService.login(login).subscribe({
                 next: (data: AuthResponse) => {
                     localStorage.setItem('loginName', data!.administator.username);
-                    localStorage.setItem('authToken', this.utilsService.generateToken());
+                    localStorage.setItem('authToken', data.token);
                     this.authService.setLoginName(data!.administator.username);
                     this.router.navigate(['/dashboard']);
                 },

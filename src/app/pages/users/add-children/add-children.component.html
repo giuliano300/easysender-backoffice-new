@@ -7,59 +7,118 @@
         <button (click)="goToUser()" class="btn cancel-button">torna indietro</button>
     </div>
 </nav>
-<mat-card class="trinta-card basic-form mb-25 bg-white border-none d-block">
+<section class="page-head-card">
+    <div>
+        <span class="page-eyebrow">{{ linkedUser ? 'UTENZE COLLEGATE' : 'SOTTOUTENTI' }}</span>
+        <h1>{{ id2 ? 'Modifica' : 'Nuova' }} {{ linkedUser ? 'utenza collegata' : 'utenza' }}</h1>
+        <p>Gestisci i dati e gli accessi dell’utenza collegata a {{ utente }}.</p>
+    </div>
+</section>
+<mat-card class="trinta-card basic-form user-edit-card mb-25 bg-white border-none d-block">
     <mat-card-content>
         <form [formGroup]="form" (ngSubmit)="saveUser()">
-            @if (!linkedUser) {
-            <label class="label d-block fw-medium mb-10">
-                Tipo di utente
-            </label>
-            <mat-form-field>
-                <i-feather name="code"></i-feather>
-                <mat-label>
-                    Seleziona il tipo di utente
-                </mat-label>
-                <mat-select formControlName="userTypes">
-                    <mat-option value="2">Visualizzatore</mat-option>
-                    <mat-option value="3">Inseritore</mat-option>
-                </mat-select>
-            </mat-form-field>
-            }
-            <label class="label d-block fw-medium mb-10">
-                Nominativo
-            </label>
-            <mat-form-field>
-                <i-feather name="user"></i-feather>
-                <mat-label>Inserisci il Nominativo</mat-label>
-                <input matInput formControlName="businessName">
-            </mat-form-field>
-            <label class="label d-block fw-medium mb-10">
-                Indirizzo
-            </label>
-            <mat-form-field>
-                <i-feather name="map-pin"></i-feather>
-                <mat-label>Inserisci l'indirizzo</mat-label>
-                <input matInput formControlName="address">
-            </mat-form-field>
-            <label class="label d-block fw-medium mb-10">
-                Email
-            </label>
-            <mat-form-field>
-                <i-feather name="mail"></i-feather>
-                <mat-label>Inserisci l'indirizzo email</mat-label>
-                <input matInput formControlName="email">
-            </mat-form-field>
-            <label class="label d-block fw-medium mb-10">
-                Password (minimo 6 caratteri)
-            </label>
-            <mat-form-field>
-                <i-feather name="lock"></i-feather>
-                <mat-label>{{id2 ? 'Nuova password (lascia vuoto per non modificarla)' : 'Inserisci la password'}}</mat-label>
-                <input matInput formControlName="password" type="password">
-            </mat-form-field>
-            <button mat-button type="submit" class="mat-mdc-button" [disabled]="!form.valid">
-               Salva
-            </button>
+            <section class="edit-section">
+                <header class="edit-section-head">
+                    <span class="edit-section-icon"><i class="ri-user-settings-line"></i></span>
+                    <div>
+                        <small>DATI UTENZA</small>
+                        <h2>Profilo e accesso</h2>
+                        <p>Modifica i dati personali e le credenziali EasySender.</p>
+                    </div>
+                </header>
+
+                <div class="edit-form-grid">
+                    @if (!linkedUser) {
+                    <div class="edit-field">
+                        <label class="main-label d-block">Tipo di utente</label>
+                        <mat-form-field>
+                            <i-feather name="code"></i-feather>
+                            <mat-label>Seleziona il tipo di utente</mat-label>
+                            <mat-select formControlName="userTypes">
+                                <mat-option value="2">Visualizzatore</mat-option>
+                                <mat-option value="3">Inseritore</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    }
+
+                    <div class="edit-field">
+                        <label class="main-label d-block">Nominativo</label>
+                        <mat-form-field>
+                            <i-feather name="user"></i-feather>
+                            <mat-label>Inserisci il nominativo</mat-label>
+                            <input matInput formControlName="businessName">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="edit-field">
+                        <label class="main-label d-block">Indirizzo</label>
+                        <mat-form-field>
+                            <i-feather name="map-pin"></i-feather>
+                            <mat-label>Inserisci l'indirizzo</mat-label>
+                            <input matInput formControlName="address">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="edit-field">
+                        <label class="main-label d-block">Email</label>
+                        <mat-form-field>
+                            <i-feather name="mail"></i-feather>
+                            <mat-label>Inserisci l'indirizzo email</mat-label>
+                            <input matInput formControlName="email" type="email">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="edit-field">
+                        <label class="main-label d-block">Password EasySender</label>
+                        <mat-form-field>
+                            <i-feather name="lock"></i-feather>
+                            <mat-label>{{id2 ? 'Password EasySender attuale' : 'Inserisci la password'}}</mat-label>
+                            <input matInput formControlName="password" [type]="id2 ? 'text' : 'password'">
+                        </mat-form-field>
+                        <small class="field-hint">Minimo 3 caratteri. Le password precedenti all’aggiornamento devono essere impostate nuovamente.</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="edit-section legacy-section">
+                <header class="edit-section-head">
+                    <span class="edit-section-icon"><i class="ri-history-line"></i></span>
+                    <div>
+                        <small>VECCHIO SITO</small>
+                        <h2>Accesso alla vecchia piattaforma</h2>
+                        <p>Credenziali utilizzate dall’utenza sul precedente sito EasySender.</p>
+                    </div>
+                </header>
+
+                <div class="edit-form-grid">
+                    <div class="edit-field">
+                        <label class="main-label d-block">Email vecchio sito</label>
+                        <mat-form-field>
+                            <i-feather name="mail"></i-feather>
+                            <mat-label>Inserisci l'email del vecchio sito</mat-label>
+                            <input matInput formControlName="usernameOldSite" type="email">
+                        </mat-form-field>
+                        @if (form.controls['usernameOldSite'].invalid && form.controls['usernameOldSite'].touched) {
+                        <div class="error field-error">Email vecchio sito non valida</div>
+                        }
+                    </div>
+
+                    <div class="edit-field">
+                        <label class="main-label d-block">Password vecchio sito</label>
+                        <mat-form-field>
+                            <i-feather name="lock"></i-feather>
+                            <mat-label>Inserisci la password del vecchio sito</mat-label>
+                            <input matInput formControlName="passwordOldSite" type="text">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </section>
+
+            <div class="edit-actions">
+                <button mat-button type="button" class="filterRemove" (click)="goToUser()">Annulla</button>
+                <button mat-button type="submit" class="action-save" [disabled]="!form.valid">Salva modifiche</button>
+            </div>
         </form>
     </mat-card-content>
 </mat-card>

@@ -15,6 +15,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FeathericonsModule } from '../../../icons/feathericons/feathericons.module';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { forkJoin } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -75,17 +76,13 @@ export class ChildrenComponent {
 
     this.linkedUser = this.route.snapshot.data['linkedUser'] === true;
     this.displayedColumns = this.linkedUser
-      ? ['businessName', 'email', 'address', 'enabled', 'edit', 'delete']
-      : ['userTypes', 'businessName', 'email', 'address', 'enabled', 'edit', 'delete'];
+      ? ['businessName', 'email', 'address', 'usernameOldSite', 'passwordOldSite', 'enabled', 'edit', 'delete']
+      : ['userTypes', 'businessName', 'email', 'address', 'usernameOldSite', 'passwordOldSite', 'enabled', 'edit', 'delete'];
 
     this.route.paramMap.subscribe(params => {
           this.id = params.get('id')!;
           if(this.id){
               this.getUsers();
-              this.usersService.getUserById(parseInt(this.id!))
-                .subscribe((res: CompleteUser) => {     
-                  this.utente = res.user.businessName;
-                });
           }
       });   
 
@@ -116,18 +113,31 @@ export class ChildrenComponent {
 
     request.subscribe({
       next: (data: CompleteUser[]) => {
+        const parentRequest = this.usersService.getUserById(parseInt(this.id!));
+        const detailRequests = data.map(item => this.usersService.getUserById(item.user.id));
+
+        forkJoin({ parent: parentRequest, details: forkJoin(detailRequests) }).subscribe(({ parent, details }) => {
+          this.utente = parent.user.businessName;
           this.completeUser = data
           .sort((a, b) => b.user.id - a.user.id)
-          .map(c => ({
-            ...c, 
-            action: {
+          .map(c => {
+            const detail = details.find(item => item.user.id === c.user.id);
+            return {
+              ...c,
+              user: {
+                ...c.user,
+                usernameOldSite: detail?.user.usernameOldSite ?? parent.user.usernameOldSite ?? '',
+                passwordOldSite: detail?.user.passwordOldSite ?? parent.user.passwordOldSite ?? ''
+              },
+              action: {
                 edit: 'ri-edit-line',
                 delete: 'ri-delete-bin-line'
+              }
             }
-          })
-        )
-        this.dataSource = new MatTableDataSource<CompleteUser>(this.completeUser);
-        this.dataSource.paginator = this.paginator;
+          });
+          this.dataSource = new MatTableDataSource<CompleteUser>(this.completeUser);
+          this.dataSource.paginator = this.paginator;
+        });
       },
       error: (error) => {
         if (error.status === 404) {

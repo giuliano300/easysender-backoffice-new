@@ -307,3 +307,261 @@ table {
     display: none;
   }
 }
+
+/* NAgorà visual language */
+.broker-strip {
+  border: 1px solid var(--manager-border);
+  border-radius: 16px;
+  background: var(--manager-surface);
+  box-shadow: none;
+
+  &.running { background: color-mix(in srgb, var(--color-success) 7%, var(--manager-surface)); }
+  &.offline { background: color-mix(in srgb, var(--color-danger) 7%, var(--manager-surface)); }
+}
+
+.product-card,
+.table-grid mat-card {
+  border: 1px solid var(--manager-border) !important;
+  border-radius: 20px !important;
+  background: var(--manager-surface) !important;
+  box-shadow: none !important;
+}
+
+.product-card header {
+  margin: -4px -2px 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--manager-border);
+}
+
+.system-header {
+  color: var(--manager-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.system-row { border-color: var(--manager-border); }
+.metric-value { border-radius: 10px; background: var(--manager-soft); color: var(--manager-ink); }
+.status-pill { border-radius: 999px; background: var(--manager-bg); }
+.status-pill.running { background: color-mix(in srgb, var(--color-success) 11%, var(--manager-surface)); color: var(--color-success); }
+.status-pill.warning,
+.status-pill.idle { background: color-mix(in srgb, var(--color-warning) 11%, var(--manager-surface)); color: var(--color-warning); }
+.status-pill.blocked,
+.status-pill.missing,
+.status-pill.offline { background: color-mix(in srgb, var(--color-danger) 10%, var(--manager-surface)); color: var(--color-danger); }
+
+.empty,
+.error-box { border-radius: 14px; background: var(--manager-soft); color: var(--manager-muted); }
+.error-box { border: 1px solid var(--action-delete-border); background: var(--action-delete-bg-soft); color: var(--color-danger); }
+
+/* Vista operativa compatta */
+.broker-strip {
+  min-height: 46px;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  border-radius: 6px;
+
+  &.running .status-dot { background: var(--color-success); }
+  &.offline .status-dot { background: var(--color-danger); }
+}
+
+.broker-meta {
+  display: flex !important;
+  align-items: center;
+  gap: 22px !important;
+  color: var(--manager-muted);
+  font-size: 12px;
+
+  span { color: var(--manager-muted) !important; }
+  strong { color: var(--manager-ink); font-weight: 600; }
+}
+
+.broker-message {
+  color: var(--color-danger) !important;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.product-grid {
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.product-card {
+  overflow: hidden;
+
+  header {
+    margin: 0;
+    padding: 8px 10px 12px;
+  }
+
+  header > div {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .product-label {
+    color: var(--manager-accent-strong);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .1em;
+  }
+
+  h3 {
+    color: var(--manager-ink);
+    font-size: 18px;
+    font-weight: 650;
+  }
+
+  .service-count {
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: var(--manager-soft);
+    color: var(--manager-accent-strong);
+    font-size: 11px;
+    font-weight: 600;
+  }
+}
+
+.monitoring-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--manager-border);
+  border-radius: 6px;
+  background: var(--manager-surface);
+}
+
+.systems-table {
+  min-width: 720px;
+}
+
+.monitoring-table-wrap table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  th {
+    padding: 10px 14px !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--manager-border) !important;
+    background: #f7f9f7;
+    color: var(--manager-muted) !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: .06em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 10px 14px !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--manager-border) !important;
+    background: transparent;
+    color: var(--manager-ink);
+    font-size: 12px;
+    vertical-align: middle;
+  }
+
+  tbody tr:last-child td { border-bottom: 0 !important; }
+  tbody tr { transition: background-color var(--transition); }
+  tbody tr:hover { background: var(--action-filter-bg-soft); }
+}
+
+.system-main {
+  min-width: 230px;
+
+  strong {
+    color: var(--manager-ink);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  small {
+    margin-top: 2px;
+    color: var(--manager-muted);
+    font-size: 10px;
+  }
+}
+
+.status-pill {
+  min-width: 140px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+
+  small {
+    font-size: 9px;
+    font-weight: 400;
+  }
+}
+
+.table-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 42px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: var(--manager-soft);
+  color: var(--manager-ink);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.table-grid {
+  gap: 10px;
+
+  mat-card { overflow: hidden; }
+}
+
+.monitoring-card-head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 10px;
+  padding: 4px 4px 10px;
+  border-bottom: 1px solid var(--manager-border);
+
+  > div { display: grid; gap: 2px; }
+
+  small {
+    color: var(--manager-accent-strong);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .09em;
+  }
+
+  h3 {
+    margin: 0;
+    color: var(--manager-ink);
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.monitoring-card-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--manager-soft);
+  color: var(--manager-accent-strong);
+  font-size: 17px;
+
+  &.danger {
+    background: var(--action-delete-bg-soft);
+    color: var(--color-danger);
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .broker-meta { align-items: flex-start; flex-direction: column; gap: 3px !important; }
+  .product-card header { align-items: flex-start; }
+  .table-grid { grid-template-columns: 1fr; }
+}
