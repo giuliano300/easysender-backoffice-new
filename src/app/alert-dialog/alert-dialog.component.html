@@ -1,5 +1,10 @@
-<h1 mat-dialog-title>{{data.title}}</h1>
-<h2 mat-dialog-title>{{data.description}}</h2>
-<mat-dialog-actions>
-  <button mat-button (click)="onCancel()" class="btn back">Chiudi</button>
-</mat-dialog-actions>
+<div class="compact-dialog alert-dialog">
+  <button type="button" class="icon-close" aria-label="Chiudi" (click)="onCancel()"><i class="ri-close-line"></i></button>
+  <div class="dialog-symbol"><i class="ri-error-warning-line"></i></div>
+  <span class="dialog-eyebrow">ATTENZIONE</span>
+  <h1>{{ data.title || 'Operazione non completata' }}</h1>
+  <p>{{ data.description || 'Si è verificato un problema durante l’operazione.' }}</p>
+  <mat-dialog-actions class="dialog-actions">
+    <button type="button" class="primary-button" (click)="onCancel()">Ho capito</button>
+  </mat-dialog-actions>
+</div>

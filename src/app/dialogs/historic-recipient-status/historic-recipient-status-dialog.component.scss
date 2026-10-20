@@ -1,5 +1,5 @@
 :host { display: block; color: var(--manager-ink); }
-.dialog-shell { overflow: hidden; background: var(--manager-surface); }
+.dialog-shell { display: flex; max-height: min(88vh, 720px); overflow: hidden; flex-direction: column; background: var(--manager-surface); }
 .dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 21px 22px; background: linear-gradient(135deg, var(--color-brand-deep), var(--color-brand-dark)); }
 .dialog-title-group { display: flex; align-items: center; min-width: 0; gap: 13px; }
 .dialog-icon { display: grid; flex: 0 0 44px; width: 44px; height: 44px; place-items: center; border: 1px solid rgba(255,255,255,.18); border-radius: 14px; color: #fff; background: rgba(255,255,255,.1); font-size: 21px; }
@@ -14,7 +14,7 @@
 .recipient-strip span { color: var(--manager-muted); font-size: 8px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
 .recipient-strip strong { display: block; margin-top: 3px; overflow: hidden; color: var(--manager-ink); font-size: 11px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
 .code-value { font-family: Consolas, Monaco, monospace; }
-.dialog-content { max-height: min(62vh, 570px); padding: 19px 22px 9px !important; background: var(--manager-bg); }
+.dialog-content { min-height: 0; max-height: none; padding: 19px 22px 9px !important; overflow-y: auto; flex: 1 1 auto; background: var(--manager-bg); }
 .timeline-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .timeline-heading span { color: var(--manager-accent-strong); font-size: 8px; font-weight: 700; letter-spacing: .12em; }
 .timeline-heading h2 { margin: 3px 0 0; padding: 0 !important; border-radius: 0 !important; background: transparent !important; color: var(--manager-ink) !important; font-size: 15px !important; font-weight: 600 !important; }
@@ -37,6 +37,6 @@
 .empty-state > span { display: grid; width: 52px; height: 52px; margin: 0 auto 13px; place-items: center; border-radius: 16px; color: var(--manager-accent-strong); background: var(--manager-soft); font-size: 24px; }
 .empty-state h3 { margin: 0 0 5px; color: var(--manager-ink); font-size: 14px; }
 .empty-state p { margin: 0; color: var(--manager-muted); font-size: 11px; }
-.dialog-footer { min-height: 64px; padding: 10px 22px !important; justify-content: flex-end; border-top: 1px solid var(--manager-border); background: var(--manager-surface); }
+.dialog-footer { min-height: 64px; margin: 0; padding: 10px 22px !important; justify-content: flex-end; flex: 0 0 auto; border-top: 1px solid var(--manager-border); background: var(--manager-surface); }
 .close-button { min-width: 110px; min-height: 42px; border: 1px solid var(--manager-border) !important; border-radius: 12px !important; background: var(--manager-surface) !important; color: var(--manager-ink) !important; font-size: 12px; font-weight: 600; }
 @media (max-width: 560px) { .dialog-header { padding: 18px; } .dialog-icon { display: none; } .recipient-strip { grid-template-columns: 1fr 1fr; } .recipient-strip > div { border-bottom: 1px solid var(--manager-border); } .recipient-strip > div:first-child { grid-column: 1 / -1; } .recipient-strip > div:nth-child(2) { border-bottom: 0; } .recipient-strip > div:last-child { border-bottom: 0; } .dialog-content { padding: 16px 17px 6px !important; } }

@@ -6,6 +6,46 @@
     text-align: right;
 }
 
+.pending-state-tools {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 5px;
+    color: #7b7b8b;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+::ng-deep .send-row-clickable {
+    cursor: pointer;
+}
+
+.pending-unlock {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 22px;
+    padding: 2px 6px;
+    border: 1px solid #d9deea;
+    border-radius: 5px;
+    background: #fff;
+    color: #536784;
+    font: inherit;
+    cursor: pointer;
+    transition: .18s ease;
+
+    i { font-size: 13px; }
+
+    &:hover:not(:disabled) {
+        border-color: var(--manager-accent, #6684d8);
+        background: #f2f5ff;
+        color: var(--manager-accent-strong, #3d5aa9);
+    }
+
+    &:disabled { cursor: wait; opacity: .65; }
+}
+
 .trinta-card {
     &.to-do-list-card {
         .search-box {
@@ -161,8 +201,8 @@
                     .mat-mdc-cell {
                         padding: 15px 0!important;
                         h6{
-                            font-weight: 500!important;
-                            font-size: 14px!important;
+                            font-weight: 400!important;
+                            font-size: 13px!important;
                         }
                         .mdc-checkbox {
                             padding: 0;
@@ -376,14 +416,53 @@ button.filter {
 .row-base{
     background-color: inherit;
 }
-.row-success{
-    background-color: var(--row-success)!important;
+.to-do-list-table tr.row-processing td {
+    background: color-mix(in srgb, #2387a8 5%, var(--manager-surface)) !important;
+    border-top-color: color-mix(in srgb, #2387a8 12%, var(--manager-border)) !important;
+    border-bottom-color: color-mix(in srgb, #2387a8 12%, var(--manager-border)) !important;
+}
+
+.to-do-list-table tr.row-processing td:first-child {
+    box-shadow: inset 3px 0 0 #2387a8;
+}
+
+.to-do-list-table tr.row-processing:hover td {
+    background: color-mix(in srgb, #2387a8 9%, var(--manager-surface)) !important;
 }
 .row-info{
     background-color: var(--row-info)!important;
 }
-.row-error{
-    background-color: var(--row-danger)!important;
+.to-do-list-table tr.row-error td {
+    background: color-mix(in srgb, var(--color-danger) 5%, var(--manager-surface)) !important;
+    border-top-color: color-mix(in srgb, var(--color-danger) 13%, var(--manager-border)) !important;
+    border-bottom-color: color-mix(in srgb, var(--color-danger) 13%, var(--manager-border)) !important;
+}
+
+.to-do-list-table tr.row-error td:first-child {
+    box-shadow: inset 3px 0 0 var(--color-danger);
+}
+
+.to-do-list-table tr.row-error:hover td {
+    background: color-mix(in srgb, var(--color-danger) 9%, var(--manager-surface)) !important;
+}
+
+.to-do-list-table tr.row-error-confirm td {
+    background: color-mix(in srgb, var(--color-danger) 13%, var(--manager-surface)) !important;
+    border-top-color: color-mix(in srgb, var(--color-danger) 28%, var(--manager-border)) !important;
+    border-bottom-color: color-mix(in srgb, var(--color-danger) 28%, var(--manager-border)) !important;
+}
+
+.to-do-list-table tr.row-error-confirm td:first-child {
+    box-shadow: inset 5px 0 0 var(--color-danger);
+}
+
+.to-do-list-table tr.row-error-confirm td:nth-child(9) h6 {
+    color: var(--color-danger) !important;
+    font-weight: 700 !important;
+}
+
+.to-do-list-table tr.row-error-confirm:hover td {
+    background: color-mix(in srgb, var(--color-danger) 17%, var(--manager-surface)) !important;
 }
 
 .hover-underline:hover{
@@ -410,4 +489,9 @@ button.filter {
     width: 30px!important;
     max-width: 30px!important;
     text-align: center!important;
+}
+
+
+.table-responsive {
+    overflow-x: hidden !important;
 }

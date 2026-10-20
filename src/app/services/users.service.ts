@@ -46,11 +46,11 @@ export class UsersService {
     return this.http.get<CompleteUser[]>(`${this.apiUrl}/GetLinkedUsers/${ownerId}?filter=${encodeURIComponent(filter)}`);
   }
 
-  getUsers(filter?: string, id?: number): Observable<CompleteUser[]> {
+  getUsers(filter?: string, id?: number, includeRelated = false): Observable<CompleteUser[]> {
     const safeFilter = filter ?? '';
     const safeId = id ?? 0;
 
-    return this.http.get<CompleteUser[]>(`${this.apiUrl}/GetCompleteUsers?filter=${safeFilter}&id=${safeId}`);
+    return this.http.get<CompleteUser[]>(`${this.apiUrl}/GetCompleteUsers?filter=${safeFilter}&id=${safeId}&includeRelated=${includeRelated}`);
   }
 
   getUserById(userId: number): Observable<CompleteUser> {

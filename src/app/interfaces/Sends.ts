@@ -12,17 +12,22 @@ export interface Sends {
   requestId: string;
   address: string;
   city: string;
+  province: string;
   zipCode: string;
   state: string;
   codice: string;
   valid: string;
   currentState: string;
   currentStateInt: number;
+  currentStateChangedAt?: string | null;
+  waitingMinutes?: number | null;
+  canUnlock: boolean;
   stato: string;
   pageNumber: number;
   notificato: boolean;
   hasArScan: boolean;
   arScanLoading?: boolean;
+  unblocking?: boolean;
   pathFile: string;
   fileName: string;
   attacchedFile: Uint8Array; // oppure `string` se arriva base64 dal backend
@@ -33,11 +38,13 @@ export interface Sends {
   sender: string;
   addressSender: string;
   citySender: string;
+  provinceSender: string;
   zipCodeSender: string;
   stateSender: string;
   senderAR: string;
   addressSenderAR: string;
   citySenderAR: string;
+  provinceSenderAR: string;
   zipCodeSenderAR: string;
   stateSenderAR: string;
 

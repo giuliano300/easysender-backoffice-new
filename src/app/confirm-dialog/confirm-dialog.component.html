@@ -1,6 +1,11 @@
-<h1 mat-dialog-title>CONFERMA ELIMINAZIONE</h1>
-<h2 mat-dialog-title>Sei sicuro di voler eliminare questo elemento?</h2>
-<mat-dialog-actions>
-  <button mat-button (click)="onCancel()" class="btn back">Chiudi</button>
-  <button mat-button (click)="onConfirm()" class="btn confirm-button">Elimina</button>
-</mat-dialog-actions>
+<div class="compact-dialog danger-dialog">
+  <button type="button" class="icon-close" aria-label="Chiudi" (click)="onCancel()"><i class="ri-close-line"></i></button>
+  <div class="dialog-symbol"><i class="ri-delete-bin-6-line"></i></div>
+  <span class="dialog-eyebrow">CONFERMA RICHIESTA</span>
+  <h1>Eliminare l’elemento?</h1>
+  <p>L’operazione rimuoverà definitivamente l’elemento selezionato e non potrà essere annullata.</p>
+  <mat-dialog-actions class="dialog-actions">
+    <button type="button" class="secondary-button" (click)="onCancel()">Annulla</button>
+    <button type="button" class="danger-button" (click)="onConfirm()"><i class="ri-delete-bin-line"></i>Elimina</button>
+  </mat-dialog-actions>
+</div>

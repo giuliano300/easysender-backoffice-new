@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +24,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CompleteUser } from '../../../interfaces/CompleteUser';
 import { UsersService } from '../../../services/users.service';
 import { HistoricRecipientStatusDialogComponent } from '../../../dialogs/historic-recipient-status/historic-recipient-status-dialog.component';
@@ -33,8 +34,9 @@ import { SendUpdateDialogComponent } from '../../../dialogs/send-update-dialog/s
 import { MatProgressBar } from "@angular/material/progress-bar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { SelectionModel } from '@angular/cdk/collections';
-import { forkJoin, Observable, tap } from 'rxjs';
+import { firstValueFrom, forkJoin, Observable, tap } from 'rxjs';
 import { StatusResponses } from '../../../interfaces/StatusResponses';
+import { CsvExportService } from '../../../services/csv-export.service';
 
 export const IT_DATE_FORMATS = {
   parse: {
@@ -69,6 +71,7 @@ export const IT_DATE_FORMATS = {
     MatFormFieldModule,
     MatNativeDateModule,
     MatSelectModule,
+    MatAutocompleteModule,
     MatProgressBar,
     MatProgressSpinnerModule
 ],
@@ -81,7 +84,7 @@ export const IT_DATE_FORMATS = {
 })
 export class SendsComponent {
 
-  displayedColumns: string[] = ['select', 'id', 'type', 'date', 'userComplete', 'sender', 'recipient', 'currentState', 'code', 'arScan', 'message', 'ctrl','det', 'edit', 'delete'];
+  displayedColumns: string[] = ['select', 'id', 'type', 'date', 'sender', 'recipient', 'currentState', 'code', 'arScan', 'message', 'ctrl', 'edit', 'delete'];
 
   sends: Sends[] = [];
 
@@ -110,6 +113,8 @@ export class SendsComponent {
   }));
 
   currentState: any = [
+    {id: null, name : "Tutti gli stati"},
+    {id: -1, name : "Tutti gli errori"},
     {id: 0, name : "In attesa"},
     {id: 1, name : "Presa in carico"},
     {id: 2, name : "In lavorazione"},
@@ -129,6 +134,20 @@ export class SendsComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   isFiltered: boolean = false;
+  exportingCsv = false;
+
+  waitingThresholds = [
+    { id: 10, name: 'Da almeno 10 minuti' },
+    { id: 20, name: 'Da almeno 20 minuti' },
+    { id: 30, name: 'Da almeno 30 minuti' },
+    { id: 60, name: 'Da almeno 1 ora' },
+    { id: 180, name: 'Da almeno 3 ore' },
+    { id: 360, name: 'Da almeno 6 ore' },
+    { id: 720, name: 'Da almeno 12 ore' },
+    { id: 1440, name: 'Da almeno 24 ore' }
+  ];
+
+  intervalId: any;
 
   date = new Date();
   daysToAdd = 1;
@@ -139,11 +158,13 @@ export class SendsComponent {
   constructor(
       private dialog: MatDialog, 
       private router: Router,
+      private route: ActivatedRoute,
       private fb: FormBuilder,
       private sendService: SendsService,
       public utils: UtilsService,
       private usersService: UsersService,      
-      private recipientService: RecipientService
+      private recipientService: RecipientService,
+      private csvExport: CsvExportService
   ) 
   {
     this.newDate.setDate(this.newDate.getDate() + this.daysToAdd);
@@ -156,7 +177,9 @@ export class SendsComponent {
       recipientName: [''],
       code: [''],
       codePresence: [null],
+      waitingMinutes: [null],
       userId: [null],
+      userSearch: [''],
       massiveAction: [null]
     });
   }
@@ -167,30 +190,126 @@ export class SendsComponent {
     if (!token) 
       this.router.navigate(['/']);
 
-    const startRaw = this.form.value.start;
-    const endRaw = this.newDate;
+    const requestedStateParam = this.route.snapshot.queryParamMap.get('currentState');
+    const requestedState = requestedStateParam === null ? null : Number(requestedStateParam);
+    if (requestedState !== null && Number.isInteger(requestedState) && this.currentState.some((state: any) => state.id === requestedState)) {
+      this.form.patchValue({ currentState: requestedState });
+      if (requestedState === -1) {
+        const start = this.parseQueryDate(this.route.snapshot.queryParamMap.get('startDate'));
+        const end = this.parseQueryDate(this.route.snapshot.queryParamMap.get('endDate'));
+        if (start && end) {
+          this.form.patchValue({ start, end });
+        } else {
+          this.applyDashboardErrorPeriod(this.route.snapshot.queryParamMap.get('errorPeriod'));
+        }
+      }
+      this.isFiltered = true;
+    }
 
-    const startDate = startRaw ? new Date(startRaw) : new Date();
-    const endDate = endRaw ? new Date(endRaw) : new Date();
-
-    const pageIndex = this.pageIndex;
-    const pageSize = this.pageSize;
-
-    let params = {
-      pageIndex,
-      pageSize,
-      startDate: startDate,
-      endDate: endDate,
-    };
-
-    this.getSends(params);
+    this.refreshSends();
+    this.intervalId = setInterval(() => {
+      this.refreshSends();
+    }, 30000); 
 
     this.getUsers();
   }
 
+  ngOnDestroy(): void {
+    clearInterval(this.intervalId);
+  }
+
+  get filteredUsers(): CompleteUser[] {
+    const search = String(this.form.get('userSearch')?.value ?? '').trim().toLocaleLowerCase('it-IT');
+    if (!search) return this.users.slice(0, 50);
+
+    return this.users
+      .filter(item => item.user.businessName?.toLocaleLowerCase('it-IT').includes(search))
+      .slice(0, 50);
+  }
+
+  selectUser(user: CompleteUser): void {
+    this.form.patchValue({ userId: user.user.id, userSearch: user.user.businessName }, { emitEvent: false });
+  }
+
+  displayUser(user: CompleteUser | string | null): string {
+    return typeof user === 'string' ? user : user?.user.businessName ?? '';
+  }
+
+  userOptionLabel(user: CompleteUser): string {
+    if (user.user.parentId > 0) return `${user.user.businessName} · Sottoutenza`;
+    if (user.user.accountOwnerId) return `${user.user.businessName} · Utenza collegata`;
+    return user.user.businessName;
+  }
+
+  clearSelectedUser(): void {
+    this.form.patchValue({ userId: null }, { emitEvent: false });
+  }
+
+  private buildCurrentFilters(includeTotalCounts = false): any {
+    const currentStateValue = this.form.value.currentState;
+    const currentState = currentStateValue === null || currentStateValue === ''
+      ? undefined
+      : Number(currentStateValue);
+
+    return {
+      pageIndex: this.pageIndex,
+      pageSize: this.pageSize,
+      ...(includeTotalCounts && { totalCounts: this.totalRecords }),
+      userId: this.form.value.userId ?? undefined,
+      startDate: this.form.value.start ? new Date(this.form.value.start) : undefined,
+      endDate: this.form.value.end ? new Date(this.form.value.end) : undefined,
+      sendType: this.form.value.sendType ?? undefined,
+      currentState,
+      recipientName: this.form.value.recipientName?.trim() || undefined,
+      code: this.form.value.code?.trim() || undefined,
+      noCod: this.form.value.codePresence ?? undefined,
+      waitingMinutes: this.form.value.waitingMinutes ?? undefined
+    };
+  }
+
+  private refreshSends(includeTotalCounts = false): void {
+    this.getSends(this.buildCurrentFilters(includeTotalCounts));
+  }
+
+  private applyDashboardErrorPeriod(period: string | null): void {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const end = new Date(today);
+    let start: Date | null = null;
+
+    switch (period) {
+      case 'today':
+        start = new Date(today);
+        break;
+      case 'week':
+        start = new Date(today);
+        start.setDate(start.getDate() - 6);
+        break;
+      case 'month':
+        start = new Date(today.getFullYear(), today.getMonth(), 1);
+        break;
+      case 'previous-month':
+        start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        end.setDate(0);
+        break;
+      default:
+        this.form.patchValue({ start: null, end: null });
+        return;
+    }
+
+    this.form.patchValue({ start, end });
+  }
+
+  private parseQueryDate(value: string | null): Date | null {
+    if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+    const [year, month, day] = value.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day ? date : null;
+  }
+
 
     getUsers() {
-      this.usersService.getUsers("").subscribe({
+      this.usersService.getUsers("", undefined, true).subscribe({
         next: (data: CompleteUser[]) => {
             this.users = data;
         },
@@ -220,31 +339,7 @@ export class SendsComponent {
     if (this.paginator) {
       this.paginator.pageIndex = 0;
     }
-    const userId = this.form.value.userId ?? '';
-    const startRaw = this.form.value.start;
-    const endRaw = this.form.value.end;
-    const sendType = this.form.value.sendType ?? '';
-    const currentState = this.form.value.currentState ?? '';
-    const recipientName = this.form.value.recipientName?.trim() ?? '';
-    const code = this.form.value.code?.trim() ?? '';
-    const codePresence = this.form.value.codePresence;
-
-    const startDate = startRaw ? new Date(startRaw) : new Date();
-    const endDate = endRaw ? new Date(endRaw) : new Date();
-
-    let params = {
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
-      userId: userId,
-      startDate: startDate,
-      endDate: endDate,
-      sendType: sendType,
-      currentState: currentState,
-      recipientName: recipientName,
-      code: code,
-      noCod: codePresence ?? undefined
-    };
-    this.getSends(params);
+    this.refreshSends();
     this.isFiltered = true;
   }
 
@@ -257,28 +352,49 @@ export class SendsComponent {
       recipientName: '',
       code: '',
       codePresence: null,
-      userId:  ''
+      waitingMinutes: null,
+      userId:  '',
+      userSearch: ''
     });
     this.pageIndex = 0;
     if (this.paginator) {
       this.paginator.pageIndex = 0;
     }
-    const startRaw = this.form.value.start;
-    const endRaw = this.form.value.end;
-
-    const startDate = startRaw ? new Date(startRaw) : new Date();
-    const endDate = endRaw ? new Date(endRaw) : new Date();
-
-    let params = {
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
-      startDate: startDate,
-      endDate: endDate,
-    };
-
-    this.getSends(params);
+    this.refreshSends();
 
     this.isFiltered = false;
+  }
+
+  async exportFilteredSends(): Promise<void> {
+    if (this.exportingCsv) return;
+
+    this.exportingCsv = true;
+    try {
+      const filters = { ...this.buildCurrentFilters(false), pageIndex: 0, pageSize: 500 };
+      const firstPage = await firstValueFrom(this.sendService.getSends(filters));
+      const rows = [...firstPage.data];
+
+      for (let pageIndex = 1; rows.length < firstPage.totalCount; pageIndex++) {
+        const page = await firstValueFrom(this.sendService.getSends({ ...filters, pageIndex }));
+        if (!page.data.length) break;
+        rows.push(...page.data);
+      }
+
+      this.csvExport.download('invii-filtrati', rows, [
+        { header: 'ID', value: row => row.id },
+        { header: 'Tipo', value: row => row.type },
+        { header: 'Data invio', value: row => this.utils.getDateFormatted(row.insertDate) },
+        { header: 'Utente', value: row => row.userComplete },
+        { header: 'Mittente', value: row => row.senderComplete || row.sender },
+        { header: 'Destinatario', value: row => row.recipient || row.namesComplete },
+        { header: 'Stato corrente', value: row => row.currentState },
+        { header: 'Codice spedizione', value: row => row.codice },
+        { header: 'Scansione AR', value: row => row.hasArScan ? 'Sì' : 'No' },
+        { header: 'Messaggio', value: row => row.stato || row.state }
+      ]);
+    } finally {
+      this.exportingCsv = false;
+    }
   }
 
   getSends(filter: any = "") {
@@ -334,37 +450,36 @@ export class SendsComponent {
     });
   }
 
+  getWaitingDuration(waitingMinutes: number | null | undefined): string {
+    const elapsedMinutes = Math.max(0, waitingMinutes ?? 0);
+    const days = Math.floor(elapsedMinutes / 1440);
+    const hours = Math.floor((elapsedMinutes % 1440) / 60);
+    const minutes = elapsedMinutes % 60;
+
+    if (days > 0) return `Da ${days}g ${hours}h`;
+    if (hours > 0) return `Da ${hours}h ${minutes}m`;
+    return `Da ${minutes} min`;
+  }
+
+  unlockPendingSend(send: Sends): void {
+    if (send.unblocking || !send.canUnlock) return;
+
+    send.unblocking = true;
+    this.sendService.unlockPendingSend(send.id).subscribe({
+      next: () => this.refreshSends(),
+      error: error => {
+        console.error('Errore durante lo sblocco della spedizione:', error);
+        send.unblocking = false;
+      }
+    });
+  }
+
 
   onPaginateChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
 
-    const userId = this.form.value.userId ?? '';
-    const startRaw = this.form.value.start;
-    const endRaw = this.form.value.end;
-    const sendType = this.form.value.sendType ?? '';
-    const currentState = this.form.value.currentState ?? '';
-    const recipientName = this.form.value.recipientName?.trim() ?? '';
-    const code = this.form.value.code?.trim() ?? '';
-    const codePresence = this.form.value.codePresence;
-
-    const startDate = startRaw ? new Date(startRaw) : new Date();
-    const endDate = endRaw ? new Date(endRaw) : new Date();
-
-    let params = {
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
-      totalCounts: this.totalRecords,
-      userId: userId,
-      startDate: startDate,
-      endDate: endDate,
-      sendType: sendType,
-      currentState: currentState,
-      recipientName: recipientName,
-      code: code,
-      noCod: codePresence ?? undefined
-    };
-    this.getSends(params);
+    this.refreshSends(true);
   }
   
   UpdateItem(item:Sends){
@@ -392,7 +507,9 @@ export class SendsComponent {
   DeleteItem(item:Sends){
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '500px'
+      width: '470px',
+      maxWidth: '92vw',
+      panelClass: 'confirm-action-dialog'
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {
@@ -417,11 +534,15 @@ export class SendsComponent {
         return 'row-base';
       case CurrentState.presaInCarico:
       case CurrentState.inlavorazione:
-        return 'row-success';
+        return 'row-processing';
       case CurrentState.accettatoOnline:
       case CurrentState.documentoValidato:
         return 'row-info';
+      case CurrentState.erroreConfirm:
+        return 'row-error-confirm';
       default:
+        // Ogni stato non operativo viene trattato visivamente come anomalia,
+        // anche se verranno aggiunti nuovi codici di errore in futuro.
         return 'row-error';
     }
   }
@@ -503,6 +624,15 @@ export class SendsComponent {
       }
     });
 
+  }
+
+  openSendFromRow(event: MouseEvent, send: Sends): void {
+    const target = event.target as Element | null;
+    if (target?.closest('button, input, a, .mat-mdc-checkbox, .cursor-pointer')) {
+      return;
+    }
+
+    this.gotoDetails(send);
   }
 
   isTruncated(element: HTMLElement): boolean {

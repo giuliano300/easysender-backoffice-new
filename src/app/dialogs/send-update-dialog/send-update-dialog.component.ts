@@ -26,24 +26,30 @@ export class SendUpdateDialogComponent {
   fieldLabels: { [key: string]: string } = {
     zipCodeSender: 'CAP',
     citySender: 'Città',
+    provinceSender: 'Provincia',
     stateSender: 'Stato',
     zipCodeSenderAR: 'CAP',
     citySenderAR: 'Città',
+    provinceSenderAR: 'Provincia',
     stateSenderAR: 'Stato',
     zipCode: 'CAP',
     city: 'Città',
+    province: 'Provincia',
     state: 'Stato'
   };
 
   fieldIcons: { [key: string]: string } = {
     zipCodeSender: 'code',
     citySender: 'map-pin',
+    provinceSender: 'map',
     stateSender: 'flag',    
     zipCodeSenderAR: 'code',
     citySenderAR: 'map-pin',
+    provinceSenderAR: 'map',
     stateSenderAR: 'flag',
     zipCode: 'code',
     city: 'map-pin',
+    province: 'map',
     state: 'flag'
 
   };  
@@ -74,6 +80,7 @@ export class SendUpdateDialogComponent {
       addressSender: [this.data?.addressSender || '', Validators.required],
       zipCodeSender: [this.data?.zipCodeSender || '', Validators.required],
       citySender: [this.data?.citySender || '', Validators.required],
+      provinceSender: [this.data?.provinceSender || '', Validators.required],
       stateSender: [this.data?.stateSender || '', Validators.required],
 
       senderAR: [this.data?.senderAR || ''],
@@ -82,6 +89,7 @@ export class SendUpdateDialogComponent {
       complementAddressSenderAR: [this.data?.complementAddressSenderAR || ''],
       zipCodeSenderAR: [this.data?.zipCodeSenderAR || ''],
       citySenderAR: [this.data?.citySenderAR || ''],
+      provinceSenderAR: [this.data?.provinceSenderAR || ''],
       stateSenderAR: [this.data?.stateSenderAR || ''],
 
       complementName: [this.data?.complementName || ''],
@@ -89,6 +97,7 @@ export class SendUpdateDialogComponent {
       complementAddress: [this.data?.complementAddress || ''],
       zipCode: [this.data?.zipCode || '', Validators.required],
       city: [this.data?.city || '', Validators.required],
+      province: [this.data?.province || '', Validators.required],
       state: [this.data?.state || '', Validators.required],
       fileName: [{value: this.data?.fileName || '',  disabled: true}]
     });
@@ -121,6 +130,7 @@ export class SendUpdateDialogComponent {
         complementAddressSender: raw.complementAddressSender,
         zipCodeSender: raw.zipCodeSender,
         citySender: raw.citySender,
+        provinceSender: raw.provinceSender,
         stateSender: raw.stateSender,
 
         senderAR: raw.senderAR,
@@ -129,6 +139,7 @@ export class SendUpdateDialogComponent {
         complementAddressSenderAR: raw.complementAddressSenderAR,
         zipCodeSenderAR: raw.zipCodeSenderAR,
         citySenderAR: raw.citySenderAR,
+        provinceSenderAR: raw.provinceSenderAR,
         stateSenderAR: raw.stateSenderAR,
 
         complementName: raw.complementName,
@@ -136,6 +147,7 @@ export class SendUpdateDialogComponent {
         complementAddress: raw.complementAddress,
         zipCode: raw.zipCode,
         city: raw.city,
+        province: raw.province,
         state: raw.state,
         fileName: raw.fileName,
         attachedFile: this.attachedFile!

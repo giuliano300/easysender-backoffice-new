@@ -89,10 +89,10 @@
                     </ng-container>
 
                     <ng-container matColumnDef="usernameOldSite">
-                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0 text-start">
                             Email vecchio sito
                         </th>
-                        <td mat-cell *matCellDef="let element" class="pl-0">
+                        <td mat-cell *matCellDef="let element" class="pl-0 text-start">
                             <div class="position-relative">
                                 <h6 class="mt-0 mb-0 truncate" #oldSiteEmail
                                     matTooltipClass="mat-tooltip"
@@ -106,10 +106,10 @@
                     </ng-container>
 
                     <ng-container matColumnDef="passwordOldSite">
-                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                        <th mat-header-cell *matHeaderCellDef class="text-start pl-0">
                             Password vecchio sito
                         </th>
-                        <td mat-cell *matCellDef="let element" class="pl-0">
+                        <td mat-cell *matCellDef="let element" class="text-start pl-0">
                             <div class="position-relative">
                                 <h6 class="mt-0 mb-0">
                                     {{element.user.passwordOldSite || '—'}}
@@ -119,10 +119,10 @@
                     </ng-container>
 
                     <ng-container matColumnDef="enabled">
-                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                        <th mat-header-cell *matHeaderCellDef class="text-center pl-0">
                             Attivo
                         </th>
-                        <td mat-cell *matCellDef="let element" class="pl-0">
+                        <td mat-cell *matCellDef="let element"  class="text-center pr-0">
                             <div class="position-relative">
                                 <h6 class="mt-0 mb-0">
                                     {{element.user.enabled ? "SI" : "NO"}}
@@ -130,7 +130,18 @@
                             </div>
                         </td>
                     </ng-container>
-
+                    <ng-container matColumnDef="sottoutenza">
+                        <th mat-header-cell *matHeaderCellDef class="pl-0">
+                            Sott.ut.
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center pr-0">
+                            <div class="position-relative">
+                                <button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto count-link" (click)="UsersItem(element)">
+                                    ({{element.childrenCount ?? 0}})
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
                     <ng-container matColumnDef="edit">
                         <th mat-header-cell *matHeaderCellDef class="text-center pr-0">
                             Modifica

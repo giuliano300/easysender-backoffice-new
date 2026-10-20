@@ -8,6 +8,7 @@ export interface UpdateRecipient {
   complementAddressSender?: string;
   zipCodeSender?: string;
   citySender?: string;
+  provinceSender?: string;
   stateSender?: string;
 
   senderAR?: string;
@@ -16,6 +17,7 @@ export interface UpdateRecipient {
   complementAddressSenderAR?: string;
   zipCodeSenderAR?: string;
   citySenderAR?: string;
+  provinceSenderAR?: string;
   stateSenderAR?: string;
 
   complementName: string;
@@ -23,6 +25,7 @@ export interface UpdateRecipient {
   complementAddress: string;
   zipCode?: string;
   city?: string;
+  province?: string;
   state?: string;
   fileName: string;
   attachedFile: string;

@@ -36,8 +36,8 @@
         <div class="field-control"><label for="addressSender">Indirizzo</label><input id="addressSender" formControlName="addressSender"></div>
         <div class="field-control"><label for="complementAddressSender">Completamento indirizzo</label><input id="complementAddressSender" formControlName="complementAddressSender"></div>
       </div>
-      <div class="form-grid three-columns compact-row">
-        <div class="field-control" *ngFor="let field of ['zipCodeSender', 'citySender', 'stateSender']">
+      <div class="form-grid four-columns compact-row">
+        <div class="field-control" *ngFor="let field of ['zipCodeSender', 'citySender', 'provinceSender', 'stateSender']">
           <label [for]="field">{{ fieldLabels[field] }}</label><input [id]="field" [formControlName]="field">
         </div>
       </div>
@@ -54,8 +54,8 @@
         <div class="field-control"><label for="address">Indirizzo</label><input id="address" formControlName="address"></div>
         <div class="field-control"><label for="complementAddress">Completamento indirizzo</label><input id="complementAddress" formControlName="complementAddress"></div>
       </div>
-      <div class="form-grid three-columns compact-row">
-        <div class="field-control" *ngFor="let field of ['zipCode', 'city', 'state']">
+      <div class="form-grid four-columns compact-row">
+        <div class="field-control" *ngFor="let field of ['zipCode', 'city', 'province', 'state']">
           <label [for]="field">{{ fieldLabels[field] }}</label><input [id]="field" [formControlName]="field">
         </div>
       </div>
@@ -72,8 +72,8 @@
         <div class="field-control"><label for="addressSenderAR">Indirizzo AR</label><input id="addressSenderAR" formControlName="addressSenderAR"></div>
         <div class="field-control"><label for="complementAddressSenderAR">Completamento indirizzo AR</label><input id="complementAddressSenderAR" formControlName="complementAddressSenderAR"></div>
       </div>
-      <div class="form-grid three-columns compact-row">
-        <div class="field-control" *ngFor="let field of ['zipCodeSenderAR', 'citySenderAR', 'stateSenderAR']">
+      <div class="form-grid four-columns compact-row">
+        <div class="field-control" *ngFor="let field of ['zipCodeSenderAR', 'citySenderAR', 'provinceSenderAR', 'stateSenderAR']">
           <label [for]="field">{{ fieldLabels[field] }}</label><input [id]="field" [formControlName]="field">
         </div>
       </div>

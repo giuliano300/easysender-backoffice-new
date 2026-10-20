@@ -24,13 +24,13 @@ export class SendsService {
     recipientName?: string;
     code?: string;
     noCod?: number;
+    waitingMinutes?: number;
     pageIndex?: number;
     pageSize?: number;
     totalCounts?: number;
     } = {}): Observable<{ data: Sends[]; totalCount: number; arScansCount: number }> {
 
-  const formatDate = (date: Date) =>
-    date.toISOString().split('T')[0];
+  const formatDate = (date: Date) => this.formatLocalDate(date);
 
     const params = new HttpParams({ fromObject: {
       ...(filters.totalCounts !== undefined && { totalCounts: filters.totalCounts }),
@@ -44,11 +44,16 @@ export class SendsService {
       ...(filters.recipientName && { recipientName: filters.recipientName }),
       ...(filters.code && { code: filters.code }),
       ...(filters.noCod !== undefined && { noCod: filters.noCod }),
+      ...(filters.waitingMinutes !== undefined && { waitingMinutes: filters.waitingMinutes }),
     }});
 
     //console.log(params.toString());
 
     return this.http.get<{ data: Sends[]; totalCount: number; arScansCount: number }>(this.apiUrl + '/GetSends', { params });
+  }
+
+  unlockPendingSend(recipientId: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/UnlockPending/${recipientId}`, {});
   }
 
   downloadArScan(recipientId: number): Observable<Blob> {
@@ -72,8 +77,7 @@ export class SendsService {
     sendType?: number;
     } = {}): Observable<Reports[]> {
 
-    const formatDate = (date: Date) =>
-      date.toISOString().split('T')[0];
+    const formatDate = (date: Date) => this.formatLocalDate(date);
 
     const params = new HttpParams({ fromObject: {
         ...(filters.userId !== undefined && { userId: filters.userId }),
@@ -91,8 +95,7 @@ export class SendsService {
     endDate?: Date;
     } = {}): Observable<TotalReport[]> {
  
-    const formatDate = (date: Date) =>
-      date.toISOString().split('T')[0];
+    const formatDate = (date: Date) => this.formatLocalDate(date);
 
     const params = new HttpParams({ fromObject: {
       ...(filters.userId !== undefined && { userId: filters.userId }),
@@ -103,6 +106,13 @@ export class SendsService {
     console.log(params.toString());
 
     return this.http.get<TotalReport[]>(this.apiUrl + '/GetTotalReport', { params });
+  }
+
+  private formatLocalDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
 }

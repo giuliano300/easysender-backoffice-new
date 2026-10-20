@@ -16,6 +16,8 @@ import { FeathericonsModule } from '../../icons/feathericons/feathericons.module
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CsvExportService } from '../../services/csv-export.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -33,14 +35,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatLabel,
     ReactiveFormsModule,
     MatInputModule,
-    MatTooltipModule
+    MatTooltipModule,
+    CommonModule
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
 export class UsersComponent {
 
-  displayedColumns: string[] = ['businessName', 'vatNumber', 'email', 'address', 'usernamePoste', 'passwordPoste', 'enabled', 'doubleFactor', 'ged', 'users', 'linkedUsers', 'edit', 'delete'];
+  displayedColumns: string[] = ['businessName', 'vatNumber', 'email', 'password', 'enabled', 'doubleFactor', 'ged', 'users', 'linkedUsers', 'edit', 'delete'];
 
   completeUser: CompleteUser[] = [];
 
@@ -57,7 +60,8 @@ export class UsersComponent {
       private dialog: MatDialog, 
       private router: Router,
       private fb: FormBuilder,
-      private usersService: UsersService
+      private usersService: UsersService,
+      private csvExport: CsvExportService
   ) 
   {
     this.form = this.fb.group({
@@ -86,6 +90,22 @@ export class UsersComponent {
       nominativo: ''
     });
     this.isFiltered = false;
+  }
+
+  exportFilteredUsers(): void {
+    this.csvExport.download('utenti-filtrati', this.completeUser, [
+      { header: 'ID', value: row => row.user.id },
+      { header: 'Nominativo', value: row => row.user.businessName },
+      { header: 'Partita IVA', value: row => row.user.vatNumber },
+      { header: 'Email', value: row => row.user.email },
+      { header: 'Indirizzo', value: row => [row.user.address, row.user.zipCode, row.user.city, row.user.province].filter(Boolean).join(', ') },
+      { header: 'Password EasySender', value: row => row.user.password },
+      { header: 'Attivo', value: row => row.user.enabled ? 'Sì' : 'No' },
+      { header: '2FA', value: row => row.user.doubleFactor ? 'Sì' : 'No' },
+      { header: 'GED', value: row => row.gedEnabled ? 'Sì' : 'No' },
+      { header: 'Sottoutenti', value: row => row.childrenCount ?? 0 },
+      { header: 'Utenze collegate', value: row => row.linkedUsersCount ?? 0 }
+    ]);
   }
 
   change2F(user:any){
@@ -147,7 +167,9 @@ export class UsersComponent {
   DeleteItem(item:CompleteUser){
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '500px'
+      width: '470px',
+      maxWidth: '92vw',
+      panelClass: 'confirm-action-dialog'
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {

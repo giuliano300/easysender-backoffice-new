@@ -42,6 +42,8 @@ export class ChildrenComponent {
 
   linkedUser = false;
 
+  linkedin: string = "";
+
   completeUser: CompleteUser[] = [];
 
   form: FormGroup;
@@ -74,9 +76,13 @@ export class ChildrenComponent {
     if (!token) 
       this.router.navigate(['/']);
 
+
+    this.linkedin = this.router.url.includes('/linkedin') == true ? 'linkedin' : '';
+    console.log("Route data:", this.linkedin);
+
     this.linkedUser = this.route.snapshot.data['linkedUser'] === true;
     this.displayedColumns = this.linkedUser
-      ? ['businessName', 'email', 'address', 'usernameOldSite', 'passwordOldSite', 'enabled', 'edit', 'delete']
+      ? ['businessName', 'email', 'address', 'usernameOldSite', 'passwordOldSite', 'enabled', 'sottoutenza', 'edit', 'delete']
       : ['userTypes', 'businessName', 'email', 'address', 'usernameOldSite', 'passwordOldSite', 'enabled', 'edit', 'delete'];
 
     this.route.paramMap.subscribe(params => {
@@ -88,8 +94,12 @@ export class ChildrenComponent {
 
   }
 
+  UsersItem(item:CompleteUser){
+     this.router.navigate(["/users/children/" + item.user.id + "/linkedin"]);
+  }
+
   AddChildren(){
-      this.router.navigate([this.linkedUser ? '/users/add-linked/' + this.id : '/users/add-children/' + this.id]);
+      this.router.navigate([this.linkedUser ? '/users/add-linked/' + this.id : '/users/add-children/' + this.id + "/" + this.linkedin]);
   }
 
   onSubmit(){
@@ -107,6 +117,11 @@ export class ChildrenComponent {
   }
 
   getUsers(filter: string = "") {
+
+    this.usersService.getUserById(parseInt(this.id!)).subscribe(({ user }) => {
+      this.utente = user.businessName;
+    });
+    
     const request = this.linkedUser
       ? this.usersService.getLinkedUsers(parseInt(this.id!), filter)
       : this.usersService.getUsers(filter, parseInt(this.id!));
@@ -117,6 +132,7 @@ export class ChildrenComponent {
         const detailRequests = data.map(item => this.usersService.getUserById(item.user.id));
 
         forkJoin({ parent: parentRequest, details: forkJoin(detailRequests) }).subscribe(({ parent, details }) => {
+          console.log(data);
           this.utente = parent.user.businessName;
           this.completeUser = data
           .sort((a, b) => b.user.id - a.user.id)
@@ -165,7 +181,9 @@ export class ChildrenComponent {
   DeleteItem(item:CompleteUser){
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '500px'
+      width: '470px',
+      maxWidth: '92vw',
+      panelClass: 'confirm-action-dialog'
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {

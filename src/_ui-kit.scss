@@ -363,6 +363,7 @@
                     border-radius: 10px;
                     padding: 0 15px 0 60px;
                     border: 1px solid #f5f7fa;
+                    min-height: 30px!important;
                 }
                 .date-input {
                     .mat-mdc-text-field-wrapper {
@@ -1666,3 +1667,8 @@ blockquote {
 
 /* Min width 1600px */
 @media only screen and (min-width: 1600px) {}
+
+
+.mat-mdc-select{
+    text-align: center!important;
+}

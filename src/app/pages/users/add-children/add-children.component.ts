@@ -28,6 +28,8 @@ export class AddChildrenComponent {
 
   linkedUser = false;
 
+  linkedin: string = "";
+
   form: FormGroup;
 
   constructor(
@@ -105,7 +107,9 @@ export class AddChildrenComponent {
   }
   
   goToUser() {
-      this.router.navigate([this.linkedUser ? '/users/linked/' + this.id : '/users/children/' + this.id]);
+      this.linkedin = this.router.url.includes('/linkedin') == true ? 'linkedin' : '';
+
+      this.router.navigate([this.linkedUser ? '/users/linked/' + this.id : '/users/children/' + this.id + "/" + this.linkedin]);
   }
   
   goToUsers() {

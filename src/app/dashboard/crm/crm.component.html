@@ -89,25 +89,25 @@
             <span class="section-status danger"><i class="ri-error-warning-line"></i> Da verificare</span>
         </header>
         <div class="kpi-grid">
-            <article class="kpi-card tone-danger">
+            <article class="kpi-card tone-danger error-link" role="button" tabindex="0" (click)="goToErrorSends('today')" (keydown.enter)="goToErrorSends('today')">
                 <span class="kpi-icon"><i class="ri-alarm-warning-line"></i></span>
                 <span class="kpi-label">Oggi</span>
                 <strong>{{ g?.dayErrors ?? 0 }}</strong>
                 <small>Errori del giorno</small>
             </article>
-            <article class="kpi-card tone-danger">
+            <article class="kpi-card tone-danger error-link" role="button" tabindex="0" (click)="goToErrorSends('week')" (keydown.enter)="goToErrorSends('week')">
                 <span class="kpi-icon"><i class="ri-calendar-event-line"></i></span>
                 <span class="kpi-label">Settimana</span>
                 <strong>{{ g?.weekErrors ?? 0 }}</strong>
                 <small>Errori degli ultimi 7 giorni</small>
             </article>
-            <article class="kpi-card tone-danger">
+            <article class="kpi-card tone-danger error-link" role="button" tabindex="0" (click)="goToErrorSends('month')" (keydown.enter)="goToErrorSends('month')">
                 <span class="kpi-icon"><i class="ri-calendar-close-line"></i></span>
                 <span class="kpi-label">Mese corrente</span>
                 <strong>{{ g?.monthErrors ?? 0 }}</strong>
                 <small>Errori del mese</small>
             </article>
-            <article class="kpi-card tone-danger">
+            <article class="kpi-card tone-danger error-link" role="button" tabindex="0" (click)="goToErrorSends('previous-month')" (keydown.enter)="goToErrorSends('previous-month')">
                 <span class="kpi-icon"><i class="ri-history-line"></i></span>
                 <span class="kpi-label">Mese precedente</span>
                 <strong>{{ g?.previousMonthErrors ?? 0 }}</strong>

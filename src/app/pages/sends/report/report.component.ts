@@ -26,6 +26,7 @@ import { CompleteUser } from '../../../interfaces/CompleteUser';
 import { UsersService } from '../../../services/users.service';
 import { Reports } from '../../../interfaces/Reports';
 import { MatProgressBar } from "@angular/material/progress-bar";
+import { CsvExportService } from '../../../services/csv-export.service';
 
 export const IT_DATE_FORMATS = {
   parse: {
@@ -122,7 +123,8 @@ export class ReportComponent {
       private fb: FormBuilder,
       private sendService: SendsService,
       public utils: UtilsService,
-      private usersService: UsersService
+      private usersService: UsersService,
+      private csvExport: CsvExportService
   ) 
   {
     this.newDate.setDate(this.newDate.getDate() + this.daysToAdd);
@@ -225,6 +227,16 @@ export class ReportComponent {
     this.getReports(params);
 
     this.isFiltered = false;
+  }
+
+  exportFilteredReports(): void {
+    this.csvExport.download('report-invii-filtrato', this.reports, [
+      { header: 'Utente', value: row => row.userComplete },
+      { header: 'Invii', value: row => row.sends },
+      { header: 'GED', value: row => row.ged },
+      { header: 'GED Poste', value: row => row.gedPoste },
+      { header: 'Costo', value: row => row.price }
+    ]);
   }
 
   getReports(filter: any = "") {

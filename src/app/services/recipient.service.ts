@@ -72,6 +72,8 @@ export class RecipientService {
 
   requestFinalDoc(s: Sends): Observable<StatusFileResponses>{
     switch(s.type.toUpperCase()){
+       case "LOL":
+        return this.http.get<StatusFileResponses>(this.apiUrlStatus + "/DOCLOL/" + s.id)
        case "ROL":
         return this.http.get<StatusFileResponses>(this.apiUrlStatus + "/DOCROL/" + s.id)
        case "MOL":

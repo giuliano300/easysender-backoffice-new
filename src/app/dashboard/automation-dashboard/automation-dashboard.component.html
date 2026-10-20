@@ -31,6 +31,32 @@
     </div>
   </section>
 
+  <section class="configuration-launch" *ngIf="!settingsOpened">
+    <div><span class="page-eyebrow">CONFIGURAZIONE</span><strong>Orari e intervalli automazioni</strong><small>Gestisci sospensioni, fasce orarie e frequenze di esecuzione.</small></div>
+    <button type="button" (click)="openSettings()">Configura automazioni</button>
+  </section>
+
+  <section class="schedule-section" *ngIf="settingsOpened">
+    <header class="schedule-head"><div class="schedule-title"><span class="schedule-icon"><i class="ri-time-line"></i></span><div><span class="page-eyebrow">CONFIGURAZIONE</span><h2>Orari e intervalli automazioni</h2><p>Gestisci esecuzione, sospensioni e fasce orarie dei servizi.</p></div></div><div class="schedule-head-actions"><span class="schedule-count">{{ settings.length || 30 }} fasi</span><button type="button" class="close-settings" (click)="closeSettings()"><i class="ri-close-line"></i> Chiudi</button></div></header>
+    <mat-progress-bar *ngIf="settingsLoading" mode="indeterminate"></mat-progress-bar>
+    <div class="error-box" *ngIf="settingsError">{{ settingsError }}</div>
+    <div class="schedule-groups" *ngIf="!settingsLoading && settings.length">
+      <mat-card class="trinta-card schedule-card bg-white border-none d-block" *ngFor="let group of groupedSettings">
+        <mat-card-content><header><h3>{{ group.service }}</h3><span>{{ group.settings.length }} fasi</span></header>
+          <div class="schedule-table-wrap"><table class="schedule-table"><thead><tr><th>Fase</th><th>Stato</th><th>Da</th><th>A</th><th>Ogni</th><th>Elementi</th><th></th></tr></thead>
+            <tbody><tr *ngFor="let setting of group.settings" [class.suspended]="!setting.enabled"><td><strong>{{ setting.phase }}</strong></td>
+              <td class="automation-state"><button type="button" class="state-button" [class.off]="!setting.enabled" (click)="toggleSetting(setting)" [disabled]="savingKey === setting.automationKey">{{ setting.enabled ? 'Sospendi' : 'Riprendi' }}</button></td>
+              <td><input type="time" [value]="setting.startTime || ''" (change)="setTime(setting, 'startTime', $any($event.target).value)"></td>
+              <td><input type="time" [value]="setting.endTime || ''" (change)="setTime(setting, 'endTime', $any($event.target).value)"></td>
+              <td><label class="interval-input"><input type="number" min="1" max="1440" [value]="setting.intervalMinutes" (change)="setInterval(setting, $any($event.target).value)"><span>min</span></label></td>
+              <td><label class="interval-input"><input type="number" min="1" max="500" [value]="setting.batchSize" (change)="setBatchSize(setting, $any($event.target).value)"><span>per ciclo</span></label></td>
+              <td class="schedule-actions"><button type="button" class="run-now-button" (click)="runNow(setting)" [disabled]="savingKey === setting.automationKey"><i class="ri-play-line"></i> Esegui ora</button><button type="button" class="save-button" (click)="saveSetting(setting)" [disabled]="savingKey === setting.automationKey">Salva</button><button type="button" class="restart-button" (click)="restartSetting(setting)" [disabled]="savingKey === setting.automationKey">Riavvia</button></td>
+            </tr></tbody></table></div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
   <section class="product-grid">
     <mat-card class="trinta-card product-card bg-white border-none d-block" *ngFor="let group of groupedSystems">
       <mat-card-content>
@@ -46,6 +72,7 @@
               <tr>
                 <th>Servizio</th>
                 <th>Stato</th>
+                <th>Automazione</th>
                 <th class="text-right">Messaggi RabbitMQ</th>
                 <th class="text-right">Consumer RabbitMQ</th>
               </tr>
@@ -65,6 +92,12 @@
                   <span class="status-pill" [ngClass]="system.status" [title]="statusDescription(system)">
                     {{ statusLabel(system.status) }}
                     <small>{{ statusDescription(system) }}</small>
+                  </span>
+                </td>
+                <td>
+                  <span class="automation-status-pill" [class.suspended]="!system.automationEnabled">
+                    <i [class]="system.automationEnabled ? 'ri-checkbox-circle-line' : 'ri-pause-circle-line'"></i>
+                    {{ system.automationEnabled ? 'Attiva' : 'Sospesa' }}
                   </span>
                 </td>
                 <td class="text-right"><strong class="table-number">{{ system.rabbitMessages | number:'1.0-0' }}</strong></td>

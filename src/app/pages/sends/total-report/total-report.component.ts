@@ -27,6 +27,7 @@ import { UsersService } from '../../../services/users.service';
 import { Reports } from '../../../interfaces/Reports';
 import { TotalReport } from '../../../interfaces/TotalReport';
 import { MatProgressBar } from "@angular/material/progress-bar";
+import { CsvExportService } from '../../../services/csv-export.service';
 
 export const IT_DATE_FORMATS = {
   parse: {
@@ -124,7 +125,8 @@ export class TotalReportComponent {
       private fb: FormBuilder,
       private sendService: SendsService,
       public utils: UtilsService,
-      private usersService: UsersService
+      private usersService: UsersService,
+      private csvExport: CsvExportService
   ) 
   {
     this.newDate.setDate(this.newDate.getDate() + this.daysToAdd);
@@ -210,6 +212,20 @@ export class TotalReportComponent {
     this.getTotalReports(params);
 
     this.isFiltered = false;
+  }
+
+  exportFilteredReports(): void {
+    this.csvExport.download('report-generale-filtrato', this.reports, [
+      { header: 'Utente', value: row => row.userComplete },
+      { header: 'ROL', value: row => row.rol }, { header: 'Costo ROL', value: row => row.rolPrice },
+      { header: 'LOL', value: row => row.lol }, { header: 'Costo LOL', value: row => row.lolPrice },
+      { header: 'TOL', value: row => row.tol }, { header: 'Costo TOL', value: row => row.tolPrice },
+      { header: 'MOL', value: row => row.mol }, { header: 'Costo MOL', value: row => row.molPrice },
+      { header: 'COL', value: row => row.col }, { header: 'Costo COL', value: row => row.colPrice },
+      { header: 'VOL', value: row => row.vol }, { header: 'Costo VOL', value: row => row.volPrice },
+      { header: 'AGOL', value: row => row.agol }, { header: 'Costo AGOL', value: row => row.agolPrice },
+      { header: 'Totale invii', value: row => row.sends }
+    ]);
   }
 
   getTotalReports(filter: any = "") {

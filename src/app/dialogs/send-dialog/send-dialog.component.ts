@@ -71,8 +71,9 @@ export class SendDialogComponent {
         }
         const dialogRef = this.dialog.open(alertDialogComponent, {
           data: data,
-          width: '600px',
-          minWidth: '600px'
+          width: '540px',
+          maxWidth: '92vw',
+          panelClass: 'alert-action-dialog'
         });
         send.loading = false; 
       },

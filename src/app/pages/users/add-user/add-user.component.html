@@ -11,7 +11,7 @@
         <p>Configura dati aziendali, accessi e servizi dell’utenza.</p>
     </div>
 </section>
-<mat-card class="trinta-card mb-25 bg-white border-none d-block">
+<mat-card class="trinta-card user-wizard-card mb-25 bg-white border-none d-block">
     <mat-card-content>
         <div *ngIf="errorMessage" class="error mb-20">
             {{errorMessage}}
@@ -19,9 +19,13 @@
         <mat-stepper #stepper>
             <mat-step>
                 <ng-template matStepLabel>
-                    Dati azienda
+                    <span class="wizard-tab-label"><i class="ri-building-2-line"></i><span>Dati azienda</span></span>
                 </ng-template>
-                <form [formGroup]="form1" (ngSubmit)="saveForm1()">
+                <div class="wizard-step-intro">
+                    <span>01</span>
+                    <div><small>PROFILO AZIENDALE</small><h2>Dati dell’azienda</h2><p>Inserisci i riferimenti fiscali, la sede e la durata del contratto.</p></div>
+                </div>
+                <form class="wizard-form" [formGroup]="form1" (ngSubmit)="saveForm1()">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="mb-20 relative">
@@ -180,16 +184,20 @@
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div class="wizard-actions">
                         <button mat-button class="next" matStepperNext [disabled]="!form1.valid">Avanti</button>
                     </div>
                 </form>
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>
-                    Dati di login
+                    <span class="wizard-tab-label"><i class="ri-key-2-line"></i><span>Dati di login</span></span>
                 </ng-template>
-                <form [formGroup]="form2" (ngSubmit)="saveForm2()">
+                <div class="wizard-step-intro">
+                    <span>02</span>
+                    <div><small>ACCESSI</small><h2>Credenziali e login</h2><p>Configura l’accesso Poste, EasySender e, se necessario, la vecchia piattaforma.</p></div>
+                </div>
+                <form class="wizard-form" [formGroup]="form2" (ngSubmit)="saveForm2()">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
@@ -281,7 +289,7 @@
                                 </div>
                             </div>
                         </div>
-                        <h2>Accesso alla vecchia piattaforma</h2>
+                        <h2 class="legacy-login-title">Accesso alla vecchia piattaforma</h2>
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
                                 <label class="main-label d-block lh-1 text-black mb-10">
@@ -311,7 +319,7 @@
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div class="wizard-actions">
                         <button mat-button class="filterRemove mr-15" matStepperPrevious>Indietro</button>
                         <button mat-button class="next" matStepperNext [disabled]="!form2.valid || !accessValid">Avanti</button>
                     </div>
@@ -319,9 +327,13 @@
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>
-                    Prodotti
+                    <span class="wizard-tab-label"><i class="ri-apps-2-line"></i><span>Prodotti</span></span>
                 </ng-template>
-                <form [formGroup]="form3" (ngSubmit)="saveForm3()">
+                <div class="wizard-step-intro">
+                    <span>03</span>
+                    <div><small>SERVIZI</small><h2>Codici contratto</h2><p>Associa i codici dei prodotti e servizi abilitati per l’utenza.</p></div>
+                </div>
+                <form class="wizard-form" [formGroup]="form3" (ngSubmit)="saveForm3()">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
@@ -408,7 +420,7 @@
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div class="wizard-actions">
                         <button mat-button class="filterRemove mr-15" matStepperPrevious>Indietro</button>
                         <button mat-button  class="next" matStepperNext color="primary">Avanti</button>
                     </div>
@@ -416,9 +428,13 @@
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>
-                   Opzioni
+                   <span class="wizard-tab-label"><i class="ri-settings-3-line"></i><span>Opzioni</span></span>
                 </ng-template>
-                <form [formGroup]="form4" (ngSubmit)="saveForm4()">
+                <div class="wizard-step-intro">
+                    <span>04</span>
+                    <div><small>CONFIGURAZIONE</small><h2>Opzioni dell’utenza</h2><p>Definisci visibilità prezzi, ricevute di ritorno e integrazione GED.</p></div>
+                </div>
+                <form class="wizard-form" [formGroup]="form4" (ngSubmit)="saveForm4()">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="mb-20">
@@ -500,7 +516,7 @@
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div class="wizard-actions">
                         <button mat-button class="filterRemove mr-15" matStepperPrevious>Indietro</button>
                         <button mat-button  class="next" matStepperNext color="primary">Fine</button>
                     </div>

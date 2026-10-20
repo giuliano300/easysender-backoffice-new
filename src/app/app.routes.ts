@@ -68,7 +68,17 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: 'users/children/:id/linkedin',
+        component: ChildrenComponent,
+        canActivate: [AuthGuard]
+    },
+    {
         path: 'users/add-children/:id',
+        component: AddChildrenComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'users/add-children/:id/linkedin',
         component: AddChildrenComponent,
         canActivate: [AuthGuard]
     },

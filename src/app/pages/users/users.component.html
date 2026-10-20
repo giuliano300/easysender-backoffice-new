@@ -9,6 +9,9 @@
         <h1>Utenti</h1>
         <p>Cerca e gestisci clienti, sottoutenti e utenze collegate.</p>
     </div>
+    <button type="button" class="page-head-action csv-page-export" (click)="exportFilteredUsers()">
+        <i class="ri-file-download-line"></i> Esporta CSV
+    </button>
 </section>
 <mat-card class="trinta-card to-do-list-card mb-10 bg-white border-none d-block filter filter-card filters">
     <mat-card-content>
@@ -106,44 +109,15 @@
                             </div>
                         </td>
                     </ng-container>
-                    <ng-container matColumnDef="address">
-                        <th mat-header-cell *matHeaderCellDef class="pl-0">
-                            Indirizzo
-                        </th>
-                        <td mat-cell *matCellDef="let element" class="pl-0">
-                            <div class="position-relative">
-                                <h6 class="mt-0 mb-0 truncate" #address
-                                    matTooltipClass="mat-tooltip"
-                                    matTooltip="{{element.user.address}}"
-                                    matTooltipPosition="below"
-                                    [matTooltipDisabled]="!isTruncated(address)">
-                                    {{element.user.address}}
-                                </h6>
-                            </div>
-                        </td>
-                    </ng-container>
 
-                    <ng-container matColumnDef="usernamePoste">
+                    <ng-container matColumnDef="password">
                         <th mat-header-cell *matHeaderCellDef class="pl-0">
-                            Username Poste
+                            Password EasySender
                         </th>
                         <td mat-cell *matCellDef="let element" class="pl-0">
                             <div class="position-relative">
                                 <h6 class="mt-0 mb-0">
-                                    {{element.user.usernamePoste}}
-                                </h6>
-                            </div>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="passwordPoste">
-                        <th mat-header-cell *matHeaderCellDef class="pl-0">
-                            Password Poste
-                        </th>
-                        <td mat-cell *matCellDef="let element" class="pl-0">
-                            <div class="position-relative">
-                                <h6 class="mt-0 mb-0">
-                                    {{element.user.passwordPoste}}
+                                    {{element.user.password || '-'}}
                                 </h6>
                             </div>
                         </td>
