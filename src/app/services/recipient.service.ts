@@ -79,6 +79,8 @@ export class RecipientService {
        case "MOL":
         return this.http.get<StatusFileResponses>(this.apiUrlStatus + "/DOCMOL/" + s.id)
        case "COL":
+       case "COL1":
+       case "COL4":
         return this.http.get<StatusFileResponses>(this.apiUrlStatus + "/DOCCOL/" + s.id)
        case "AGOL":
         return this.http.get<StatusFileResponses>(this.apiUrlStatus + "/DOCAGOL/" + s.id)
