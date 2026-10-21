@@ -134,6 +134,7 @@ export class SendsComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   isFiltered: boolean = false;
+  dashboardProductTypes: number[] | null = null;
   exportingCsv = false;
 
   waitingThresholds = [
@@ -191,18 +192,29 @@ export class SendsComponent {
       this.router.navigate(['/']);
 
     const requestedStateParam = this.route.snapshot.queryParamMap.get('currentState');
+    const requestedStart = this.parseQueryDate(this.route.snapshot.queryParamMap.get('startDate'));
+    const requestedEnd = this.parseQueryDate(this.route.snapshot.queryParamMap.get('endDate'));
+    const allDates = this.route.snapshot.queryParamMap.get('allDates') === 'true';
+    const requestedProductTypes = this.route.snapshot.queryParamMap.get('productTypes');
+    this.dashboardProductTypes = requestedProductTypes
+      ? requestedProductTypes.split(',').map(value => Number(value)).filter(Number.isInteger)
+      : null;
+    if (allDates) {
+      this.form.patchValue({ start: null, end: null });
+    } else if (requestedStart && requestedEnd) {
+      this.form.patchValue({ start: requestedStart, end: requestedEnd });
+    }
     const requestedState = requestedStateParam === null ? null : Number(requestedStateParam);
     if (requestedState !== null && Number.isInteger(requestedState) && this.currentState.some((state: any) => state.id === requestedState)) {
       this.form.patchValue({ currentState: requestedState });
       if (requestedState === -1) {
-        const start = this.parseQueryDate(this.route.snapshot.queryParamMap.get('startDate'));
-        const end = this.parseQueryDate(this.route.snapshot.queryParamMap.get('endDate'));
-        if (start && end) {
-          this.form.patchValue({ start, end });
-        } else {
+        if (!requestedStart || !requestedEnd) {
           this.applyDashboardErrorPeriod(this.route.snapshot.queryParamMap.get('errorPeriod'));
         }
       }
+      this.isFiltered = true;
+    }
+    if (allDates || (requestedStart && requestedEnd) || this.dashboardProductTypes?.length) {
       this.isFiltered = true;
     }
 
@@ -260,6 +272,7 @@ export class SendsComponent {
       endDate: this.form.value.end ? new Date(this.form.value.end) : undefined,
       sendType: this.form.value.sendType ?? undefined,
       currentState,
+      productTypes: this.dashboardProductTypes ?? undefined,
       recipientName: this.form.value.recipientName?.trim() || undefined,
       code: this.form.value.code?.trim() || undefined,
       noCod: this.form.value.codePresence ?? undefined,
@@ -356,6 +369,7 @@ export class SendsComponent {
       userId:  '',
       userSearch: ''
     });
+    this.dashboardProductTypes = null;
     this.pageIndex = 0;
     if (this.paginator) {
       this.paginator.pageIndex = 0;

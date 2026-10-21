@@ -47,24 +47,34 @@ export class CrmComponent {
   }
 
   goToErrorSends(errorPeriod: 'today' | 'week' | 'month' | 'previous-month'): void {
+    this.goToSends(errorPeriod, -1);
+  }
+
+  goToSends(
+    period: 'today' | 'week' | 'month' | 'previous-month' | undefined,
+    currentState?: number,
+    productTypes?: number[]
+  ): void {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const start = new Date(today);
     const end = new Date(today);
 
-    if (errorPeriod === 'week') start.setDate(start.getDate() - 6);
-    if (errorPeriod === 'month') start.setDate(1);
-    if (errorPeriod === 'previous-month') {
+    if (period === 'week') start.setDate(start.getDate() - 6);
+    if (period === 'month') start.setDate(1);
+    if (period === 'previous-month') {
       start.setMonth(start.getMonth() - 1, 1);
       end.setDate(0);
     }
 
     this.router.navigate(['/sends'], {
       queryParams: {
-        currentState: -1,
-        errorPeriod,
-        startDate: this.toQueryDate(start),
-        endDate: this.toQueryDate(end)
+        ...(currentState !== undefined && { currentState }),
+        ...(productTypes?.length && { productTypes: productTypes.join(',') }),
+        ...(currentState === -1 && period && { errorPeriod: period }),
+        ...(period
+          ? { startDate: this.toQueryDate(start), endDate: this.toQueryDate(end) }
+          : { allDates: true })
       }
     });
   }

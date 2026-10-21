@@ -21,6 +21,7 @@ export class SendsService {
     endDate?: Date;
     sendType?: number;
     currentState?: number;
+    productTypes?: number[];
     recipientName?: string;
     code?: string;
     noCod?: number;
@@ -41,6 +42,7 @@ export class SendsService {
       ...(filters.endDate && { endDate: formatDate(filters.endDate) }),
       ...(filters.sendType !== undefined && { sendType: filters.sendType }),
       ...(filters.currentState !== undefined && { currentState: filters.currentState }),
+      ...(filters.productTypes?.length && { productTypes: filters.productTypes.join(',') }),
       ...(filters.recipientName && { recipientName: filters.recipientName }),
       ...(filters.code && { code: filters.code }),
       ...(filters.noCod !== undefined && { noCod: filters.noCod }),

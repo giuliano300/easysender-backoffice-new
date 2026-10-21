@@ -17,25 +17,25 @@
             <span class="section-status success"><i class="ri-checkbox-circle-line"></i> Regolari</span>
         </header>
         <div class="kpi-grid">
-            <article class="kpi-card tone-success">
+            <article class="kpi-card tone-success dashboard-link" role="button" tabindex="0" (click)="goToSends('today')" (keydown.enter)="goToSends('today')">
                 <span class="kpi-icon"><i class="ri-calendar-check-line"></i></span>
                 <span class="kpi-label">Oggi</span>
                 <strong>{{ g?.daySend ?? 0 }}</strong>
                 <small>Invii del giorno</small>
             </article>
-            <article class="kpi-card tone-success">
+            <article class="kpi-card tone-success dashboard-link" role="button" tabindex="0" (click)="goToSends('week')" (keydown.enter)="goToSends('week')">
                 <span class="kpi-icon"><i class="ri-calendar-2-line"></i></span>
                 <span class="kpi-label">Settimana</span>
                 <strong>{{ g?.weekSend ?? 0 }}</strong>
                 <small>Invii degli ultimi 7 giorni</small>
             </article>
-            <article class="kpi-card tone-success">
+            <article class="kpi-card tone-success dashboard-link" role="button" tabindex="0" (click)="goToSends('month')" (keydown.enter)="goToSends('month')">
                 <span class="kpi-icon"><i class="ri-calendar-line"></i></span>
                 <span class="kpi-label">Mese corrente</span>
                 <strong>{{ g?.monthSend ?? 0 }}</strong>
                 <small>Invii del mese</small>
             </article>
-            <article class="kpi-card tone-brand">
+            <article class="kpi-card tone-brand dashboard-link" role="button" tabindex="0" (click)="goToSends('previous-month')" (keydown.enter)="goToSends('previous-month')">
                 <span class="kpi-icon"><i class="ri-history-line"></i></span>
                 <span class="kpi-label">Mese precedente</span>
                 <strong>{{ g?.previousMonthSends ?? 0 }}</strong>
@@ -53,25 +53,25 @@
             <span class="section-status processing"><i class="ri-loader-4-line"></i> In corso</span>
         </header>
         <div class="kpi-grid">
-            <article class="kpi-card tone-processing">
+            <article class="kpi-card tone-processing dashboard-link" role="button" tabindex="0" (click)="goToSends(undefined, 0)" (keydown.enter)="goToSends(undefined, 0)">
                 <span class="kpi-icon"><i class="ri-timer-line"></i></span>
                 <span class="kpi-label">In attesa</span>
                 <strong>{{ g?.att ?? 0 }}</strong>
                 <small>In attesa online · c.s. 0</small>
             </article>
-            <article class="kpi-card tone-processing">
+            <article class="kpi-card tone-processing dashboard-link" role="button" tabindex="0" (click)="goToSends(undefined, 9)" (keydown.enter)="goToSends(undefined, 9)">
                 <span class="kpi-icon"><i class="ri-inbox-archive-line"></i></span>
                 <span class="kpi-label">Accettate</span>
                 <strong>{{ g?.acc ?? 0 }}</strong>
                 <small>Accettate online · c.s. 9</small>
             </article>
-            <article class="kpi-card tone-processing">
+            <article class="kpi-card tone-processing dashboard-link" role="button" tabindex="0" (click)="goToSends(undefined, 11)" (keydown.enter)="goToSends(undefined, 11)">
                 <span class="kpi-icon"><i class="ri-file-check-line"></i></span>
                 <span class="kpi-label">Validate</span>
                 <strong>{{ g?.val ?? 0 }}</strong>
                 <small>Documento validato · c.s. 11</small>
             </article>
-            <article class="kpi-card tone-processing">
+            <article class="kpi-card tone-processing dashboard-link" role="button" tabindex="0" (click)="goToSends(undefined, 1, [4, 5, 8])" (keydown.enter)="goToSends(undefined, 1, [4, 5, 8])">
                 <span class="kpi-icon"><i class="ri-loader-4-line"></i></span>
                 <span class="kpi-label">Accettazione finale</span>
                 <strong>{{ g?.ins ?? 0 }}</strong>
