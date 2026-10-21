@@ -83,6 +83,8 @@ export class RecipientService {
        case "COL4":
         return this.http.get<StatusFileResponses>(this.apiUrlStatus + "/DOCCOL/" + s.id)
        case "AGOL":
+       case "AGOLB":
+       case "AGOLM":
         return this.http.get<StatusFileResponses>(this.apiUrlStatus + "/DOCAGOL/" + s.id)
       default:
         return of({ state: 400, message: "Errore generico", file: undefined } as StatusFileResponses);
