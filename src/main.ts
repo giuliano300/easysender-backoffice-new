@@ -6,8 +6,9 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
-import { LOCALE_ID } from '@angular/core';
+import { isDevMode, LOCALE_ID } from '@angular/core';
 import { authInterceptor } from './app/interceptors/auth.interceptor';
+import { provideServiceWorker } from '@angular/service-worker';
 
 registerLocaleData(localeIt);
 
@@ -26,6 +27,10 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimations(),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
     { provide: LOCALE_ID, useValue: 'it-IT' }
   ]
 }).catch(err => console.error(err));

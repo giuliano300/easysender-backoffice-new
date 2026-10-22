@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Sends } from '../interfaces/Sends';
 import { Reports } from '../interfaces/Reports';
 import { TotalReport } from '../interfaces/TotalReport';
+import { OperationListItem } from '../interfaces/OperationListItem';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class SendsService {
   
   getSends(filters: {
     userId?: number;
+    operationId?: number;
     startDate?: Date;
     endDate?: Date;
     sendType?: number;
@@ -38,6 +40,7 @@ export class SendsService {
       ...(filters.pageIndex !== undefined && { pageIndex: filters.pageIndex }),
       ...(filters.pageSize !== undefined && { pageSize: filters.pageSize }),
       ...(filters.userId !== undefined && { userId: filters.userId }),
+      ...(filters.operationId !== undefined && { operationId: filters.operationId }),
       ...(filters.startDate && { startDate: formatDate(filters.startDate) }),
       ...(filters.endDate && { endDate: formatDate(filters.endDate) }),
       ...(filters.sendType !== undefined && { sendType: filters.sendType }),
@@ -58,6 +61,10 @@ export class SendsService {
     return this.http.post<void>(`${this.apiUrl}/UnlockPending/${recipientId}`, {});
   }
 
+  reportSend(recipientId: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/Report/${recipientId}`, {});
+  }
+
   downloadArScan(recipientId: number): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/GetArScan/${recipientId}`, {
       responseType: 'blob'
@@ -70,6 +77,22 @@ export class SendsService {
 
   deleteSend(id: number): Observable<any> {
     return this.http.delete<any>(this.apiUrl + "/Send/" + id);
+  }
+
+  deleteOperation(operationId: number): Observable<any> {
+    return this.http.delete<any>(this.apiUrl + "/Operation/" + operationId);
+  }
+
+  getOperations(filters: { search?: string; userId?: number; startDate?: Date; endDate?: Date; pageIndex?: number; pageSize?: number } = {}): Observable<{ data: OperationListItem[]; totalCount: number }> {
+    const params = new HttpParams({ fromObject: {
+      ...(filters.search && { search: filters.search }),
+      ...(filters.userId !== undefined && { userId: filters.userId }),
+      ...(filters.startDate && { startDate: this.formatLocalDate(filters.startDate) }),
+      ...(filters.endDate && { endDate: this.formatLocalDate(filters.endDate) }),
+      pageIndex: filters.pageIndex ?? 0,
+      pageSize: filters.pageSize ?? 20
+    } });
+    return this.http.get<{ data: OperationListItem[]; totalCount: number }>(this.apiUrl + '/Operations', { params });
   }
 
   getReport(filters: {

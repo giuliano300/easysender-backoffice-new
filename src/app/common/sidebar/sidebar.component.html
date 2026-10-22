@@ -54,6 +54,12 @@
                             Invii
                         </span>
                     </a>
+                    <a routerLink="/operations" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i-feather name="layers"></i-feather>
+                        <span class="title">
+                            Operazioni
+                        </span>
+                    </a>
                     <a routerLink="/sends/report" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                         <i-feather name="bar-chart-2"></i-feather>
                         <span class="title">
@@ -70,7 +76,7 @@
                         AMMINISTRAZIONE
                     </span>
                     <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
-                        <mat-expansion-panel-header>
+                        <mat-expansion-panel-header (click)="openUsersMenuFromCompactSidebar()">
                             <mat-panel-title>
                                 <i-feather name="users"></i-feather>
                                 <span class="title">

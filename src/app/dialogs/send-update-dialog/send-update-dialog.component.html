@@ -25,6 +25,21 @@
       </div>
     </section>
 
+    <section class="form-section shipment-section">
+      <div class="section-heading">
+        <span class="section-icon"><i class="ri-truck-line"></i></span>
+        <div><small>CONFIGURAZIONE</small><h2>Tipo di prodotto</h2></div>
+      </div>
+      <div class="form-grid two-columns">
+        <div class="field-control">
+          <label for="productType">Prodotto</label>
+          <select id="productType" formControlName="productType">
+            <option *ngFor="let product of productTypes" [value]="product.id">{{ product.name }}</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
     <section class="form-section">
       <div class="section-heading">
         <span class="section-icon"><i class="ri-user-location-line"></i></span>

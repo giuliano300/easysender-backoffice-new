@@ -16,6 +16,15 @@ export class ToggleService {
         this.isToggled.next(!this.isToggled.value);
     }
 
+    close() {
+        this.isToggled.next(false);
+    }
+
+    // Desktop: false corrisponde alla sidebar estesa; su mobile viene usato per chiuderla.
+    expandDesktopSidebar() {
+        this.isToggled.next(false);
+    }
+
     // Dark Mode
     private isDarkTheme = new BehaviorSubject<boolean>(false);
 

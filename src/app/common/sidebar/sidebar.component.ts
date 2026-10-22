@@ -39,6 +39,14 @@ export class SidebarComponent {
     // Mat Expansion
     panelOpenState = false;
 
+    openUsersMenuFromCompactSidebar() {
+        // Nella sidebar desktop compatta il contenuto del pannello non è visibile:
+        // prima la estendiamo, poi Material apre normalmente il sottomenu.
+        if (typeof window !== 'undefined' && window.innerWidth > 1199 && this.isToggled) {
+            this.toggleService.expandDesktopSidebar();
+        }
+    }
+
     logout(){
         localStorage.removeItem('authToken');
         this.authService.clearRoles();

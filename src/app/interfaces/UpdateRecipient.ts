@@ -1,5 +1,6 @@
 export interface UpdateRecipient {
   id: number | null;
+  productType: number;
   recipient: string;
 
   sender?: string;

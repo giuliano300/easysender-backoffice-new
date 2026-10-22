@@ -1193,7 +1193,102 @@ body .main-content .to-do-list-table .mat-column-ctrl.action button.mat-mdc-butt
     .main-content .to-do-list-table .table-responsive { margin-inline: 0; }
 }
 
+/* Layout mobile delle tabelle: ogni riga è una card con coppie etichetta/valore. */
+@media (max-width: 767px) {
+    .page-head-card { align-items: stretch; gap: 16px; }
+    .page-head-card .page-head-action { justify-content: center; width: 100%; }
+    .main-content .filter-card .mat-mdc-card-content { padding: 14px !important; }
+    .main-content .filters .row { row-gap: 0; }
+    .main-content .mat-mdc-paginator { border: 0; border-radius: 0 0 14px 14px; }
+    .main-content .mat-mdc-paginator-container { justify-content: center; min-height: 58px; padding: 6px; }
+
+    .main-content .to-do-list-table { overflow: visible; }
+    .main-content .to-do-list-table table.mat-mdc-table {
+        display: block; min-width: 0 !important; border-collapse: separate; border-spacing: 0 10px;
+    }
+    .main-content .to-do-list-table .mat-mdc-header-row { display: none !important; }
+    .main-content .to-do-list-table .mat-mdc-table tbody { display: grid; gap: 12px; }
+    .main-content .to-do-list-table .mat-mdc-row {
+        display: block !important; height: auto !important; overflow: hidden; border: 1px solid var(--manager-border);
+        border-radius: 14px; background: var(--manager-surface) !important; box-shadow: 0 5px 15px rgba(18, 35, 57, .05);
+    }
+    .main-content .to-do-list-table .mat-mdc-cell {
+        display: grid !important; grid-template-columns: minmax(105px, 42%) minmax(0, 1fr); align-items: center;
+        min-width: 0 !important; max-width: none !important; padding: 12px 16px !important; white-space: normal !important;
+        overflow: visible !important; text-overflow: clip !important; border-bottom: 1px solid var(--manager-border) !important;
+        text-align: right !important; font-size: 13px;
+    }
+    .main-content .to-do-list-table .mat-mdc-cell::before {
+        content: var(--mobile-label, 'Dettaglio'); color: var(--manager-muted); font-size: 10px; font-weight: 700;
+        letter-spacing: .07em; text-align: left; text-transform: uppercase;
+    }
+    .main-content .to-do-list-table .mat-mdc-cell:first-child { border-radius: 14px 14px 0 0; }
+    .main-content .to-do-list-table .mat-mdc-cell:last-child { border-bottom: 0 !important; border-radius: 0 0 14px 14px; }
+    .main-content .to-do-list-table .mat-column-select { display: none !important; }
+    .main-content .to-do-list-table .mat-column-id { --mobile-label: 'ID'; }
+    .main-content .to-do-list-table .mat-column-name { --mobile-label: 'Operazione'; }
+    .main-content .to-do-list-table .mat-column-date, .main-content .to-do-list-table .mat-column-insertDate { --mobile-label: 'Data'; }
+    .main-content .to-do-list-table .mat-column-type, .main-content .to-do-list-table .mat-column-productType { --mobile-label: 'Prodotto'; }
+    .main-content .to-do-list-table .mat-column-businessName, .main-content .to-do-list-table .mat-column-recipient { --mobile-label: 'Nominativo'; }
+    .main-content .to-do-list-table .mat-column-vatNumber { --mobile-label: 'P. IVA'; }
+    .main-content .to-do-list-table .mat-column-email { --mobile-label: 'Email'; }
+    .main-content .to-do-list-table .mat-column-address { --mobile-label: 'Indirizzo'; }
+    .main-content .to-do-list-table .mat-column-sender { --mobile-label: 'Mittente'; }
+    .main-content .to-do-list-table .mat-column-user, .main-content .to-do-list-table .mat-column-userComplete { --mobile-label: 'Utente'; }
+    .main-content .to-do-list-table .mat-column-currentState, .main-content .to-do-list-table .mat-column-status { --mobile-label: 'Stato'; }
+    .main-content .to-do-list-table .mat-column-code, .main-content .to-do-list-table .mat-column-codice { --mobile-label: 'Codice'; }
+    .main-content .to-do-list-table .mat-column-id,
+    .main-content .to-do-list-table .mat-column-date,
+    .main-content .to-do-list-table .mat-column-insertDate,
+    .main-content .to-do-list-table .mat-column-code,
+    .main-content .to-do-list-table .mat-column-codice {
+        grid-template-columns: minmax(72px, 29%) minmax(0, 1fr);
+        text-align: right !important;
+    }
+    .main-content .to-do-list-table .mat-column-arScan, .main-content .to-do-list-table .mat-column-arScans { --mobile-label: 'AR'; }
+    .main-content .to-do-list-table .mat-column-city, .main-content .to-do-list-table .mat-column-cap { --mobile-label: 'Località'; }
+    .main-content .to-do-list-table .mat-column-message { --mobile-label: 'Messaggio'; }
+    .main-content .to-do-list-table .mat-column-recipients, .main-content .to-do-list-table .mat-column-sends { --mobile-label: 'Invii'; }
+    .main-content .to-do-list-table .mat-column-claims { --mobile-label: 'PosteCallClaims'; }
+    .main-content .to-do-list-table .mat-column-enabled { --mobile-label: 'Abilitato'; }
+    .main-content .to-do-list-table .mat-column-ged { --mobile-label: 'GED'; }
+    .main-content .to-do-list-table .mat-column-users { --mobile-label: 'Sottoutenze'; }
+    .main-content .to-do-list-table .mat-column-linkedUsers { --mobile-label: 'Collegate'; }
+    .main-content .to-do-list-table .mat-column-edit { --mobile-label: 'Modifica'; }
+    .main-content .to-do-list-table .mat-column-view { --mobile-label: 'Invii'; }
+    .main-content .to-do-list-table .mat-column-delete { --mobile-label: 'Elimina'; }
+    .main-content .to-do-list-table .mat-column-ctrl { --mobile-label: 'Aggiorna'; }
+    .main-content .to-do-list-table .mat-column-report { --mobile-label: 'Segnala'; }
+    .main-content .to-do-list-table .mat-column-actions { --mobile-label: 'Azioni'; }
+    .main-content .to-do-list-table .mat-mdc-cell .action { display: flex; justify-content: flex-end; gap: 8px; }
+    .main-content .to-do-list-table .mat-mdc-cell .action .mat-mdc-button { margin: 0 !important; }
+    .main-content .to-do-list-table .mat-mdc-cell h6 { margin: 0; text-align: right; }
+}
+
 
 .mat-mdc-select-value{
     text-align: left;
+}
+
+/* Su telefono le celle delle righe-card hanno più respiro. */
+@media (max-width: 767px) {
+    .page-head-card .page-head-action.csv-page-export {
+        align-self: flex-start;
+        width: auto;
+        min-height: 38px;
+        padding: 4px 12px 4px 5px !important;
+        border-radius: 10px !important;
+        font-size: 11px;
+    }
+
+    .page-head-card .page-head-action.csv-page-export i {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    body .main-content .trinta-card.to-do-list-card .to-do-list-table table.mat-mdc-table .mat-mdc-cell {
+        padding: 16px 18px !important;
+    }
 }

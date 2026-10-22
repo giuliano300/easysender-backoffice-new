@@ -1,0 +1,48 @@
+<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item active">Operazioni</li></ol></nav>
+<section class="page-head-card">
+  <div><span class="page-eyebrow">GESTIONE OPERATIVA</span><h1>Operazioni</h1><p>Controlla gli invii raggruppati e rimuovi un’intera operazione in sicurezza.</p></div>
+  <button type="button" class="page-head-action csv-page-export" (click)="exportFilteredOperations()" [disabled]="exportingCsv"><i class="ri-file-download-line"></i>{{ exportingCsv ? 'Preparazione CSV…' : 'Esporta CSV' }}</button>
+</section>
+
+<mat-card class="trinta-card to-do-list-card mb-10 bg-white border-none d-block filter filter-card filters operations-filter-card">
+  <mat-card-content>
+    <details class="filter-disclosure">
+      <summary class="filters-head">
+        <span class="filters-head-icon"><i class="ri-filter-3-line"></i></span>
+        <div><small>FILTRI</small><h2>Filtra operazioni</h2><p>Ricerca per periodo, utente, ID o nome dell’operazione.</p></div>
+        <i class="ri-arrow-down-s-line filters-toggle-icon"></i>
+      </summary>
+      <div class="filter-body">
+        <form [formGroup]="form" (ngSubmit)="load(true)">
+          <div class="container"><div class="row">
+            <div class="col-lg-3"><div class="input-wrapper position-relative"><mat-form-field appearance="fill"><mat-label>Intervallo date</mat-label><i-feather name="calendar"></i-feather><mat-date-range-input [rangePicker]="picker"><input matStartDate formControlName="start" placeholder="Inizio"><input matEndDate formControlName="end" placeholder="Fine"></mat-date-range-input><mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle><mat-date-range-picker #picker></mat-date-range-picker></mat-form-field></div></div>
+            <div class="col-lg-4"><div class="input-wrapper position-relative"><mat-form-field appearance="fill"><mat-label>Utente</mat-label><i-feather name="user"></i-feather><input matInput formControlName="userSearch" [matAutocomplete]="userAutocomplete" (input)="clearSelectedUser()" autocomplete="off"><mat-autocomplete #userAutocomplete="matAutocomplete" [displayWith]="displayUser" (optionSelected)="selectUser($event.option.value)"><mat-option *ngFor="let option of filteredUsers" [value]="option">{{ option.user.businessName }}</mat-option></mat-autocomplete></mat-form-field></div></div>
+            <div class="col-lg-3"><div class="input-wrapper position-relative"><mat-form-field appearance="fill"><mat-label>ID o nome operazione</mat-label><i-feather name="search"></i-feather><input matInput formControlName="search"></mat-form-field></div></div>
+            <div class="col-lg-1"><button mat-button type="submit" class="filter">Filtra</button></div>
+            <div class="col-lg-1"><button mat-button type="button" class="filterRemove" (click)="resetFilters()">Rimuovi</button></div>
+          </div></div>
+        </form>
+      </div>
+    </details>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="trinta-card to-do-list-card bg-white border-none d-block">
+  <mat-card-content>
+    <div class="to-do-list-table operations-table">
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="id"><th mat-header-cell *matHeaderCellDef>ID</th><td mat-cell *matCellDef="let item">#{{ item.id }}</td></ng-container>
+        <ng-container matColumnDef="date"><th mat-header-cell *matHeaderCellDef>Creata il</th><td mat-cell *matCellDef="let item">{{ item.insertDate | date:'dd/MM/yyyy HH:mm' }}</td></ng-container>
+        <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef>Operazione</th><td mat-cell *matCellDef="let item"><strong>{{ item.name || '—' }}</strong></td></ng-container>
+        <ng-container matColumnDef="user"><th mat-header-cell *matHeaderCellDef>Utente</th><td mat-cell *matCellDef="let item">{{ item.userName }}</td></ng-container>
+        <ng-container matColumnDef="recipients"><th mat-header-cell *matHeaderCellDef>Invii</th><td mat-cell *matCellDef="let item">{{ item.recipients }}<small *ngIf="item.inProgress"> · {{ item.inProgress }} in corso</small></td></ng-container>
+        <ng-container matColumnDef="status"><th mat-header-cell *matHeaderCellDef>Stato</th><td mat-cell *matCellDef="let item"><span class="status-pill" [class.error]="item.error" [class.complete]="item.complete">{{ item.error ? 'Errore' : item.complete ? 'Completata' : 'In corso' }}</span></td></ng-container>
+        <ng-container matColumnDef="view"><th mat-header-cell *matHeaderCellDef class="text-center pr-0">Invii</th><td mat-cell *matCellDef="let item" class="text-center pr-0"><div class="action"><button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto" matTooltip="Apri invii" matTooltipClass="mat-tooltip" matTooltipPosition="below" (click)="openSends(item)"><i class="ri-send-plane-line"></i></button></div></td></ng-container>
+        <ng-container matColumnDef="delete"><th mat-header-cell *matHeaderCellDef class="text-center pr-0">Eli.</th><td mat-cell *matCellDef="let item" class="text-center pr-0"><div class="action"><button type="button" mat-button class="p-0 min-w-auto lh-1 h-auto" matTooltip="Elimina operazione" matTooltipClass="mat-tooltip" matTooltipPosition="below" (click)="deleteOperation(item)"><i class="ri-delete-bin-line"></i></button></div></td></ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr><tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr *matNoDataRow><td class="no-data" [attr.colspan]="displayedColumns.length">{{ loading ? 'Caricamento…' : 'Nessuna operazione trovata.' }}</td></tr>
+      </table>
+      <mat-paginator [length]="totalRecords" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[20,50,100,200]" (page)="changePage($event)"></mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>

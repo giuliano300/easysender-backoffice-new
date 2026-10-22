@@ -1,5 +1,7 @@
 export interface Sends {
   id: number;
+  operationId: number;
+  productType: number;
   type: string;
   formato: string;
   insertDate: string; // o Date, se converti in runtime
@@ -28,6 +30,7 @@ export interface Sends {
   hasArScan: boolean;
   arScanLoading?: boolean;
   unblocking?: boolean;
+  reporting?: boolean;
   pathFile: string;
   fileName: string;
   attacchedFile: Uint8Array; // oppure `string` se arriva base64 dal backend

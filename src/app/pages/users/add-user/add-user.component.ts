@@ -415,7 +415,12 @@ export class AddUserComponent {
                 this.userService.updateUser(u)
                     .subscribe({
                         next: () => this.router.navigate(['/users']),
-                        error: () => this.errorMessage = "Errore durante la modifica dell'utente. Nessun dato è stato modificato."
+                        error: (error) => {
+                            const detail = error?.error?.detail || error?.error?.message || error?.error;
+                            this.errorMessage = detail
+                                ? `Errore durante la modifica dell'utente: ${detail}`
+                                : "Errore durante la modifica dell'utente. Nessun dato è stato modificato.";
+                        }
                     });
             }
         }

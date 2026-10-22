@@ -50,6 +50,10 @@ export class AppComponent {
         this.toggleService.toggle();
     }
 
+    closeSidebar() {
+        this.toggleService.close();
+    }
+
     // ngOnInit
     ngOnInit(){
         if (isPlatformBrowser(this.platformId)) {
@@ -65,6 +69,10 @@ export class AppComponent {
             this.location = this.router.url;
             if (!(event instanceof NavigationEnd)) {
                 return;
+            }
+            // Sui dispositivi touch il menu non deve restare sopra alla nuova pagina.
+            if (window.innerWidth <= 1199) {
+                this.toggleService.close();
             }
             this.scrollToTop();
         });

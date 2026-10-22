@@ -84,7 +84,7 @@ export const IT_DATE_FORMATS = {
 })
 export class SendsComponent {
 
-  displayedColumns: string[] = ['select', 'id', 'type', 'date', 'sender', 'recipient', 'currentState', 'code', 'arScan', 'message', 'ctrl', 'edit', 'delete'];
+  displayedColumns: string[] = ['select', 'id', 'type', 'date', 'sender', 'recipient', 'currentState', 'code', 'arScan', 'message', 'ctrl', 'edit', 'report', 'delete', 'deleteOperation'];
 
   sends: Sends[] = [];
 
@@ -97,6 +97,7 @@ export class SendsComponent {
   pageSizeOptions: number[] = [20, 50, 100, 200, 500];
   totalRecords: number = 0;
   arScansCount: number | null = 0;
+  operationIdFilter: number | null = null;
 
   actions = Object.values(MassiveActions)
     .filter(v => typeof v === 'number')
@@ -196,6 +197,8 @@ export class SendsComponent {
     const requestedEnd = this.parseQueryDate(this.route.snapshot.queryParamMap.get('endDate'));
     const allDates = this.route.snapshot.queryParamMap.get('allDates') === 'true';
     const requestedProductTypes = this.route.snapshot.queryParamMap.get('productTypes');
+    const operationId = Number(this.route.snapshot.queryParamMap.get('operationId'));
+    this.operationIdFilter = Number.isInteger(operationId) && operationId > 0 ? operationId : null;
     this.dashboardProductTypes = requestedProductTypes
       ? requestedProductTypes.split(',').map(value => Number(value)).filter(Number.isInteger)
       : null;
@@ -268,6 +271,7 @@ export class SendsComponent {
       pageSize: this.pageSize,
       ...(includeTotalCounts && { totalCounts: this.totalRecords }),
       userId: this.form.value.userId ?? undefined,
+      operationId: this.operationIdFilter ?? undefined,
       startDate: this.form.value.start ? new Date(this.form.value.start) : undefined,
       endDate: this.form.value.end ? new Date(this.form.value.end) : undefined,
       sendType: this.form.value.sendType ?? undefined,
@@ -423,7 +427,8 @@ export class SendsComponent {
                 ctrl: 'ri-restart-line',
                 det: 'ri-menu-search-line',
                 edit: 'ri-edit-line',
-                delete: 'ri-delete-bin-line'
+                delete: 'ri-delete-bin-line',
+                deleteOperation: 'ri-folder-reduce-line'
             }
           })
         )
@@ -488,6 +493,36 @@ export class SendsComponent {
     });
   }
 
+  reportSend(send: Sends): void {
+    if (send.reporting) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '470px',
+      maxWidth: '92vw',
+      panelClass: 'confirm-action-dialog',
+      data: {
+        eyebrow: 'SEGNALAZIONE SPEDIZIONE',
+        title: 'Segnalare la spedizione?',
+        message: 'La spedizione verrà rimossa dalle viste operative del backoffice e resa disponibile al cliente nella sezione Segnalazioni.',
+        confirmLabel: 'Segnala',
+        confirmIcon: 'ri-flag-2-line'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (!confirmed) return;
+
+      send.reporting = true;
+      this.sendService.reportSend(send.id).subscribe({
+        next: () => this.refreshSends(),
+        error: error => {
+          console.error('Errore durante la segnalazione della spedizione:', error);
+          send.reporting = false;
+        }
+      });
+    });
+  }
+
 
   onPaginateChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
@@ -523,22 +558,47 @@ export class SendsComponent {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '470px',
       maxWidth: '92vw',
-      panelClass: 'confirm-action-dialog'
+      panelClass: 'confirm-action-dialog',
+      data: {
+        eyebrow: 'ELIMINA SPEDIZIONE',
+        title: 'Eliminare questa spedizione?',
+        message: 'Saranno eliminati anche gli eventuali record PosteCallClaims. Se è l’ultimo invio dell’operazione, verrà eliminata anche l’operazione.',
+        confirmLabel: 'Elimina spedizione'
+      }
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        this.sendService.deleteSend(item.id)
-          .subscribe((data: boolean) => {
-            if(data){
-              this.getSends();
-            }
-          });
+        this.sendService.deleteSend(item.id).subscribe({
+          next: () => this.getSends()
+        });
       } 
       else 
       {
         console.log("Close");
       }
+    });
+  }
+
+  DeleteOperation(item: Sends) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '470px',
+      maxWidth: '92vw',
+      panelClass: 'confirm-action-dialog',
+      data: {
+        eyebrow: 'ELIMINA OPERAZIONE',
+        title: 'Eliminare tutta l’operazione?',
+        message: 'Saranno eliminati tutti gli invii dell’operazione, i mittenti e gli eventuali record PosteCallClaims. L’azione è irreversibile.',
+        confirmLabel: 'Elimina operazione',
+        confirmIcon: 'ri-folder-reduce-line'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.sendService.deleteOperation(item.operationId).subscribe({
+          next: () => this.getSends()
+        });
     });
   }
 

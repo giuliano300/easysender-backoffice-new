@@ -5,6 +5,13 @@
 
     <!-- Sidebar -->
     <app-sidebar />
+    <button
+        *ngIf="isToggled"
+        type="button"
+        class="mobile-sidebar-backdrop"
+        aria-label="Chiudi menu"
+        (click)="closeSidebar()"
+    ></button>
 
     <!-- Main Content -->
     <div

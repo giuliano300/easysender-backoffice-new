@@ -1,5 +1,13 @@
-import { Component } from '@angular/core';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+
+export interface ConfirmDialogData {
+  eyebrow?: string;
+  title?: string;
+  message?: string;
+  confirmLabel?: string;
+  confirmIcon?: string;
+}
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -9,7 +17,10 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
   imports: [MatDialogModule]
 })
 export class ConfirmDialogComponent {
-  constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>) {}
+  constructor(
+    public dialogRef: MatDialogRef<ConfirmDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData | null
+  ) {}
 
   onConfirm(): void {
     this.dialogRef.close(true); // L'utente ha confermato

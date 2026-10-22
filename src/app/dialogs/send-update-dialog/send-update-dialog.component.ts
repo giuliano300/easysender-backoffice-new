@@ -6,6 +6,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RecipientService } from '../../services/recipient.service';
 import { UpdateRecipient } from '../../interfaces/UpdateRecipient';
+import { ProductTypes } from '../../interfaces/enum';
 
 @Component({
   selector: 'app-send-dialog',
@@ -22,6 +23,10 @@ export class SendUpdateDialogComponent {
   saving = false;
 
   attachedFile?: string | null;
+
+  productTypes = Object.entries(ProductTypes)
+    .filter(([, value]) => typeof value === 'number')
+    .map(([name, value]) => ({ id: value as number, name: name.toUpperCase() }));
 
   fieldLabels: { [key: string]: string } = {
     zipCodeSender: 'CAP',
@@ -73,6 +78,7 @@ export class SendUpdateDialogComponent {
       requestId: [{value: this.data?.requestId || '',  disabled: true}],
       currentState: [{value: this.data?.currentState || '',  disabled: true}],
       stato: [{value: this.data?.stato || '',  disabled: true}],
+      productType: [this.data?.productType ?? null, Validators.required],
 
       sender: [this.data?.sender || '', Validators.required],
       complementNameSender: [this.data?.complementNameSender || ''],
@@ -122,6 +128,7 @@ export class SendUpdateDialogComponent {
       const raw = this.form.getRawValue();
       const recipientUpdate: UpdateRecipient = {
         id: raw.id,
+        productType: Number(raw.productType),
         recipient: raw.recipient,
 
         sender: raw.sender,

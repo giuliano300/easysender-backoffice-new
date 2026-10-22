@@ -1,0 +1,31 @@
+.operations-table small { color: var(--manager-muted); font-size: 11px; }
+.operations-filter-card .filters-head { padding-left: 3px; }
+.status-pill { display: inline-flex; padding: 4px 8px; border-radius: 20px; background: #fff2d8; color: #9b6500; font-size: 11px; font-weight: 600; }
+.status-pill.complete { background: #e8f7ef; color: #167047; }
+.status-pill.error { color: var(--color-danger) !important; }
+.no-data { padding: 28px !important; text-align: center; color: var(--manager-muted); }
+
+@media (max-width: 767px) {
+  .operations-filter-card .filters-head { gap: 10px; }
+  .operations-filter-card .filters-head p { display: none; }
+  .operations-filter-card .filters-head h2 { font-size: 16px !important; }
+  .operations-filter-card .filters-head-icon { width: 36px; height: 36px; border-radius: 11px; font-size: 17px; }
+
+  .operations-table .mat-mdc-row { border-radius: 16px !important; }
+  .operations-table .mat-column-id { background: var(--action-filter-bg-soft) !important; color: var(--manager-accent-strong) !important; font-weight: 700; }
+  .operations-table .mat-column-id::before { color: var(--manager-accent-strong) !important; }
+  .operations-table .mat-column-name strong { display: block; color: var(--manager-ink); font-size: 14px; font-weight: 600; line-height: 1.4; text-align: right; }
+  .operations-table .mat-column-user { color: var(--manager-muted) !important; }
+  .operations-table .mat-column-recipients small { display: block; margin-top: 3px; color: var(--manager-muted); }
+  .operations-table .mat-column-status { padding-top: 12px !important; padding-bottom: 12px !important; text-align: right !important; }
+  .operations-table .status-pill { justify-self: end; min-width: 82px; justify-content: center; padding: 5px 9px; }
+
+  .operations-table .mat-column-view,
+  .operations-table .mat-column-delete { background: #fafbf9 !important; }
+  .operations-table .mat-column-view .action,
+  .operations-table .mat-column-delete .action { justify-content: flex-end; }
+  .operations-table .mat-column-view .mat-mdc-button,
+  .operations-table .mat-column-delete .mat-mdc-button { display: inline-grid !important; place-items: center; width: 34px; min-width: 34px; height: 34px; padding: 0 !important; border-radius: 10px !important; }
+  .operations-table .mat-column-view .mat-mdc-button { background: var(--action-filter-bg) !important; color: var(--manager-accent-strong) !important; }
+  .operations-table .mat-column-delete .mat-mdc-button { background: var(--action-delete-bg-soft) !important; color: var(--action-delete-text) !important; }
+}

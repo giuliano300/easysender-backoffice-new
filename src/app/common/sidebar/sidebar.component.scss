@@ -150,6 +150,10 @@
         .manager-card { justify-content: center; margin-right: 0; margin-left: 0; padding: 10px 0; }
         .manager-copy { display: none; }
         .sidebar-menu-link, .mat-expansion-panel-header { justify-content: center; width: 48px; margin-right: auto !important; margin-left: auto !important; padding: 0 !important; }
+        // MatExpansionPanel mantiene un contenitore interno con larghezza propria:
+        // senza questo allineamento l'icona "Utenti" risulta spostata quando il menu è compatto.
+        .mat-expansion-panel-header-title { display: flex; justify-content: center; flex: 1 1 100%; margin: 0 !important; }
+        .mat-expansion-panel-header-title i-feather { margin-right: 0 !important; }
         i-feather { margin-right: 0 !important; }
     }
 }
@@ -167,6 +171,8 @@
             .manager-card { justify-content: flex-start; margin-right: 4px; margin-left: 4px; padding: 13px; }
             .manager-copy { display: grid; }
             .sidebar-menu-link, .mat-expansion-panel-header { justify-content: flex-start; width: auto; margin-right: 0 !important; margin-left: 0 !important; padding: 0 12px 0 10px !important; }
+            .mat-expansion-panel-header-title { justify-content: flex-start; margin: 0 !important; }
+            .mat-expansion-panel-header-title i-feather { margin-right: 13px !important; }
             i-feather { margin-right: 13px !important; }
         }
     }
