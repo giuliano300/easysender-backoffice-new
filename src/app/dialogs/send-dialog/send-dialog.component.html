@@ -19,7 +19,7 @@
         <p>{{ data.stato || 'Nessun messaggio disponibile' }}</p>
       </div>
       <div class="summary-meta">
-        <div><span>Data invio</span><strong>{{ data.insertDate ? utils.getDateFormatted(data.insertDate) : '—' }}</strong></div>
+        <div><span>Data e ora invio</span><strong>{{ data.insertDate ? utils.getDateTimeFormatted(data.insertDate) : '—' }}</strong></div>
         <div><span>Codice</span><strong class="code-value">{{ data.codice || '—' }}</strong></div>
         <div><span>Utente</span><strong>{{ data.userComplete || '—' }}</strong></div>
         <div><span>ID richiesta</span><strong class="code-value">{{ data.requestId || '—' }}</strong></div>
@@ -70,6 +70,15 @@
       </div>
     </section>
 
+    <section *ngIf="isTelegram(); else shipmentFiles" class="detail-card full-card telegram-card">
+      <div class="section-heading">
+        <span><i class="ri-message-3-line"></i></span>
+        <div><small>TELEGRAMMA</small><h2>Messaggio inviato</h2></div>
+      </div>
+      <p class="telegram-text">{{ data.telegramText || 'Messaggio non disponibile.' }}</p>
+    </section>
+
+    <ng-template #shipmentFiles>
     <section class="detail-card full-card files-card">
       <div class="section-heading">
         <span><i class="ri-folder-3-line"></i></span>
@@ -98,6 +107,7 @@
         </div>
       </div>
     </section>
+    </ng-template>
   </mat-dialog-content>
 
   <mat-dialog-actions class="dialog-footer">

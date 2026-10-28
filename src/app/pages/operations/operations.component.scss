@@ -3,7 +3,13 @@
 .status-pill { display: inline-flex; padding: 4px 8px; border-radius: 20px; background: #fff2d8; color: #9b6500; font-size: 11px; font-weight: 600; }
 .status-pill.complete { background: #e8f7ef; color: #167047; }
 .status-pill.error { color: var(--color-danger) !important; }
-.no-data { padding: 28px !important; text-align: center; color: var(--manager-muted); }
+.no-data { padding: 28px !important; text-align: center; color: var(--manager-ink); }
+.operation-progress { min-width: 112px; }
+.operation-progress-head { display: flex; align-items: baseline; justify-content: space-between; gap: 7px; margin-bottom: 5px; }
+.operation-progress-head span { color: var(--manager-accent-strong); font-size: 12px; font-weight: 700; }
+.operation-progress-head small { margin: 0; color: var(--manager-muted); font-size: 10px; white-space: nowrap; }
+.operation-progress-track { height: 6px; overflow: hidden; border-radius: 99px; background: #e7edf1; }
+.operation-progress-track span { display: block; height: 100%; min-width: 3px; border-radius: inherit; background: linear-gradient(90deg, #58a7d9, var(--manager-accent-strong)); transition: width .2s ease; }
 
 @media (max-width: 767px) {
   .operations-filter-card .filters-head { gap: 10px; }
@@ -17,6 +23,9 @@
   .operations-table .mat-column-name strong { display: block; color: var(--manager-ink); font-size: 14px; font-weight: 600; line-height: 1.4; text-align: right; }
   .operations-table .mat-column-user { color: var(--manager-muted) !important; }
   .operations-table .mat-column-recipients small { display: block; margin-top: 3px; color: var(--manager-muted); }
+  .operations-table .mat-column-progress { text-align: right !important; }
+  .operations-table .mat-column-progress::before { align-self: flex-start; }
+  .operations-table .operation-progress { margin-left: auto; width: min(156px, 100%); }
   .operations-table .mat-column-status { padding-top: 12px !important; padding-bottom: 12px !important; text-align: right !important; }
   .operations-table .status-pill { justify-self: end; min-width: 82px; justify-content: center; padding: 5px 9px; }
 

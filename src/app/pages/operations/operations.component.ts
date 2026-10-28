@@ -30,7 +30,7 @@ import { firstValueFrom } from 'rxjs';
   styleUrl: './operations.component.scss'
 })
 export class OperationsComponent implements OnInit {
-  displayedColumns = ['id', 'date', 'name', 'user', 'recipients', 'status', 'view', 'delete'];
+  displayedColumns = ['id', 'date', 'name', 'user', 'recipients', 'progress', 'status', 'view', 'delete'];
   dataSource = new MatTableDataSource<OperationListItem>([]);
   form: FormGroup;
   totalRecords = 0;
@@ -102,6 +102,15 @@ export class OperationsComponent implements OnInit {
     this.load();
   }
 
+  progressTotal(item: OperationListItem): number {
+    return Math.max(0, item.recipients - item.notifiedRecipients);
+  }
+
+  progressPercentage(item: OperationListItem): number {
+    const total = this.progressTotal(item);
+    return total === 0 ? 100 : Math.min(100, Math.round((item.acceptedRecipients / total) * 100));
+  }
+
   async exportFilteredOperations(): Promise<void> {
     if (this.exportingCsv) return;
 
@@ -130,6 +139,8 @@ export class OperationsComponent implements OnInit {
         { header: 'Operazione', value: row => row.name },
         { header: 'Utente', value: row => row.userName },
         { header: 'Invii', value: row => row.recipients },
+        { header: 'Invii segnalati', value: row => row.notifiedRecipients },
+        { header: 'Avanzamento', value: row => `${this.progressPercentage(row)}%` },
         { header: 'Invii in corso', value: row => row.inProgress },
         { header: 'Stato', value: row => row.error ? 'Errore' : row.complete ? 'Completata' : 'In corso' },
         { header: 'Messaggio errore', value: row => row.errorMessage }

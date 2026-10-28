@@ -31,6 +31,10 @@ export class SendDialogComponent {
     return `${name}`;
   }
 
+  isTelegram(): boolean {
+    return this.data?.productType === 3;
+  }
+
 
   downloadFile(element: Sends, type: string) {
     const encoder = new TextEncoder();

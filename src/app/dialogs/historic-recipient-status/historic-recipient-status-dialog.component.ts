@@ -31,18 +31,20 @@ export class HistoricRecipientStatusDialogComponent {
       .sort((a, b) => new Date(b.insertDate).getTime() - new Date(a.insertDate).getTime());
   }
 
-  formatDate(value: string): string {
+  formatDateTime(value: string): string {
     if (!value) return 'Data non disponibile';
 
     const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return this.utils.getDateFormatted(value) || 'Data non disponibile';
+    if (Number.isNaN(date.getTime())) return this.utils.getDateTimeFormatted(value) || 'Data non disponibile';
 
     return new Intl.DateTimeFormat('it-IT', {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      second: '2-digit',
+      timeZone: 'Europe/Rome'
     }).format(date);
   }
 

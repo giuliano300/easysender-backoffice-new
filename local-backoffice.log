@@ -1,0 +1,298 @@
+
+> trinta@1.2.0 start
+> ng serve --port 4201 --host 127.0.0.1
+
+Component HMR has been enabled, see https://angular.dev/hmr for more info.
+> Building...
+√ Building...
+Initial chunk files | Names         |  Raw size
+main.js             | main          | 994.13 kB | 
+scripts.js          | scripts       | 660.90 kB | 
+styles.css          | styles        | 526.05 kB | 
+polyfills.js        | polyfills     |  89.77 kB | 
+
+                    | Initial total |   2.27 MB
+
+Application bundle generation complete. [3.963 seconds]
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  ➜  Local:   http://127.0.0.1:4201/
+  ➜  press h + enter to show help
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 994.76 kB | 
+
+Application bundle generation complete. [1.247 seconds]
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.00 MB | 
+
+Application bundle generation complete. [0.509 seconds]
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names  |  Raw size
+main.js             | main   |   1.00 MB | 
+styles.css          | styles | 526.05 kB | 
+
+Application bundle generation complete. [2.431 seconds]
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.00 MB | 
+
+Application bundle generation complete. [0.289 seconds]
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names  |  Raw size
+styles.css          | styles | 526.38 kB | 
+
+Application bundle generation complete. [1.283 seconds]
+
+Stylesheet update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names  |  Raw size
+styles.css          | styles | 526.44 kB | 
+
+Application bundle generation complete. [1.190 seconds]
+
+Stylesheet update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names  |  Raw size
+styles.css          | styles | 526.17 kB | 
+
+Application bundle generation complete. [1.158 seconds]
+
+Stylesheet update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names  |  Raw size
+styles.css          | styles | 526.23 kB | 
+
+Application bundle generation complete. [1.137 seconds]
+
+Stylesheet update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Application bundle generation failed. [0.651 seconds]
+
+X [ERROR] TS1005: ';' expected. [plugin angular-compiler]
+
+    src/app/services/sends.service.ts:95:140:
+      95 │ ...rs: number; completed: number }>(this.apiUrl + '/Operations', {...
+         ╵                                   ^
+
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names         |  Raw size
+main.js             | main          |   1.01 MB | 
+scripts.js          | scripts       | 660.90 kB | 
+styles.css          | styles        | 526.23 kB | 
+polyfills.js        | polyfills     |  89.77 kB | 
+
+                    | Initial total |   2.29 MB
+
+Application bundle generation complete. [0.285 seconds]
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.566 seconds]
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.393 seconds]
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names  |  Raw size
+main.js             | main   |   1.01 MB | 
+styles.css          | styles | 526.28 kB | 
+
+Application bundle generation complete. [1.729 seconds]
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.320 seconds]
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.296 seconds]
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.328 seconds]
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names  |  Raw size
+styles.css          | styles | 526.64 kB | 
+
+Application bundle generation complete. [1.208 seconds]
+
+Stylesheet update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.395 seconds]
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names  |  Raw size
+styles.css          | styles | 526.82 kB | 
+
+Application bundle generation complete. [1.172 seconds]
+
+Stylesheet update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names  |  Raw size
+styles.css          | styles | 527.13 kB | 
+
+Application bundle generation complete. [1.139 seconds]
+
+Stylesheet update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names  |  Raw size
+styles.css          | styles | 527.19 kB | 
+
+Application bundle generation complete. [1.114 seconds]
+
+Stylesheet update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.499 seconds]
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.491 seconds]
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.340 seconds]
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names  |  Raw size
+main.js             | main   |   1.01 MB | 
+styles.css          | styles | 527.19 kB | 
+
+Application bundle generation complete. [1.506 seconds]
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.287 seconds]
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.406 seconds]
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.836 seconds]
+
+Page reload sent to client(s).
+13:42:50 [vite] (client) ✨ new dependencies optimized: @angular/service-worker
+13:42:50 [vite] (client) ✨ optimized dependencies changed. reloading
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.008 seconds]
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.609 seconds]
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.346 seconds]
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.381 seconds]
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  1.01 MB | 
+
+Application bundle generation complete. [0.283 seconds]
+
+Page reload sent to client(s).

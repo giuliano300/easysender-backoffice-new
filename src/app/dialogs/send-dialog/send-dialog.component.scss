@@ -34,6 +34,8 @@
 .horizontal-list { grid-template-columns: 1.1fr 1.6fr .6fr 1fr .7fr; }
 .info-row-address { min-width: 150px; }
 .files-card { margin-bottom: 0; }
+.telegram-card { margin-bottom: 0; }
+.telegram-text { min-height: 92px; margin: 0; padding: 15px 16px; white-space: pre-wrap; overflow-wrap: anywhere; border: 1px solid var(--manager-border); border-radius: 12px; color: var(--manager-ink); background: var(--manager-surface); font-size: 13px; line-height: 1.65; }
 .file-list { display: grid; gap: 8px; }
 .file-row { display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 9px 11px; border: 1px solid var(--manager-border); border-radius: 13px; background: var(--manager-surface); }
 .file-icon { display: grid; flex: 0 0 38px; width: 38px; height: 38px; place-items: center; border-radius: 11px; background: rgba(210,61,61,.1); color: #c53d3d; font-size: 19px; }

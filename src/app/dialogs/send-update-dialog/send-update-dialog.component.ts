@@ -105,7 +105,19 @@ export class SendUpdateDialogComponent {
       city: [this.data?.city || '', Validators.required],
       province: [this.data?.province || '', Validators.required],
       state: [this.data?.state || '', Validators.required],
-      fileName: [{value: this.data?.fileName || '',  disabled: true}]
+      fileName: [{value: this.data?.fileName || '',  disabled: true}],
+
+      bulletinNumeroContoCorrente: [this.data?.bulletin?.numeroContoCorrente || ''],
+      bulletinIntestatoA: [this.data?.bulletin?.intestatoA || ''],
+      bulletinImportoEuro: [this.data?.bulletin?.importoEuro || ''],
+      bulletinEseguitoDaNominativo: [this.data?.bulletin?.eseguitoDaNominativo || ''],
+      bulletinEseguitoDaIndirizzo: [this.data?.bulletin?.eseguitoDaIndirizzo || ''],
+      bulletinEseguitoDaLocalita: [this.data?.bulletin?.eseguitoDaLocalita || ''],
+      bulletinEseguitoDaCap: [this.data?.bulletin?.eseguitoDaCap || ''],
+      bulletinCodiceCliente: [this.data?.bulletin?.codiceCliente || ''],
+      bulletinAnnoDiRiferimento: [this.data?.bulletin?.annoDiRiferimento || ''],
+      bulletinIban: [this.data?.bulletin?.iban || ''],
+      bulletinCausale: [this.data?.bulletin?.causale || '']
     });
 
     this.attachedFile = this.data.attacchedFile;
@@ -157,7 +169,21 @@ export class SendUpdateDialogComponent {
         province: raw.province,
         state: raw.state,
         fileName: raw.fileName,
-        attachedFile: this.attachedFile!
+        attachedFile: this.attachedFile!,
+        bulletin: this.hasBulletin() ? {
+          id: this.data?.bulletin?.id,
+          numeroContoCorrente: raw.bulletinNumeroContoCorrente,
+          intestatoA: raw.bulletinIntestatoA,
+          importoEuro: raw.bulletinImportoEuro,
+          eseguitoDaNominativo: raw.bulletinEseguitoDaNominativo,
+          eseguitoDaIndirizzo: raw.bulletinEseguitoDaIndirizzo,
+          eseguitoDaLocalita: raw.bulletinEseguitoDaLocalita,
+          eseguitoDaCap: raw.bulletinEseguitoDaCap,
+          codiceCliente: raw.bulletinCodiceCliente,
+          annoDiRiferimento: raw.bulletinAnnoDiRiferimento,
+          iban: raw.bulletinIban,
+          causale: raw.bulletinCausale
+        } : null
       };
 
       // Qui chiami la tua API per salvare
@@ -206,6 +232,10 @@ export class SendUpdateDialogComponent {
         this.attachedFile = base64String;
       }
     }
+  }
+
+  hasBulletin(): boolean {
+    return this.data?.haveBulletins === true || !!this.data?.bulletin;
   }
 
   private base64ToUint8Array(base64: string): Uint8Array {

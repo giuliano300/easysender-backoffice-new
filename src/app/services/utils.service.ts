@@ -41,6 +41,23 @@ export class UtilsService {
       return `${day}/${month}/${year}`;
     }
 
+    getDateTimeFormatted(date: string | Date | null | undefined): string {
+      if (!date) return '';
+
+      const value = new Date(date);
+      if (isNaN(value.getTime())) return '';
+
+      return new Intl.DateTimeFormat('it-IT', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZone: 'Europe/Rome'
+      }).format(value);
+    }
+
    GetMonth(): any[] {
     let m =  
     [

@@ -25,9 +25,25 @@ export interface Sends {
   waitingMinutes?: number | null;
   canUnlock: boolean;
   stato: string;
+  telegramText?: string | null;
   pageNumber: number;
   notificato: boolean;
   hasArScan: boolean;
+  haveBulletins?: boolean;
+  bulletin?: {
+    id?: number;
+    numeroContoCorrente?: string;
+    intestatoA?: string;
+    importoEuro?: string;
+    eseguitoDaNominativo?: string;
+    eseguitoDaIndirizzo?: string;
+    eseguitoDaLocalita?: string;
+    annoDiRiferimento?: string;
+    eseguitoDaCap?: string;
+    codiceCliente?: string;
+    causale?: string | null;
+    iban?: string | null;
+  } | null;
   arScanLoading?: boolean;
   unblocking?: boolean;
   reporting?: boolean;

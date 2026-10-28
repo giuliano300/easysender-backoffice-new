@@ -494,7 +494,7 @@ export class SendsComponent {
   }
 
   reportSend(send: Sends): void {
-    if (send.reporting) return;
+    if (send.reporting || this.isBackofficeActionLocked(send)) return;
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '470px',
@@ -532,6 +532,10 @@ export class SendsComponent {
   }
   
   UpdateItem(item:Sends){
+      if (this.isBackofficeActionLocked(item)) {
+        return;
+      }
+
      this.sendService.getSend(item.id).subscribe({
       next: (data: Sends) => {
 
@@ -554,6 +558,9 @@ export class SendsComponent {
 
 
   DeleteItem(item:Sends){
+    if (this.isBackofficeActionLocked(item)) {
+      return;
+    }
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '470px',
@@ -707,6 +714,21 @@ export class SendsComponent {
     }
 
     this.gotoDetails(send);
+  }
+
+  isBackofficeActionLocked(send: Sends): boolean {
+    const requiresInProgressState = [ProductTypes.mol, ProductTypes.col4, ProductTypes.col1, ProductTypes.agolB, ProductTypes.agolM]
+      .includes(send.productType);
+
+    return requiresInProgressState
+      ? send.currentStateInt === CurrentState.inlavorazione
+      : send.currentStateInt === CurrentState.presaInCarico;
+  }
+
+  backofficeActionTooltip(send: Sends, action: string): string {
+    return this.isBackofficeActionLocked(send)
+      ? 'Spedizione già presa in carico: azione non disponibile'
+      : action;
   }
 
   isTruncated(element: HTMLElement): boolean {

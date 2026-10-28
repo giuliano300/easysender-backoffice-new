@@ -19,7 +19,7 @@
         <p>{{ data.stato || 'Nessun messaggio disponibile' }}</p>
       </div>
       <div class="summary-data">
-        <div><span>Data invio</span><strong>{{ data.insertDate ? utils.getDateFormatted(data.insertDate) : '—' }}</strong></div>
+        <div><span>Data e ora invio</span><strong>{{ data.insertDate ? utils.getDateTimeFormatted(data.insertDate) : '—' }}</strong></div>
         <div><span>Utente</span><strong>{{ data.userComplete || '—' }}</strong></div>
         <div><span>ID richiesta</span><strong class="code-value">{{ data.requestId || '—' }}</strong></div>
       </div>
@@ -91,6 +91,26 @@
         <div class="field-control" *ngFor="let field of ['zipCodeSenderAR', 'citySenderAR', 'provinceSenderAR', 'stateSenderAR']">
           <label [for]="field">{{ fieldLabels[field] }}</label><input [id]="field" [formControlName]="field">
         </div>
+      </div>
+    </section>
+
+    <section class="form-section bulletin-section" *ngIf="hasBulletin()">
+      <div class="section-heading">
+        <span class="section-icon"><i class="ri-bill-line"></i></span>
+        <div><small>PAGAMENTO</small><h2>Dati del bollettino</h2></div>
+      </div>
+      <div class="form-grid three-columns">
+        <div class="field-control"><label for="bulletinNumeroContoCorrente">Conto corrente</label><input id="bulletinNumeroContoCorrente" formControlName="bulletinNumeroContoCorrente"></div>
+        <div class="field-control"><label for="bulletinIntestatoA">Intestato a</label><input id="bulletinIntestatoA" formControlName="bulletinIntestatoA"></div>
+        <div class="field-control"><label for="bulletinImportoEuro">Importo €</label><input id="bulletinImportoEuro" formControlName="bulletinImportoEuro"></div>
+        <div class="field-control"><label for="bulletinEseguitoDaNominativo">Eseguito da</label><input id="bulletinEseguitoDaNominativo" formControlName="bulletinEseguitoDaNominativo"></div>
+        <div class="field-control"><label for="bulletinEseguitoDaIndirizzo">Indirizzo</label><input id="bulletinEseguitoDaIndirizzo" formControlName="bulletinEseguitoDaIndirizzo"></div>
+        <div class="field-control"><label for="bulletinEseguitoDaLocalita">Località</label><input id="bulletinEseguitoDaLocalita" formControlName="bulletinEseguitoDaLocalita"></div>
+        <div class="field-control"><label for="bulletinEseguitoDaCap">CAP</label><input id="bulletinEseguitoDaCap" formControlName="bulletinEseguitoDaCap"></div>
+        <div class="field-control"><label for="bulletinCodiceCliente">Codice cliente</label><input id="bulletinCodiceCliente" formControlName="bulletinCodiceCliente"></div>
+        <div class="field-control"><label for="bulletinAnnoDiRiferimento">Anno di riferimento</label><input id="bulletinAnnoDiRiferimento" formControlName="bulletinAnnoDiRiferimento"></div>
+        <div class="field-control"><label for="bulletinIban">IBAN</label><input id="bulletinIban" formControlName="bulletinIban"></div>
+        <div class="field-control bulletin-causale"><label for="bulletinCausale">Causale</label><input id="bulletinCausale" formControlName="bulletinCausale"></div>
       </div>
     </section>
 

@@ -8,6 +8,8 @@ export interface OperationListItem {
   errorMessage?: string | null;
   userName: string;
   recipients: number;
+  notifiedRecipients: number;
+  acceptedRecipients: number;
   inProgress: number;
   posteCallClaims: number;
 }

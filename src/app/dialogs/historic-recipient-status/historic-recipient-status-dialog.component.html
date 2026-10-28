@@ -24,6 +24,10 @@
       <span>Località</span>
       <strong>{{ data.recipient.city || '—' }}<ng-container *ngIf="data.recipient.province"> ({{ data.recipient.province }})</ng-container></strong>
     </div>
+    <div>
+      <span>Data e ora invio</span>
+      <strong>{{ formatDateTime(data.recipient.insertDate) }}</strong>
+    </div>
   </div>
 
   <mat-dialog-content class="dialog-content">
@@ -41,7 +45,7 @@
           <div class="timeline-marker"><span></span></div>
           <div class="timeline-card">
             <div class="message-meta">
-              <span class="date"><i class="ri-calendar-line"></i>{{ formatDate(item.insertDate) }}</span>
+              <span class="date"><i class="ri-calendar-line"></i>{{ formatDateTime(item.insertDate) }}</span>
               <span *ngIf="first" class="latest-badge">Più recente</span>
             </div>
             <p>{{ item.message || 'Nessun dettaglio disponibile' }}</p>
