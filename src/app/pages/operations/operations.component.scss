@@ -1,5 +1,14 @@
 .operations-table small { color: var(--manager-muted); font-size: 11px; }
 .operations-filter-card .filters-head { padding-left: 3px; }
+.operations-filter-fields { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 12px 18px; align-items: start; }
+.operations-filter-fields .input-wrapper { min-width: 0; }
+.operations-filter-fields mat-form-field { width: 100%; }
+.operations-filter-date { grid-column: span 3; }
+.operations-filter-user { grid-column: span 3; }
+.operations-filter-complete { grid-column: span 2; }
+.operations-filter-search { grid-column: span 6; }
+.operations-filter-actions { display: contents; }
+.operations-filter-actions button { grid-column: span 1; align-self: start; width: 100%; min-width: 0; height: 52px !important; margin: 0 !important; }
 .status-pill { display: inline-flex; padding: 4px 8px; border-radius: 20px; background: #fff2d8; color: #9b6500; font-size: 11px; font-weight: 600; }
 .status-pill.complete { background: #e8f7ef; color: #167047; }
 .status-pill.error { color: var(--color-danger) !important; }
@@ -16,6 +25,12 @@
   .operations-filter-card .filters-head p { display: none; }
   .operations-filter-card .filters-head h2 { font-size: 16px !important; }
   .operations-filter-card .filters-head-icon { width: 36px; height: 36px; border-radius: 11px; font-size: 17px; }
+  .operations-filter-fields { grid-template-columns: 1fr; gap: 7px; }
+  .operations-filter-date,
+  .operations-filter-user,
+  .operations-filter-complete,
+  .operations-filter-search,
+  .operations-filter-actions button { grid-column: 1; }
 
   .operations-table .mat-mdc-row { border-radius: 16px !important; }
   .operations-table .mat-column-id { background: var(--action-filter-bg-soft) !important; color: var(--manager-accent-strong) !important; font-weight: 700; }

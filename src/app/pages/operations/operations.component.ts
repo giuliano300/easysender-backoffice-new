@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -12,6 +12,7 @@ import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSelectModule } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { OperationListItem } from '../../interfaces/OperationListItem';
@@ -25,11 +26,11 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   standalone: true,
   selector: 'app-operations',
-  imports: [CommonModule, ReactiveFormsModule, MatCardModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatDatepickerModule, MatNativeDateModule, MatTableModule, MatPaginatorModule, MatTooltipModule, FeathericonsModule, DatePipe],
+  imports: [CommonModule, ReactiveFormsModule, MatCardModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatDatepickerModule, MatNativeDateModule, MatSelectModule, MatTableModule, MatPaginatorModule, MatTooltipModule, FeathericonsModule, DatePipe],
   templateUrl: './operations.component.html',
   styleUrl: './operations.component.scss'
 })
-export class OperationsComponent implements OnInit {
+export class OperationsComponent implements OnInit, OnDestroy {
   displayedColumns = ['id', 'date', 'name', 'user', 'recipients', 'progress', 'status', 'view', 'delete'];
   dataSource = new MatTableDataSource<OperationListItem>([]);
   form: FormGroup;
@@ -38,18 +39,26 @@ export class OperationsComponent implements OnInit {
   pageSize = 20;
   loading = false;
   exportingCsv = false;
+  private refreshTimer?: ReturnType<typeof setInterval>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   users: CompleteUser[] = [];
 
   constructor(private fb: FormBuilder, private sendsService: SendsService, private usersService: UsersService, private csvExport: CsvExportService, private dialog: MatDialog, private router: Router) {
     const today = this.getToday();
-    this.form = this.fb.group({ search: [''], start: [today], end: [today], userId: [null], userSearch: [''] });
+    this.form = this.fb.group({ search: [''], start: [today], end: [today], userId: [null], userSearch: [''], complete: [true] });
   }
 
   ngOnInit(): void {
     this.load();
     this.usersService.getUsers('', 0, true).subscribe(users => this.users = users);
+    this.refreshTimer = setInterval(() => this.load(), 20_000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshTimer) {
+      clearInterval(this.refreshTimer);
+    }
   }
 
   get filteredUsers(): CompleteUser[] {
@@ -67,7 +76,7 @@ export class OperationsComponent implements OnInit {
 
   resetFilters(): void {
     const today = this.getToday();
-    this.form.reset({ search: '', start: today, end: today, userId: null, userSearch: '' });
+    this.form.reset({ search: '', start: today, end: today, userId: null, userSearch: '', complete: true });
     this.load(true);
   }
 
@@ -77,6 +86,7 @@ export class OperationsComponent implements OnInit {
   }
 
   load(resetPage = false): void {
+    if (this.loading) return;
     if (resetPage) this.pageIndex = 0;
     this.loading = true;
     this.sendsService.getOperations({
@@ -84,6 +94,7 @@ export class OperationsComponent implements OnInit {
       userId: this.form.value.userId ?? undefined,
       startDate: this.form.value.start ? new Date(this.form.value.start) : undefined,
       endDate: this.form.value.end ? new Date(this.form.value.end) : undefined,
+      complete: this.form.value.complete ?? undefined,
       pageIndex: this.pageIndex,
       pageSize: this.pageSize
     }).subscribe({
@@ -111,6 +122,10 @@ export class OperationsComponent implements OnInit {
     return total === 0 ? 100 : Math.min(100, Math.round((item.acceptedRecipients / total) * 100));
   }
 
+  isShipmentComplete(item: OperationListItem): boolean {
+    return this.progressPercentage(item) === 100;
+  }
+
   async exportFilteredOperations(): Promise<void> {
     if (this.exportingCsv) return;
 
@@ -121,6 +136,7 @@ export class OperationsComponent implements OnInit {
         userId: this.form.value.userId ?? undefined,
         startDate: this.form.value.start ? new Date(this.form.value.start) : undefined,
         endDate: this.form.value.end ? new Date(this.form.value.end) : undefined,
+        complete: this.form.value.complete ?? undefined,
         pageIndex: 0,
         pageSize: 200
       };
@@ -142,7 +158,7 @@ export class OperationsComponent implements OnInit {
         { header: 'Invii segnalati', value: row => row.notifiedRecipients },
         { header: 'Avanzamento', value: row => `${this.progressPercentage(row)}%` },
         { header: 'Invii in corso', value: row => row.inProgress },
-        { header: 'Stato', value: row => row.error ? 'Errore' : row.complete ? 'Completata' : 'In corso' },
+        { header: 'Stato', value: row => row.error ? 'Errore' : this.isShipmentComplete(row) ? 'Completata' : 'In corso' },
         { header: 'Messaggio errore', value: row => row.errorMessage }
       ]);
     } finally {

@@ -44,7 +44,15 @@ export class UtilsService {
     getDateTimeFormatted(date: string | Date | null | undefined): string {
       if (!date) return '';
 
-      const value = new Date(date);
+      // SQL datetime2 is serialized without a timezone suffix. These timestamps are
+      // stored in UTC, so mark them as UTC before rendering them in Europe/Rome.
+      const rawValue = typeof date === 'string' ? date.trim() : date;
+      const timestampWithoutTimezone = typeof rawValue === 'string'
+        && /^\d{4}-\d{2}-\d{2}[T ]/.test(rawValue)
+        && !/(Z|[+-]\d{2}:?\d{2})$/i.test(rawValue);
+      const value = new Date(timestampWithoutTimezone
+        ? `${rawValue.replace(' ', 'T')}Z`
+        : rawValue);
       if (isNaN(value.getTime())) return '';
 
       return new Intl.DateTimeFormat('it-IT', {

@@ -91,4 +91,8 @@ export class RecipientService {
     }
   }
 
+  requestAcceptanceReceipt(s: Sends): Observable<StatusFileResponses> {
+    return this.http.get<StatusFileResponses>(this.apiUrlStatus + "/ACCEPTANCEROL/" + s.id);
+  }
+
 }

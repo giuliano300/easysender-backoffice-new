@@ -83,12 +83,13 @@ export class SendsService {
     return this.http.delete<any>(this.apiUrl + "/Operation/" + operationId);
   }
 
-  getOperations(filters: { search?: string; userId?: number; startDate?: Date; endDate?: Date; pageIndex?: number; pageSize?: number } = {}): Observable<{ data: OperationListItem[]; totalCount: number }> {
+  getOperations(filters: { search?: string; userId?: number; startDate?: Date; endDate?: Date; complete?: boolean; pageIndex?: number; pageSize?: number } = {}): Observable<{ data: OperationListItem[]; totalCount: number }> {
     const params = new HttpParams({ fromObject: {
       ...(filters.search && { search: filters.search }),
       ...(filters.userId !== undefined && { userId: filters.userId }),
       ...(filters.startDate && { startDate: this.formatLocalDate(filters.startDate) }),
       ...(filters.endDate && { endDate: this.formatLocalDate(filters.endDate) }),
+      ...(filters.complete !== undefined && { complete: filters.complete }),
       pageIndex: filters.pageIndex ?? 0,
       pageSize: filters.pageSize ?? 20
     } });

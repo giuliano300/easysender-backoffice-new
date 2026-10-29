@@ -92,4 +92,27 @@ export class SendDialogComponent {
     })
   }
 
+  creaRicevutaAccettazione(send: any): void {
+    send.loadingAcceptanceReceipt = true;
+    this.recipientService.requestAcceptanceReceipt(send).subscribe({
+      next: (res) => {
+        send.attacchedFileRicevutaAccettazione = res.file;
+      },
+      error: (err) => {
+        this.dialog.open(alertDialogComponent, {
+          data: {
+            title: 'Errore nel recupero della ricevuta',
+            description: err.error?.message || 'La ricevuta di accettazione non è ancora disponibile.'
+          },
+          width: '540px',
+          maxWidth: '92vw',
+          panelClass: 'alert-action-dialog'
+        });
+      },
+      complete: () => {
+        send.loadingAcceptanceReceipt = false;
+      }
+    });
+  }
+
 }

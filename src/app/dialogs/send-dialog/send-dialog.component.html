@@ -109,7 +109,10 @@
           <span class="file-icon receipt"><i class="ri-file-shield-2-line"></i></span>
           <div class="file-copy"><small>RICEVUTA DI ACCETTAZIONE</small><strong>{{ data.attacchedFileRicevutaAccettazione ? 'Ricevuta disponibile' : 'Non ancora disponibile' }}</strong></div>
           <button *ngIf="data.attacchedFileRicevutaAccettazione" type="button" class="file-action" (click)="downloadFile(data, 'acceptanceReceipt')"><i class="ri-download-2-line"></i><span>Scarica</span></button>
-          <span *ngIf="!data.attacchedFileRicevutaAccettazione" class="pending-badge">In attesa</span>
+          <button *ngIf="!data.attacchedFileRicevutaAccettazione" type="button" class="file-action generate" (click)="creaRicevutaAccettazione(data)" [disabled]="data.loadingAcceptanceReceipt">
+            <mat-progress-spinner *ngIf="data.loadingAcceptanceReceipt" mode="indeterminate" diameter="17" strokeWidth="3"></mat-progress-spinner>
+            <i *ngIf="!data.loadingAcceptanceReceipt" class="ri-magic-line"></i><span>{{ data.loadingAcceptanceReceipt ? 'Generazione…' : 'Genera' }}</span>
+          </button>
         </div>
       </div>
     </section>
