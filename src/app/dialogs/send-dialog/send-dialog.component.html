@@ -105,6 +105,12 @@
           <button *ngIf="data.attacchedFileRR" type="button" class="file-action" (click)="downloadFile(data, 'fileRR')"><i class="ri-download-2-line"></i><span>Scarica</span></button>
           <span *ngIf="!data.attacchedFileRR" class="pending-badge">In attesa</span>
         </div>
+        <div class="file-row" *ngIf="data.productType === 1">
+          <span class="file-icon receipt"><i class="ri-file-shield-2-line"></i></span>
+          <div class="file-copy"><small>RICEVUTA DI ACCETTAZIONE</small><strong>{{ data.attacchedFileRicevutaAccettazione ? 'Ricevuta disponibile' : 'Non ancora disponibile' }}</strong></div>
+          <button *ngIf="data.attacchedFileRicevutaAccettazione" type="button" class="file-action" (click)="downloadFile(data, 'acceptanceReceipt')"><i class="ri-download-2-line"></i><span>Scarica</span></button>
+          <span *ngIf="!data.attacchedFileRicevutaAccettazione" class="pending-badge">In attesa</span>
+        </div>
       </div>
     </section>
     </ng-template>

@@ -52,6 +52,11 @@ export class SendDialogComponent {
       add = "RR-";
       file = element.attacchedFileRR;
     }
+    if(type == "acceptanceReceipt")
+    {
+      add = "RA-ACC-";
+      file = element.attacchedFileRicevutaAccettazione ?? new Uint8Array();
+    }
     
   if (!file || !file) return;
 

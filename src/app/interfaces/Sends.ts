@@ -29,6 +29,7 @@ export interface Sends {
   pageNumber: number;
   notificato: boolean;
   hasArScan: boolean;
+  hasAcceptanceReceipt?: boolean;
   haveBulletins?: boolean;
   bulletin?: {
     id?: number;
@@ -52,6 +53,7 @@ export interface Sends {
   attacchedFile: Uint8Array; // oppure `string` se arriva base64 dal backend
   attacchedFileRR: Uint8Array; // oppure `string` se arriva base64 dal backend
   attacchedFileRA: Uint8Array; // oppure `string` se arriva base64 dal backend
+  attacchedFileRicevutaAccettazione?: Uint8Array;
   dataConsegna: string | null; // o `Date | null` se converti in runtime
 
   sender: string;
