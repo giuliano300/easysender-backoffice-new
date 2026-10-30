@@ -46,7 +46,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder, private sendsService: SendsService, private usersService: UsersService, private csvExport: CsvExportService, private dialog: MatDialog, private router: Router) {
     const today = this.getToday();
-    this.form = this.fb.group({ search: [''], start: [today], end: [today], userId: [null], userSearch: [''], complete: [true] });
+    this.form = this.fb.group({ search: [''], start: [today], end: [today], userId: [null], userSearch: [''], complete: [null] });
   }
 
   ngOnInit(): void {
@@ -76,7 +76,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
 
   resetFilters(): void {
     const today = this.getToday();
-    this.form.reset({ search: '', start: today, end: today, userId: null, userSearch: '', complete: true });
+    this.form.reset({ search: '', start: today, end: today, userId: null, userSearch: '', complete: null });
     this.load(true);
   }
 

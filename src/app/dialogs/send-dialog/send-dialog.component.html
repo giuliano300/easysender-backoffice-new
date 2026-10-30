@@ -56,7 +56,7 @@
       </section>
     </div>
 
-    <section class="detail-card full-card" *ngIf="data.arBool">
+    <section class="detail-card full-card" *ngIf="hasReturnReceipt()">
       <div class="section-heading">
         <span><i class="ri-reply-line"></i></span>
         <div><small>RICEVUTA DI RITORNO</small><h2>Destinatario AR</h2></div>
@@ -99,7 +99,7 @@
             <i *ngIf="!data.loading" class="ri-magic-line"></i><span>{{ data.loading ? 'Creazione…' : 'Genera' }}</span>
           </button>
         </div>
-        <div class="file-row" *ngIf="data.arBool">
+        <div class="file-row" *ngIf="hasReturnReceipt()">
           <span class="file-icon receipt"><i class="ri-mail-check-line"></i></span>
           <div class="file-copy"><small>RICEVUTA DI RITORNO</small><strong>{{ data.attacchedFileRR ? 'Ricevuta disponibile' : 'Non ancora disponibile' }}</strong></div>
           <button *ngIf="data.attacchedFileRR" type="button" class="file-action" (click)="downloadFile(data, 'fileRR')"><i class="ri-download-2-line"></i><span>Scarica</span></button>

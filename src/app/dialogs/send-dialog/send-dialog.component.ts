@@ -35,6 +35,12 @@ export class SendDialogComponent {
     return this.data?.productType === 3;
   }
 
+  hasReturnReceipt(): boolean {
+    // ArBool è il valore restituito dall'API, derivato direttamente da
+    // Recipients.ReturnReceipt: mostrare file e dati AR solo se è selezionato.
+    return this.data?.arBool === true;
+  }
+
 
   downloadFile(element: Sends, type: string) {
     const encoder = new TextEncoder();
