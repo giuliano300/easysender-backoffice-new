@@ -42,9 +42,23 @@
     box-shadow: 0 0 0 5px color-mix(in srgb, #2387a8 5%, transparent);
 }
 .tone-danger .kpi-icon { background: color-mix(in srgb, var(--color-danger) 9%, var(--manager-surface)); color: var(--color-danger); }
-.dashboard-link { cursor: pointer; transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition); }
-.dashboard-link:hover, .dashboard-link:focus-visible { border-color: color-mix(in srgb, var(--manager-accent-strong) 38%, var(--manager-border)); box-shadow: 0 10px 20px color-mix(in srgb, var(--manager-accent-strong) 9%, transparent); outline: 0; transform: translateY(-1px); }
-.error-link:hover, .error-link:focus-visible { border-color: color-mix(in srgb, var(--color-danger) 38%, var(--manager-border)); box-shadow: 0 10px 20px color-mix(in srgb, var(--color-danger) 9%, transparent); }
+.dashboard-link {
+    --dashboard-hover-color: var(--manager-accent-strong);
+    cursor: pointer;
+    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+
+    .kpi-icon { transition: transform .18s ease, box-shadow .18s ease; }
+}
+.error-link { --dashboard-hover-color: var(--color-danger); }
+.dashboard-link:hover,
+.dashboard-link:focus-visible {
+    border-color: color-mix(in srgb, var(--dashboard-hover-color) 38%, var(--manager-border));
+    box-shadow: 0 10px 20px color-mix(in srgb, var(--dashboard-hover-color) 9%, transparent);
+    outline: 0;
+    transform: translateY(-2px);
+
+    .kpi-icon { transform: scale(1.06); }
+}
 
 @keyframes processing-spin {
     to { transform: rotate(360deg); }
