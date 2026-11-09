@@ -1,0 +1,76 @@
+<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item active">Contabilità</li></ol></nav>
+
+<section class="page-head-card accounting-hero">
+  <div><span class="page-eyebrow">AMMINISTRAZIONE ECONOMICA</span><h1>Contabilità clienti</h1><p>Ogni posizione nasce da un’utenza: incassi, consumi e rettifiche restano nello stesso conto economico.</p></div>
+  <button type="button" class="page-head-action csv-page-export" (click)="exportCsv()" [disabled]="exporting"><i class="ri-file-download-line"></i>{{ exporting ? 'Preparazione…' : 'Esporta CSV' }}</button>
+</section>
+
+<section class="accounting-kpis" *ngIf="summary as data">
+  <article><span>Maturato</span><strong>{{ data.accrued | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong><small>{{ data.positions }} posizioni · {{ data.customers }} clienti</small></article>
+  <article class="success"><span>Incassato</span><strong>{{ data.collected | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong><small>{{ data.accrued ? ((data.collected / data.accrued) * 100 | number:'1.0-0') : 0 }}% del maturato</small></article>
+  <article class="warning"><span>Da incassare</span><strong>{{ data.outstanding | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong><small>Posizioni ancora aperte</small></article>
+  <article class="danger"><span>Scaduto</span><strong>{{ data.overdue | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong><small>Scadenze da gestire</small></article>
+  <article class="brand"><span>Prossimi 30 giorni</span><strong>{{ data.nextThirtyDays | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong><small>Flusso in entrata previsto</small></article>
+</section>
+
+<section class="accounting-overview" *ngIf="summary as data">
+  <mat-card class="trinta-card aging-card"><mat-card-content>
+    <header><div><span>ANALISI CREDITI</span><h2>Scadenzario</h2></div><small>Aggiornato in tempo reale</small></header>
+    <div class="aging-grid">
+      <div><span>Non scaduto</span><strong>{{ data.aging.current | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong></div>
+      <div><span>1–30 giorni</span><strong>{{ data.aging.days1To30 | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong></div>
+      <div><span>31–60 giorni</span><strong>{{ data.aging.days31To60 | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong></div>
+      <div><span>61–90 giorni</span><strong>{{ data.aging.days61To90 | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong></div>
+      <div><span>Oltre 90 giorni</span><strong>{{ data.aging.over90 | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong></div>
+    </div>
+  </mat-card-content></mat-card>
+
+  <mat-card class="trinta-card due-card"><mat-card-content>
+    <header><div><span>AGENDA</span><h2>Prossime scadenze</h2></div><small>{{ data.dueSoon.length }} in evidenza</small></header>
+    <button class="due-row" type="button" *ngFor="let due of data.dueSoon" (click)="select(due)"><time>{{ due.dueDate | date:'dd MMM':'':'it-IT' }}</time><span><strong>{{ due.userName }}</strong><small>{{ due.description }}</small></span><em>{{ due.residualAmount | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</em></button>
+    <p class="empty-agenda" *ngIf="!data.dueSoon.length">Nessuna scadenza nei prossimi 30 giorni.</p>
+  </mat-card-content></mat-card>
+</section>
+
+<mat-card class="trinta-card to-do-list-card filter filter-card filters accounting-filter-card"><mat-card-content>
+  <details class="filter-disclosure"><summary class="filters-head"><span class="filters-head-icon"><i class="ri-filter-3-line"></i></span><div><small>RICERCA E FILTRI</small><h2>Partitario clienti</h2><p>Filtra per cliente, riferimento, stato e data di scadenza.</p></div><i class="ri-arrow-down-s-line filters-toggle-icon"></i></summary>
+    <form class="accounting-filters" [formGroup]="filters" (ngSubmit)="load()">
+      <mat-form-field appearance="fill"><mat-label>Cliente o riferimento</mat-label><i class="ri-search-line"></i><input matInput formControlName="search"></mat-form-field>
+      <mat-form-field appearance="fill"><mat-label>Cliente</mat-label><mat-select formControlName="userId"><mat-option [value]="null">Tutti i clienti</mat-option><mat-option *ngFor="let item of users" [value]="item.user.id">{{ item.user.businessName }}</mat-option></mat-select></mat-form-field>
+      <mat-form-field appearance="fill"><mat-label>Stato</mat-label><mat-select formControlName="status"><mat-option value="">Tutti</mat-option><mat-option value="open">Da pagare</mat-option><mat-option value="overdue">Scadute</mat-option><mat-option value="paid">Pagate</mat-option></mat-select></mat-form-field>
+      <mat-form-field appearance="fill"><mat-label>Da scadenza</mat-label><input matInput [matDatepicker]="fromPicker" formControlName="dueFrom"><mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle><mat-datepicker #fromPicker></mat-datepicker></mat-form-field>
+      <mat-form-field appearance="fill"><mat-label>A scadenza</mat-label><input matInput [matDatepicker]="toPicker" formControlName="dueTo"><mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle><mat-datepicker #toPicker></mat-datepicker></mat-form-field>
+      <button mat-button type="submit" class="filter">Filtra</button><button mat-button type="button" class="filterRemove" (click)="resetFilters()">Rimuovi</button>
+    </form>
+  </details>
+</mat-card-content></mat-card>
+
+<mat-card class="trinta-card accounting-create"><mat-card-content>
+  <details><summary><span><i class="ri-add-circle-line"></i> Nuova posizione contabile</span><small>Registra un importo maturato, una scadenza e il cliente.</small></summary>
+    <form class="position-form" [formGroup]="positionForm" (ngSubmit)="createPosition()">
+      <mat-form-field appearance="fill"><mat-label>Cliente</mat-label><mat-select formControlName="userId"><mat-option *ngFor="let item of users" [value]="item.user.id">{{ item.user.businessName }}</mat-option></mat-select></mat-form-field>
+      <mat-form-field appearance="fill"><mat-label>Descrizione</mat-label><input matInput formControlName="description"></mat-form-field>
+      <mat-form-field appearance="fill"><mat-label>Riferimento contratto</mat-label><input matInput formControlName="contractReference"></mat-form-field>
+      <mat-form-field appearance="fill"><mat-label>Importo maturato</mat-label><input matInput type="number" min="0.01" step="0.01" formControlName="accruedAmount"></mat-form-field>
+      <mat-form-field appearance="fill"><mat-label>Scadenza</mat-label><input matInput [matDatepicker]="duePicker" formControlName="dueDate"><mat-datepicker-toggle matSuffix [for]="duePicker"></mat-datepicker-toggle><mat-datepicker #duePicker></mat-datepicker></mat-form-field>
+      <mat-form-field appearance="fill"><mat-label>Note</mat-label><input matInput formControlName="notes"></mat-form-field>
+      <button mat-button class="filter" type="submit" [disabled]="saving">{{ saving ? 'Salvataggio…' : 'Crea posizione' }}</button>
+    </form>
+  </details>
+</mat-card-content></mat-card>
+
+<mat-card class="trinta-card to-do-list-card accounting-table-card"><mat-card-content>
+  <header class="table-heading"><div><span>PARTITARIO CLIENTI</span><h2>Posizioni contabili</h2></div><small>{{ positions.length }} risultati</small></header>
+  <div class="to-do-list-table accounting-table"><table><thead><tr><th>Cliente e contratto</th><th>Scadenza</th><th>Maturato</th><th>Incassato</th><th>Residuo</th><th>Stato</th><th>Azioni</th></tr></thead><tbody>
+    <tr *ngFor="let position of positions" (click)="select(position)" class="clickable-row"><td><strong>{{ position.userName }}</strong><small>{{ position.contractReference || position.description }}</small></td><td>{{ position.dueDate | date:'dd/MM/yyyy' }}</td><td>{{ position.accruedAmount | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</td><td>{{ position.collectedAmount | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</td><td><strong>{{ position.residualAmount | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong></td><td><span class="accounting-status" [class.paid]="positionStatus(position) === 'paid'" [class.overdue]="positionStatus(position) === 'overdue'">{{ positionStatus(position) === 'paid' ? 'Pagata' : positionStatus(position) === 'overdue' ? 'Scaduta' : 'Da pagare' }}</span></td><td><button mat-button type="button" class="accounting-detail" (click)="$event.stopPropagation(); select(position)"><i class="ri-file-list-3-line"></i> Dettaglio</button></td></tr>
+    <tr *ngIf="!positions.length"><td colspan="7" class="no-data">{{ loading ? 'Caricamento…' : 'Nessuna posizione contabile trovata.' }}</td></tr>
+  </tbody></table></div>
+</mat-card-content></mat-card>
+
+<mat-card *ngIf="selected" class="trinta-card accounting-detail"><mat-card-content>
+  <header><div><span>DETTAGLIO POSIZIONE</span><h2>{{ selected.userName }}</h2><p>{{ selected.description }}<span *ngIf="selected.contractReference"> · {{ selected.contractReference }}</span></p></div><button mat-button type="button" class="filterRemove" (click)="selected = undefined">Chiudi</button></header>
+  <div class="detail-totals"><div><span>Maturato</span><strong>{{ selected.accruedAmount | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong></div><div><span>Rettifiche</span><strong>{{ selected.creditAmount | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong></div><div><span>Incassato</span><strong>{{ selected.collectedAmount | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong></div><div><span>Residuo</span><strong>{{ selected.residualAmount | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong></div></div>
+  <div class="detail-columns"><section><h3>Movimenti</h3><div class="movement" *ngFor="let movement of movements"><span [class]="movement.type">{{ movement.type === 'payment' ? 'Pagamento' : movement.type === 'credit-note' ? 'Nota di credito' : 'Rettifica' }}</span><strong>{{ movement.amount | currency:'EUR':'symbol':'1.2-2':'it-IT' }}</strong><small>{{ movement.movementDate | date:'dd/MM/yyyy' }}<ng-container *ngIf="movement.notes"> · {{ movement.notes }}</ng-container></small></div><p class="empty-agenda" *ngIf="!movements.length">Nessun movimento registrato.</p></section>
+    <section><h3>Registra movimento</h3><form class="movement-form" [formGroup]="movementForm" (ngSubmit)="addMovement()"><mat-form-field appearance="fill"><mat-label>Tipo</mat-label><mat-select formControlName="type"><mat-option value="payment">Pagamento</mat-option><mat-option value="adjustment">Rettifica</mat-option><mat-option value="credit-note">Nota di credito</mat-option></mat-select></mat-form-field><mat-form-field appearance="fill"><mat-label>Importo</mat-label><input matInput type="number" min="0.01" step="0.01" formControlName="amount"></mat-form-field><mat-form-field appearance="fill"><mat-label>Data</mat-label><input matInput [matDatepicker]="movementPicker" formControlName="movementDate"><mat-datepicker-toggle matSuffix [for]="movementPicker"></mat-datepicker-toggle><mat-datepicker #movementPicker></mat-datepicker></mat-form-field><mat-form-field appearance="fill"><mat-label>Note</mat-label><input matInput formControlName="notes"></mat-form-field><button mat-button class="filter" type="submit" [disabled]="saving">Registra</button></form></section>
+  </div>
+</mat-card-content></mat-card>

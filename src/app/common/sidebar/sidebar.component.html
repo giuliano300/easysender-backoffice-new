@@ -75,6 +75,10 @@
                     <span class="sub-title text-body">
                         AMMINISTRAZIONE
                     </span>
+                    <a routerLink="/accounting" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i-feather name="credit-card"></i-feather>
+                        <span class="title">Contabilità</span>
+                    </a>
                     <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
                         <mat-expansion-panel-header (click)="openUsersMenuFromCompactSidebar()">
                             <mat-panel-title>
