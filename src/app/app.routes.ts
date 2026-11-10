@@ -14,6 +14,7 @@ import { AddChildrenComponent } from './pages/users/add-children/add-children.co
 import { AutomationDashboardComponent } from './dashboard/automation-dashboard/automation-dashboard.component';
 import { OperationsComponent } from './pages/operations/operations.component';
 import { AccountingComponent } from './pages/accounting/accounting.component';
+import { DisasterRecoveryComponent } from './pages/disaster-recovery/disaster-recovery.component';
 
 export const routes: Routes = [
     { path: '', redirectTo : '/dashboard', pathMatch: 'full' },
@@ -47,6 +48,11 @@ export const routes: Routes = [
     {
         path: 'accounting',
         component: AccountingComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'disaster-recovery',
+        component: DisasterRecoveryComponent,
         canActivate: [AuthGuard]
     },
     {

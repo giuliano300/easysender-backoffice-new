@@ -45,6 +45,12 @@
                             Sistemi
                         </span>
                     </a>
+                    <a routerLink="/disaster-recovery" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i-feather name="shield"></i-feather>
+                        <span class="title">
+                            Disaster recovery
+                        </span>
+                    </a>
                     <span class="sub-title text-body">
                         INVII
                     </span>
@@ -76,7 +82,7 @@
                         AMMINISTRAZIONE
                     </span>
                     <a routerLink="/accounting" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                        <i-feather name="credit-card"></i-feather>
+                        <i-feather name="dollar-sign"></i-feather>
                         <span class="title">Contabilità</span>
                     </a>
                     <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">

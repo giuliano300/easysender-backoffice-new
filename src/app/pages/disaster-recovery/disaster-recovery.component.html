@@ -1,0 +1,38 @@
+<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item active">Disaster recovery</li></ol></nav>
+
+<section class="page-head-card dr-hero">
+  <div><span class="page-eyebrow">PROTEZIONE DATI</span><h1>Disaster recovery</h1><p>Backup verificato del database su due dischi distinti del server. La terza copia esterna si attiverà quando sarà disponibile una VPN privata.</p></div>
+  <div class="dr-hero-actions"><button mat-button type="button" class="filterRemove" (click)="load()"><i class="ri-refresh-line"></i> Aggiorna</button><button mat-button type="button" class="filter" (click)="runNow()" [disabled]="running"><i class="ri-play-line"></i> {{ running ? 'Richiesto…' : 'Esegui ora' }}</button></div>
+</section>
+
+<div class="dr-message success" *ngIf="message"><i class="ri-checkbox-circle-line"></i>{{ message }}</div>
+<div class="dr-message error" *ngIf="error"><i class="ri-error-warning-line"></i>{{ error }}</div>
+
+<section class="dr-summary" *ngIf="data as status">
+  <article [class.ok]="status.configuration.enabled" [class.off]="!status.configuration.enabled"><div><span>Servizio</span><strong>{{ status.configuration.enabled ? 'Attivo' : 'Sospeso' }}</strong><small>Controllo automatico ogni 30 secondi</small></div></article>
+  <article [class.ok]="status.lastRun?.status === 'completed'" [class.danger]="status.lastRun?.status === 'failed'"><div><span>Ultimo backup</span><strong>{{ runStatus(status.lastRun) }}</strong><small>{{ status.lastRun?.completedAt || status.lastRun?.startedAt ? (status.lastRun?.completedAt || status.lastRun?.startedAt | date:'dd/MM/yyyy HH:mm:ss') : 'Nessuna esecuzione' }}</small></div></article>
+  <article><div><span>Dimensione</span><strong>{{ fileSize(status.lastRun?.backupSizeBytes) }}</strong><small>File verificato con checksum</small></div></article>
+  <article><div><span>Programmazione</span><strong>{{ status.configuration.scheduledTime }}</strong><small>Ogni giorno, ora del server</small></div></article>
+</section>
+
+<mat-card class="trinta-card dr-configuration"><mat-card-content>
+  <header><div><span>CONFIGURAZIONE SERVIZIO</span><h2>Copie, orari e conservazione</h2><p>Le cartelle sono sul server. B è la copia primaria; C è la copia indipendente di sicurezza.</p></div><div [formGroup]="form"><label class="dr-switch"><input type="checkbox" formControlName="enabled"><span></span>{{ form.controls.enabled.value ? 'Attivo' : 'Sospeso' }}</label></div></header>
+  <form [formGroup]="form" (ngSubmit)="save()" class="dr-form">
+    <div class="field-control"><label for="scheduledTime">Orario giornaliero</label><input id="scheduledTime" type="time" formControlName="scheduledTime"></div>
+    <div class="field-control"><label for="primaryBackupRoot">Copia primaria (server)</label><input id="primaryBackupRoot" formControlName="primaryBackupRoot"></div>
+    <div class="field-control"><label for="secondaryBackupRoot">Copia secondaria (server)</label><input id="secondaryBackupRoot" formControlName="secondaryBackupRoot"></div>
+    <div class="field-control"><label for="offsiteBackupRoot">Terza copia esterna (VPN, facoltativa)</label><input id="offsiteBackupRoot" formControlName="offsiteBackupRoot" placeholder="\\PC-GIULIANO\EasySenderDR"></div>
+    <div class="field-control"><label for="dailyRetentionDays">Conserva tutti i backup (giorni)</label><input id="dailyRetentionDays" type="number" min="7" formControlName="dailyRetentionDays"></div>
+    <div class="field-control"><label for="weeklyRetentionWeeks">Copie domenicali (settimane)</label><input id="weeklyRetentionWeeks" type="number" min="4" formControlName="weeklyRetentionWeeks"></div>
+    <div class="field-control"><label for="monthlyRetentionMonths">Copie mensili (mesi)</label><input id="monthlyRetentionMonths" type="number" min="12" formControlName="monthlyRetentionMonths"></div>
+    <button mat-button type="submit" class="filter" [disabled]="saving">{{ saving ? 'Salvataggio…' : 'Salva configurazione' }}</button>
+  </form>
+</mat-card-content></mat-card>
+
+<mat-card class="trinta-card to-do-list-card bg-white border-none d-block dr-history"><mat-card-content>
+  <header class="table-heading"><div><span>STORICO</span><h2>Ultime esecuzioni</h2></div><small>Backup, verifica SQL e copia completati nello stesso ciclo.</small></header>
+  <div class="to-do-list-table"><table><thead><tr><th>Avvio</th><th>Tipo</th><th>Stato</th><th>File</th><th class="text-right">Dimensione</th><th>Errore</th></tr></thead><tbody>
+    <tr *ngFor="let run of data?.recentRuns"><td>{{ run.startedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td><td>{{ run.trigger === 'manual' ? 'Manuale' : 'Pianificato' }}</td><td><span class="dr-status" [class.completed]="run.status === 'completed'" [class.failed]="run.status === 'failed'" [class.running]="run.status === 'running'">{{ runStatus(run) }}</span></td><td class="dr-file" [title]="run.backupFile || ''">{{ run.backupFile || '—' }}</td><td class="text-right">{{ fileSize(run.backupSizeBytes) }}</td><td class="dr-error" [title]="run.error || ''">{{ run.error || '—' }}</td></tr>
+    <tr *ngIf="!data?.recentRuns?.length"><td colspan="6" class="no-data">{{ loading ? 'Caricamento…' : 'Il servizio non ha ancora eseguito backup.' }}</td></tr>
+  </tbody></table></div>
+</mat-card-content></mat-card>
