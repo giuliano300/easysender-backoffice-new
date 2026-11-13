@@ -1,14 +1,14 @@
 .main-content {
-    min-height: 100dvh; padding: 104px 28px 0 304px; overflow: hidden;
+    min-height: 100dvh; padding: 82px 22px 0 290px; overflow: hidden;
     background: var(--manager-bg); transition: var(--transition);
-    &.active, &.hide-sidebar { padding-left: 120px; }
+    &.active, &.hide-sidebar { padding-left: 114px; }
 }
 .blank-page {
     app-sidebar, app-footer, app-header { display: none !important; }
     .main-content { padding: 0 !important; }
 }
 .mobile-sidebar-backdrop { display: none; }
-@media (max-width: 1199px) { .main-content, .main-content.active, .main-content.hide-sidebar { padding: 96px 24px 0; } }
+@media (max-width: 1199px) { .main-content, .main-content.active, .main-content.hide-sidebar { padding: 82px 20px 0; } }
 @media (max-width: 1199px) {
     .mobile-sidebar-backdrop {
         position: fixed; inset: 0; z-index: 35; display: block; width: 100%; height: 100%;

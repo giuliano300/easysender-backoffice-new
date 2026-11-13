@@ -1,13 +1,13 @@
 :host { display: block; color: var(--manager-ink); }
 .dialog-shell { display: flex; max-height: min(90vh, 860px); overflow: hidden; flex-direction: column; background: var(--manager-surface); }
-.dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 24px; border-bottom: 1px solid var(--manager-border); background: linear-gradient(135deg, var(--color-brand-deep), var(--color-brand-dark)); }
+.dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 24px; border-bottom: 1px solid var(--manager-border); background: #f7fafb; }
 .dialog-title-group { display: flex; align-items: center; min-width: 0; gap: 14px; }
-.dialog-icon { display: grid; flex: 0 0 46px; width: 46px; height: 46px; place-items: center; border: 1px solid rgba(255,255,255,.18); border-radius: 14px; color: #fff; background: rgba(255,255,255,.1); font-size: 22px; }
-.dialog-eyebrow { display: block; margin-bottom: 3px; color: rgba(255,255,255,.62); font-size: 9px; font-weight: 700; letter-spacing: .13em; }
-.dialog-header h1 { margin: 0; color: #fff !important; font-size: 21px !important; font-weight: 600 !important; letter-spacing: -.025em; }
-.dialog-header p { margin: 3px 0 0; color: rgba(255,255,255,.7); font-size: 12px; }
-.dialog-close { display: grid; flex: 0 0 38px; width: 38px; height: 38px; padding: 0; place-items: center; border: 1px solid rgba(255,255,255,.15); border-radius: 12px; color: #fff; background: rgba(255,255,255,.08); font-size: 21px; cursor: pointer; transition: background .2s ease, transform .2s ease; }
-.dialog-close:hover { background: rgba(255,255,255,.16); transform: translateY(-1px); }
+.dialog-icon { display: grid; flex: 0 0 46px; width: 46px; height: 46px; place-items: center; border: 1px solid var(--action-filter-border); border-radius: 13px; color: var(--manager-accent-strong); background: var(--manager-soft); font-size: 22px; }
+.dialog-eyebrow { display: block; margin-bottom: 3px; color: var(--manager-accent-strong); font-size: 9px; font-weight: 700; letter-spacing: .13em; }
+.dialog-header h1 { margin: 0; color: var(--manager-ink) !important; font-size: 21px !important; font-weight: 600 !important; letter-spacing: -.025em; }
+.dialog-header p { margin: 3px 0 0; color: var(--manager-muted); font-size: 12px; }
+.dialog-close { display: grid; flex: 0 0 38px; width: 38px; height: 38px; padding: 0; place-items: center; border: 1px solid var(--manager-border); border-radius: 11px; color: var(--manager-muted); background: var(--manager-surface); font-size: 21px; cursor: pointer; transition: color .16s ease, background .16s ease, border-color .16s ease, transform .16s ease; }
+.dialog-close:hover { border-color: var(--action-filter-border); color: var(--manager-accent-strong); background: var(--manager-soft); transform: translateY(-1px); }
 .dialog-content { min-height: 0; max-height: none; padding: 20px 22px !important; overflow-x: hidden; overflow-y: auto; flex: 1 1 auto; background: var(--manager-bg); }
 .summary-panel { display: grid; grid-template-columns: minmax(250px, .85fr) minmax(470px, 1.65fr); gap: 1px; margin-bottom: 16px; overflow: hidden; border: 1px solid var(--manager-border); border-radius: 16px; background: var(--manager-border); }
 .summary-status, .summary-data { background: var(--manager-surface); }
@@ -60,6 +60,7 @@
 .send-update .cancel-button { border: 1px solid var(--manager-border) !important; color: var(--manager-ink) !important; background: #eef0ec !important; box-shadow: none !important; }
 .send-update .cancel-button:hover:not(:disabled) { border-color: #cfd4cc !important; color: var(--manager-ink) !important; background: #e2e5df !important; box-shadow: none !important; transform: none !important; }
 .save-button { min-width: 145px; border: 1px solid var(--manager-accent-strong); color: #fff; background: var(--manager-accent-strong); }
+.save-button:hover:not(:disabled) { border-color: var(--color-brand-dark); background: var(--color-brand-dark); box-shadow: 0 7px 16px rgba(31,92,116,.18); transform: translateY(-1px); }
 .save-button:disabled { opacity: .48; cursor: not-allowed; }
 .spin { animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }

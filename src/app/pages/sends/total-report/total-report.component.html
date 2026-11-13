@@ -49,7 +49,7 @@
                             <mat-form-field appearance="fill">
                                 <mat-label>Utente</mat-label>
                                 <i-feather name="user"></i-feather>
-                                <mat-select formControlName="userId">
+                                <mat-select formControlName="userId" placeholder="Tutti gli utenti">
                                     <mat-option *ngFor="let option of users" [value]="option.user.id">
                                     {{ option.user.businessName }}
                                 </mat-option>
