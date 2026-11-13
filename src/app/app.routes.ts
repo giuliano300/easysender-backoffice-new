@@ -15,6 +15,7 @@ import { AutomationDashboardComponent } from './dashboard/automation-dashboard/a
 import { OperationsComponent } from './pages/operations/operations.component';
 import { AccountingComponent } from './pages/accounting/accounting.component';
 import { DisasterRecoveryComponent } from './pages/disaster-recovery/disaster-recovery.component';
+import { CapUpdatesComponent } from './pages/cap-updates/cap-updates.component';
 
 export const routes: Routes = [
     { path: '', redirectTo : '/dashboard', pathMatch: 'full' },
@@ -53,6 +54,11 @@ export const routes: Routes = [
     {
         path: 'disaster-recovery',
         component: DisasterRecoveryComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'aggiornamento-cap',
+        component: CapUpdatesComponent,
         canActivate: [AuthGuard]
     },
     {

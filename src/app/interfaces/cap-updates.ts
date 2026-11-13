@@ -1,0 +1,4 @@
+export interface CapUpdateConfiguration { enabled: boolean; checkIntervalHours: number; sourceUrl: string; archiveRoot: string; frontendCapFile?: string | null; backofficeCapFile?: string | null; lastCheckAt?: string | null; manualCheckRequestedAt?: string | null; manualCheckExecutedAt?: string | null; applyRequestedAt?: string | null; applyExecutedAt?: string | null; updatedAt: string; }
+export interface CapUpdateRun { id: number; startedAt: string; completedAt?: string | null; trigger: string; status: string; sourceUrl?: string | null; archiveFile?: string | null; changesFound: number; error?: string | null; }
+export interface CapUpdateChange { id: number; municipality: string; province?: string | null; oldCap?: string | null; newCap: string; status: string; applyNote?: string | null; }
+export interface CapUpdatesStatus { configuration: CapUpdateConfiguration; lastRun?: CapUpdateRun | null; recentRuns: CapUpdateRun[]; pendingChanges: CapUpdateChange[]; }
