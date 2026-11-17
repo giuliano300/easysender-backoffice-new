@@ -92,6 +92,10 @@ export class UsersComponent {
     this.isFiltered = false;
   }
 
+  AddUser(): void {
+    this.router.navigate(['/users/add']);
+  }
+
   exportFilteredUsers(): void {
     this.csvExport.download('utenti-filtrati', this.completeUser, [
       { header: 'ID', value: row => row.user.id },

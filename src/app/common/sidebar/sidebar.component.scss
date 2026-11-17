@@ -10,7 +10,13 @@
         a { min-width: 0; color: var(--sidebar-ink); font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
         .logo-icon { flex: 0 0 auto; width: 202px; height: 50px; margin: 0; padding: 0; border-radius: 0; background: transparent; object-fit: contain; object-position: left center; }
         .compact-logo { display: none; width: 58px; height: 46px; }
-        .compact-logo img { display: block; width: 58px; height: 46px; object-fit: contain; }
+        .compact-logo img {
+            display: block;
+            width: 50px;
+            height: auto;
+            object-fit: contain;
+            margin: -3px 0 0 5px;
+        }
         span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     }
 

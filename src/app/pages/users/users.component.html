@@ -9,9 +9,14 @@
         <h1>Utenti</h1>
         <p>Cerca e gestisci clienti, sottoutenti e utenze collegate.</p>
     </div>
-    <button type="button" class="page-head-action csv-page-export" (click)="exportFilteredUsers()">
-        <i class="ri-file-download-line"></i> Esporta CSV
-    </button>
+    <div class="users-page-actions">
+        <button type="button" class="page-head-action" (click)="AddUser()">
+            <i class="ri-user-add-line"></i> Aggiungi utente
+        </button>
+        <button type="button" class="page-head-action csv-page-export" (click)="exportFilteredUsers()">
+            <i class="ri-file-download-line"></i> Esporta CSV
+        </button>
+    </div>
 </section>
 <mat-card class="trinta-card to-do-list-card mb-10 bg-white border-none d-block filter filter-card filters">
     <mat-card-content>

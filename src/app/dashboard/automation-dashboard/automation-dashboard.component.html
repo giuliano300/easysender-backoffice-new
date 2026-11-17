@@ -31,6 +31,14 @@
     </div>
   </section>
 
+  <section class="watchdog-strip" *ngIf="watchdog as watchdog" [class.has-issues]="watchdog.issues > 0">
+    <div class="watchdog-head"><span class="status-dot" [ngClass]="watchdog.issues ? 'offline' : 'running'"></span><div><span class="page-eyebrow">WATCHDOG</span><strong>{{ watchdog.issues ? 'Anomalie rilevate' : 'Tutti i controlli operativi' }}</strong></div></div>
+    <div class="watchdog-summary"><span><strong>{{ watchdog.healthy }}</strong> sani</span><span *ngIf="watchdog.issues"><strong>{{ watchdog.issues }}</strong> anomalie</span><span>Ultimo controllo {{ watchdog.generatedAtUtc | date:'HH:mm:ss' }}</span></div>
+    <div class="watchdog-issues" *ngIf="watchdog.issues">
+      <span *ngFor="let check of watchdog.checks" [class.failed]="check.status !== 'healthy'" [title]="check.detail || ''" >{{ check.status !== 'healthy' ? check.displayName + ': ' + check.detail : '' }}</span>
+    </div>
+  </section>
+
   <section class="configuration-launch" *ngIf="!settingsOpened">
     <div><span class="page-eyebrow">CONFIGURAZIONE</span><strong>Orari e intervalli automazioni</strong><small>Gestisci sospensioni, fasce orarie e frequenze di esecuzione.</small></div>
     <button type="button" (click)="openSettings()">Configura automazioni</button>

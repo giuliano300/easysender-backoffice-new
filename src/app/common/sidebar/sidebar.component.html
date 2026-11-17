@@ -22,7 +22,7 @@
     <ng-scrollbar visibility="hover">
         <div class="sidebar-inner">
             <div class="sidebar-menu">
-                <mat-accordion>
+                <div class="sidebar-menu-list">
                     <span class="sub-title text-body">
                         PANORAMICA
                     </span>
@@ -82,35 +82,15 @@
                         <i-feather name="dollar-sign"></i-feather>
                         <span class="title">Contabilità</span>
                     </a>
-                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = true">
-                        <mat-expansion-panel-header (click)="openUsersMenuFromCompactSidebar()">
-                            <mat-panel-title>
-                                <i-feather name="users"></i-feather>
-                                <span class="title">
-                                    Utenti
-                                </span>
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <ul class="sidebar-sub-menu">
-                            <li class="sidemenu-item">
-                                <a routerLink="/users/add" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
-                                    <i-feather name="user-plus"></i-feather>
-                                    Nuovo utente
-                                </a>
-                            </li>
-                            <li class="sidemenu-item">
-                                <a routerLink="/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
-                                    <i-feather name="list"></i-feather>
-                                    Vedi gli utenti
-                                </a>
-                            </li>
-                        </ul>
-                    </mat-expansion-panel>
+                    <a routerLink="/users" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i-feather name="users"></i-feather>
+                        <span class="title">Utenti</span>
+                    </a>
                     <a class="sidebar-menu-link" (click)="logout()" href="">
                         <i-feather name="Lock"></i-feather>
                         <span class="title">Logout</span>
                     </a>
-                </mat-accordion>
+                </div>
             </div>
         </div>
     </ng-scrollbar>

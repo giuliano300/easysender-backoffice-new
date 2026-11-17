@@ -6,6 +6,8 @@ import { AutomationDashboard, AutomationSystem } from '../../interfaces/Automati
 import { AutomationRuntimeSetting } from '../../interfaces/AutomationRuntimeSetting';
 import { AutomationDashboardService } from '../../services/automation-dashboard.service';
 import { AutomationSettingsService } from '../../services/automation-settings.service';
+import { WatchdogStatus } from '../../interfaces/Watchdog';
+import { WatchdogService } from '../../services/watchdog.service';
 
 @Component({
   selector: 'app-automation-dashboard',
@@ -21,10 +23,11 @@ export class AutomationDashboardComponent implements OnInit, OnDestroy {
   settingsLoading = false;
   settingsError = '';
   settings: AutomationRuntimeSetting[] = [];
+  watchdog: WatchdogStatus | null = null;
   savingKey = '';
   private intervalId: ReturnType<typeof setInterval> | null = null;
 
-  constructor(private automationDashboardService: AutomationDashboardService, private automationSettingsService: AutomationSettingsService) {}
+  constructor(private automationDashboardService: AutomationDashboardService, private automationSettingsService: AutomationSettingsService, private watchdogService: WatchdogService) {}
 
   ngOnInit(): void {
     this.load();
@@ -49,6 +52,7 @@ export class AutomationDashboardComponent implements OnInit, OnDestroy {
         this.error = 'Impossibile leggere lo stato dei sistemi.';
       }
     });
+    this.watchdogService.getStatus().subscribe({ next: value => this.watchdog = value });
   }
 
   get groupedSystems(): { product: string; systems: AutomationSystem[] }[] {

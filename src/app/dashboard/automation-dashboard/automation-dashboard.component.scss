@@ -69,6 +69,13 @@
   }
 }
 
+.watchdog-strip { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin: 0 0 16px; padding: 11px 16px; border: 1px solid color-mix(in srgb, var(--successColor) 25%, var(--manager-border)); border-radius: 6px; background: color-mix(in srgb, var(--successColor) 5%, var(--manager-surface)); }
+.watchdog-strip.has-issues { border-color: color-mix(in srgb, var(--dangerColor) 35%, var(--manager-border)); background: color-mix(in srgb, var(--dangerColor) 5%, var(--manager-surface)); }
+.watchdog-head { display: flex; align-items: center; gap: 9px; .page-eyebrow { display: block; margin: 0; } strong { display: block; color: var(--manager-ink); font-size: 13px; } }
+.watchdog-summary { display: flex; align-items: center; gap: 12px; margin-left: auto; color: var(--manager-muted); font-size: 12px; strong { color: var(--manager-ink); } }
+.watchdog-issues { flex-basis: 100%; display: grid; gap: 4px; color: var(--dangerColor); font-size: 12px; }
+@media only screen and (max-width: 767px) { .watchdog-summary { width: 100%; margin-left: 0; flex-wrap: wrap; } }
+
 .product-grid {
   display: grid;
   grid-template-columns: 1fr;
