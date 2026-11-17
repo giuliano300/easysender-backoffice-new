@@ -35,6 +35,10 @@ export interface recipients {
   pathGEDUrl?: string | null;
   digitalReturnReceipt?: boolean | null;
   message?: string | null;
+  statoMarker?: string | null;
+  lastStatusCheckDate?: string | null;
+  inProcessStepStato?: boolean | null;
+  finalState?: boolean | null;
   tag1?: string | null;
   tag2?: string | null;
   tag3?: string | null;

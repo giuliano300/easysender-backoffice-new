@@ -16,6 +16,7 @@ import { OperationsComponent } from './pages/operations/operations.component';
 import { AccountingComponent } from './pages/accounting/accounting.component';
 import { DisasterRecoveryComponent } from './pages/disaster-recovery/disaster-recovery.component';
 import { CapUpdatesComponent } from './pages/cap-updates/cap-updates.component';
+import { StatusCheckDailyComponent } from './pages/status-check-daily/status-check-daily.component';
 
 export const routes: Routes = [
     { path: '', redirectTo : '/dashboard', pathMatch: 'full' },
@@ -59,6 +60,11 @@ export const routes: Routes = [
     {
         path: 'aggiornamento-cap',
         component: CapUpdatesComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'esiti-giornalieri',
+        component: StatusCheckDailyComponent,
         canActivate: [AuthGuard]
     },
     {

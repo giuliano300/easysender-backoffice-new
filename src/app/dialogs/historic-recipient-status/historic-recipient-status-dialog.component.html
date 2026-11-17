@@ -28,6 +28,14 @@
       <span>Data e ora invio</span>
       <strong>{{ formatDateTime(data.recipient.insertDate) }}</strong>
     </div>
+    <div>
+      <span>Ultimo controllo Poste</span>
+      <strong>{{ data.recipient.lastStatusCheckDate ? formatDateTime(data.recipient.lastStatusCheckDate) : 'Non effettuato' }}</strong>
+    </div>
+    <div>
+      <span>Monitoraggio</span>
+      <strong>{{ data.recipient.inProcessStepStato ? 'In corso' : (data.recipient.finalState ? 'Concluso' : 'Programmato') }}</strong>
+    </div>
   </div>
 
   <mat-dialog-content class="dialog-content">

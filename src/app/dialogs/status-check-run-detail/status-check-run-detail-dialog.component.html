@@ -1,0 +1,66 @@
+<div class="dialog-shell batch-detail">
+  <header class="dialog-header">
+    <div class="dialog-title-group">
+      <span class="dialog-icon"><i class="ri-pulse-line"></i></span>
+      <div>
+        <span class="dialog-eyebrow">CONTROLLO POST-SPEDIZIONE</span>
+        <h1>Dettaglio batch</h1>
+        <p>{{ run.product }} · {{ run.userName }}</p>
+      </div>
+    </div>
+    <button type="button" class="dialog-close" aria-label="Chiudi" (click)="close()"><i class="ri-close-line"></i></button>
+  </header>
+
+  <section class="batch-overview">
+    <div class="overview-main">
+      <span>Esito batch</span>
+      <strong [class.failed]="run.outcome === 'failed'" [class.empty-outcome]="run.outcome === 'no_outcomes'">{{ outcomeLabel }}</strong>
+    </div>
+    <div><span>Prodotto</span><strong>{{ run.product }}</strong></div>
+    <div><span>Utente</span><strong>{{ run.userName }}</strong></div>
+  </section>
+
+  <mat-dialog-content class="dialog-content">
+    <section class="detail-section">
+      <div class="section-title"><i class="ri-time-line"></i><div><small>TEMPI DI ESECUZIONE</small><h2>Elaborazione batch</h2></div></div>
+      <div class="detail-grid timing-grid">
+        <div><span>Avviato</span><strong>{{ run.startedAt | date:'dd/MM/yyyy, HH:mm:ss' }}</strong></div>
+        <div><span>Completato</span><strong>{{ run.completedAt | date:'dd/MM/yyyy, HH:mm:ss' }}</strong></div>
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <div class="section-title"><i class="ri-bar-chart-grouped-line"></i><div><small>RISULTATI</small><h2>Spedizioni elaborate</h2></div></div>
+      <div class="detail-grid result-grid">
+        <div><span>Richieste</span><strong>{{ run.requestedCount }}</strong></div>
+        <div><span>Restituite</span><strong>{{ run.returnedCount }}</strong></div>
+        <div><span>Aggiornate</span><strong>{{ run.statusChangedCount }}</strong></div>
+        <div><span>Finali</span><strong>{{ run.finalStateCount }}</strong></div>
+        <div><span>Duplicate</span><strong>{{ run.duplicateCount }}</strong></div>
+        <div><span>Non associate</span><strong>{{ run.unmatchedCount }}</strong></div>
+      </div>
+    </section>
+
+    <section *ngIf="run.error" class="error-detail">
+      <div><i class="ri-error-warning-line"></i><strong>Messaggio di errore</strong></div>
+      <p>{{ run.error }}</p>
+    </section>
+
+    <section class="detail-section shipments-section">
+      <div class="section-title"><i class="ri-mail-check-line"></i><div><small>SPEDIZIONI DEL BATCH</small><h2>Esiti e modifiche applicate</h2></div></div>
+      <div *ngIf="loadingShipments" class="shipments-state">Caricamento delle spedizioni del batch…</div>
+      <div *ngIf="shipmentError" class="shipments-state error-state">{{ shipmentError }}</div>
+      <div *ngIf="!loadingShipments && !shipmentError && !details?.shipments?.length" class="shipments-state">Per questo batch storico non sono disponibili le singole spedizioni.</div>
+      <div *ngIf="details?.shipments?.length" class="shipment-list">
+        <article *ngFor="let shipment of details?.shipments" class="shipment-item" [class.changed]="shipment.changed">
+          <div class="shipment-title"><div><strong>{{ shipment.recipientName }}</strong><span>{{ shipment.code || ('ID ' + shipment.recipientId) }}<ng-container *ngIf="shipment.city"> · {{ shipment.city }}<ng-container *ngIf="shipment.province"> ({{ shipment.province }})</ng-container></ng-container></span></div><span class="shipment-badge" [class.no-change]="!shipment.changed">{{ shipment.changed ? 'Stato modificato' : 'Nessuna modifica' }}</span></div>
+          <div class="shipment-statuses"><div><span>Stato precedente</span><strong>{{ shipment.previousStatusCode || '—' }}</strong><p>{{ shipment.previousMessage || 'Nessun dato precedente' }}</p></div><i class="ri-arrow-right-line"></i><div><span>Stato registrato</span><strong>{{ shipment.statusCode || '—' }}</strong><p>{{ shipment.statusMessage || 'Nessun esito ricevuto' }}</p></div></div>
+        </article>
+      </div>
+    </section>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-footer">
+    <button mat-button type="button" class="close-button" (click)="close()">Chiudi</button>
+  </mat-dialog-actions>
+</div>
