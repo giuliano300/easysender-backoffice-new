@@ -6,7 +6,7 @@ import { AutomationDashboard, AutomationSystem } from '../../interfaces/Automati
 import { AutomationRuntimeSetting } from '../../interfaces/AutomationRuntimeSetting';
 import { AutomationDashboardService } from '../../services/automation-dashboard.service';
 import { AutomationSettingsService } from '../../services/automation-settings.service';
-import { WatchdogStatus } from '../../interfaces/Watchdog';
+import { WatchdogCheck, WatchdogStatus } from '../../interfaces/Watchdog';
 import { WatchdogService } from '../../services/watchdog.service';
 
 @Component({
@@ -24,6 +24,7 @@ export class AutomationDashboardComponent implements OnInit, OnDestroy {
   settingsError = '';
   settings: AutomationRuntimeSetting[] = [];
   watchdog: WatchdogStatus | null = null;
+  heartbeatsOpened = false;
   savingKey = '';
   private intervalId: ReturnType<typeof setInterval> | null = null;
 
@@ -69,6 +70,18 @@ export class AutomationDashboardComponent implements OnInit, OnDestroy {
 
   get visibleSystems(): AutomationSystem[] {
     return (this.dashboard?.systems ?? []).filter(system => !this.isStatusCheckSystem(system));
+  }
+
+  get heartbeatChecks(): WatchdogCheck[] {
+    return (this.watchdog?.checks ?? []).filter(check => check.category === 'heartbeat');
+  }
+
+  heartbeatLabel(check: WatchdogCheck): string {
+    return check.displayName.replace(/^Heartbeat\s+/i, '');
+  }
+
+  toggleHeartbeats(): void {
+    this.heartbeatsOpened = !this.heartbeatsOpened;
   }
 
   get groupedSettings(): { service: string; settings: AutomationRuntimeSetting[] }[] {

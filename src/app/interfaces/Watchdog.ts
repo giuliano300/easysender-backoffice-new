@@ -2,7 +2,7 @@ export interface WatchdogCheck {
   checkKey: string;
   displayName: string;
   category: string;
-  status: 'healthy' | 'failed' | 'missing';
+  status: 'healthy' | 'failed' | 'missing' | 'stale';
   detail?: string;
   checkedAtUtc: string;
   lastHealthyAtUtc?: string;

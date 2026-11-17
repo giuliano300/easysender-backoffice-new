@@ -19,25 +19,48 @@
 <div class="error-box" *ngIf="error">{{ error }}</div>
 
 <ng-container *ngIf="dashboard as d">
-  <section class="broker-strip" [ngClass]="d.broker.reachable ? 'running' : 'offline'">
-    <div>
-      <span class="status-dot"></span>
-      <strong>RabbitMQ {{ statusLabel(d.broker.status) }}</strong>
+  <section class="monitor-strip" [class.has-issues]="!d.broker.reachable">
+    <div class="monitor-head"><span class="status-dot" [ngClass]="d.broker.reachable ? 'running' : 'offline'"></span><div><span class="page-eyebrow">RABBITMQ</span><strong>{{ d.broker.reachable ? 'Broker operativo' : 'Broker non raggiungibile' }}</strong></div></div>
+    <div class="monitor-summary" *ngIf="!d.broker.error">
+      <span><strong>{{ d.totals.rabbitConsumers }}</strong> consumer</span><span>Ultimo controllo {{ d.generatedAt | date:'HH:mm:ss' }}</span>
     </div>
-    <span class="broker-message" *ngIf="d.broker.error">{{ d.broker.error }}</span>
-    <div class="broker-meta" *ngIf="!d.broker.error">
-      <span>Consumer: <strong>{{ d.totals.rabbitConsumers }}</strong></span>
-      <span>Aggiornato: <strong>{{ d.generatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</strong></span>
-    </div>
+    <div class="monitor-issues" *ngIf="d.broker.error">{{ d.broker.error }}</div>
   </section>
 
-  <section class="watchdog-strip" *ngIf="watchdog as watchdog" [class.has-issues]="watchdog.issues > 0">
-    <div class="watchdog-head"><span class="status-dot" [ngClass]="watchdog.issues ? 'offline' : 'running'"></span><div><span class="page-eyebrow">WATCHDOG</span><strong>{{ watchdog.issues ? 'Anomalie rilevate' : 'Tutti i controlli operativi' }}</strong></div></div>
-    <div class="watchdog-summary"><span><strong>{{ watchdog.healthy }}</strong> sani</span><span *ngIf="watchdog.issues"><strong>{{ watchdog.issues }}</strong> anomalie</span><span>Ultimo controllo {{ watchdog.generatedAtUtc | date:'HH:mm:ss' }}</span></div>
-    <div class="watchdog-issues" *ngIf="watchdog.issues">
+  <section class="monitor-strip" *ngIf="watchdog as watchdog" [class.has-issues]="watchdog.issues > 0">
+    <div class="monitor-head"><span class="status-dot" [ngClass]="watchdog.issues ? 'offline' : 'running'"></span><div><span class="page-eyebrow">WATCHDOG</span><strong>{{ watchdog.issues ? 'Anomalie rilevate' : 'Tutti i controlli operativi' }}</strong></div></div>
+    <div class="monitor-summary"><span><strong>{{ watchdog.healthy }}</strong> sani</span><span *ngIf="watchdog.issues"><strong>{{ watchdog.issues }}</strong> anomalie</span><span>Ultimo controllo {{ watchdog.generatedAtUtc | date:'HH:mm:ss' }}</span></div>
+    <div class="monitor-issues" *ngIf="watchdog.issues">
       <span *ngFor="let check of watchdog.checks" [class.failed]="check.status !== 'healthy'" [title]="check.detail || ''" >{{ check.status !== 'healthy' ? check.displayName + ': ' + check.detail : '' }}</span>
     </div>
   </section>
+
+  <mat-card class="trinta-card heartbeat-card bg-white border-none d-block">
+    <mat-card-content>
+      <header class="monitoring-card-head heartbeat-card-head" (click)="toggleHeartbeats()" [attr.aria-expanded]="heartbeatsOpened">
+        <span class="monitoring-card-icon"><i class="ri-heart-pulse-line"></i></span>
+        <div><small>HEARTBEAT</small><h3>Cicli delle automazioni</h3></div>
+        <button type="button" class="heartbeat-toggle" (click)="$event.stopPropagation(); toggleHeartbeats()"><i [class]="heartbeatsOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'"></i>{{ heartbeatsOpened ? 'Chiudi' : 'Mostra' }}</button>
+      </header>
+      <div class="heartbeat-empty" *ngIf="heartbeatsOpened && heartbeatChecks.length === 0">
+        <i class="ri-heart-pulse-line"></i>
+        <div><strong>In attesa del primo heartbeat</strong><span>Pubblica le automazioni aggiornate e riavviale: i cicli compariranno qui automaticamente.</span></div>
+      </div>
+      <div class="monitoring-table-wrap" *ngIf="heartbeatsOpened && heartbeatChecks.length">
+        <table class="heartbeat-table">
+          <thead><tr><th>Fase</th><th>Stato</th><th>Ultimo battito</th><th>Dettaglio</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let check of heartbeatChecks" [class.heartbeat-problem]="check.status !== 'healthy'">
+              <td><strong>{{ heartbeatLabel(check) }}</strong></td>
+              <td><span class="heartbeat-state" [class.problem]="check.status !== 'healthy'"><i [class]="check.status === 'healthy' ? 'ri-checkbox-circle-line' : 'ri-error-warning-line'"></i>{{ check.status === 'healthy' ? 'Attivo' : (check.status === 'stale' ? 'Bloccato' : 'Errore') }}</span></td>
+              <td>{{ check.checkedAtUtc | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+              <td>{{ check.detail || '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
   <section class="configuration-launch" *ngIf="!settingsOpened">
     <div><span class="page-eyebrow">CONFIGURAZIONE</span><strong>Orari e intervalli automazioni</strong><small>Gestisci sospensioni, fasce orarie e frequenze di esecuzione.</small></div>
