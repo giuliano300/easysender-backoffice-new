@@ -45,6 +45,18 @@ export class RecipientService {
     }
   }
 
+  retryStatusByProduct(id: number, product: string): Observable<StatusResponses> {
+    switch (product.toUpperCase()) {
+      case 'LOL': return this.http.get<StatusResponses>(this.apiUrlStatus + '/LOL/' + id);
+      case 'ROL': return this.http.get<StatusResponses>(this.apiUrlStatus + '/ROL/' + id);
+      case 'COL4':
+      case 'COL1': return this.http.get<StatusResponses>(this.apiUrlStatus + '/COL/' + id);
+      case 'MOL': return this.http.get<StatusResponses>(this.apiUrlStatus + '/MOL/' + id);
+      case 'AGOL': return this.http.get<StatusResponses>(this.apiUrlStatus + '/AGOL/' + id);
+      default: return of({ state: 400, message: 'Il recupero stato automatico non è disponibile per questo prodotto.' } as StatusResponses);
+    }
+  }
+
   AssignCode(s: Sends): Observable<StatusResponses>{
     console.log(s);
     switch(s.type.toUpperCase()){

@@ -33,8 +33,15 @@ export interface StatusCheckDaily {
   to: string;
   totals: { batches: number; requested: number; returned: number; changed: number; finalStates: number; failed: number; noOutcomes: number; };
   byProduct: StatusCheckDailyProduct[];
+  totalRuns: number;
+  pageIndex: number;
+  pageSize: number;
+  runFilter?: StatusCheckRunFilter | null;
+  staleShipmentsCount: number;
   runs: StatusCheckDailyRun[];
 }
+
+export type StatusCheckRunFilter = 'changed' | 'final' | 'no_outcomes' | 'failed';
 
 export interface StatusCheckRunShipment {
   recipientId: number;
@@ -42,6 +49,7 @@ export interface StatusCheckRunShipment {
   code?: string | null;
   city?: string | null;
   province?: string | null;
+  takenInChargeAt?: string | null;
   previousStatusCode?: string | null;
   previousMessage?: string | null;
   statusCode?: string | null;
@@ -54,4 +62,25 @@ export interface StatusCheckRunShipment {
 export interface StatusCheckRunDetails {
   run: Pick<StatusCheckDailyRun, 'id' | 'product' | 'startedAt' | 'completedAt'>;
   shipments: StatusCheckRunShipment[];
+}
+
+export interface StatusRecognitionIssue {
+  id: number;
+  code?: string | null;
+  requestId?: string | null;
+  product: string;
+  recipientName: string;
+  userName: string;
+  currentState: string;
+  stateChangedAt: string;
+  maximumDays: number;
+  elapsedDays: number;
+  canRetry: boolean;
+}
+
+export interface StatusRecognitionIssues {
+  totalCount: number;
+  pageIndex: number;
+  pageSize: number;
+  rows: StatusRecognitionIssue[];
 }

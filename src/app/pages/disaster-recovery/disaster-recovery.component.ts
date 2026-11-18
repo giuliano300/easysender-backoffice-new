@@ -5,13 +5,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DisasterRecoveryRun, DisasterRecoveryStatus, UpdateDisasterRecoveryConfiguration } from '../../interfaces/disaster-recovery';
 import { DisasterRecoveryService } from '../../services/disaster-recovery.service';
+import { DisasterRecoveryDeleteDialogComponent } from '../../dialogs/disaster-recovery-delete/disaster-recovery-delete-dialog.component';
 
 @Component({
   standalone: true,
   selector: 'app-disaster-recovery',
-  imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, DatePipe],
+  imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatDialogModule, DatePipe],
   templateUrl: './disaster-recovery.component.html',
   styleUrl: './disaster-recovery.component.scss'
 })
@@ -20,12 +22,13 @@ export class DisasterRecoveryComponent implements OnInit, OnDestroy {
   loading = true;
   saving = false;
   running = false;
+  deletingRunId?: number;
   message = '';
   error = '';
   private refresh?: ReturnType<typeof setInterval>;
   form;
 
-  constructor(private readonly fb: FormBuilder, private readonly disasterRecovery: DisasterRecoveryService) {
+  constructor(private readonly fb: FormBuilder, private readonly disasterRecovery: DisasterRecoveryService, private readonly dialog: MatDialog) {
     this.form = this.fb.group({
       enabled: [true], scheduledTime: ['02:15'], primaryBackupRoot: ['B:\\EasySenderBackups'], secondaryBackupRoot: ['C:\\EasySenderBackups'], offsiteBackupRoot: [''],
       dailyRetentionDays: [31], weeklyRetentionWeeks: [12], monthlyRetentionMonths: [36]
@@ -79,6 +82,23 @@ export class DisasterRecoveryComponent implements OnInit, OnDestroy {
     this.disasterRecovery.runNow().subscribe({
       next: () => { this.message = 'Esecuzione richiesta. Il servizio inizierà il backup entro 30 secondi.'; this.load(true); },
       error: err => { this.running = false; this.error = err?.error || 'Impossibile richiedere il backup.'; }
+    });
+  }
+
+  deleteRun(run: DisasterRecoveryRun): void {
+    if (run.status !== 'completed' || this.deletingRunId) return;
+    const dialogRef = this.dialog.open(DisasterRecoveryDeleteDialogComponent, {
+      data: { id: run.id, backupFile: run.backupFile },
+      width: '480px', maxWidth: 'calc(100vw - 28px)', autoFocus: false, panelClass: 'disaster-recovery-delete-dialog'
+    });
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (!confirmed) return;
+      this.deletingRunId = run.id;
+      this.error = ''; this.message = '';
+      this.disasterRecovery.deleteRun(run.id).subscribe({
+        next: () => { this.deletingRunId = undefined; this.message = 'Backup eliminato dai dischi B e C e rimosso dallo storico.'; this.load(true); },
+        error: err => { this.deletingRunId = undefined; this.error = err?.error || 'Impossibile eliminare il backup.'; }
+      });
     });
   }
 

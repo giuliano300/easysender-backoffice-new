@@ -14,4 +14,5 @@ export class DisasterRecoveryService {
     return this.http.put<DisasterRecoveryConfiguration>(`${this.apiUrl}/configuration`, configuration);
   }
   runNow(): Observable<DisasterRecoveryConfiguration> { return this.http.post<DisasterRecoveryConfiguration>(`${this.apiUrl}/run-now`, {}); }
+  deleteRun(id: number): Observable<void> { return this.http.delete<void>(`${this.apiUrl}/runs/${id}`); }
 }

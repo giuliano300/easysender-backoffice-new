@@ -23,7 +23,7 @@
         <div class="filter-body daily-filter-body">
           <div class="daily-date-control">
             <label for="status-date"><i class="ri-calendar-line"></i> Data di riferimento</label>
-            <input id="status-date" type="date" [(ngModel)]="selectedDate" (change)="load()">
+            <input id="status-date" type="date" [(ngModel)]="selectedDate" (change)="onDateChange()">
           </div>
           <button mat-button type="button" class="filter" (click)="load()" [disabled]="loading"><i class="ri-refresh-line" [class.ri-loader-4-line]="loading"></i>{{ loading ? 'Aggiornamento…' : 'Aggiorna dati' }}</button>
         </div>
@@ -38,10 +38,11 @@
     <section class="daily-kpis" aria-label="Riepilogo della giornata">
       <article><span class="daily-kpi-icon"><i class="ri-stack-line"></i></span><div><small>Batch eseguiti</small><strong>{{ data.totals.batches }}</strong></div></article>
       <article><span class="daily-kpi-icon"><i class="ri-search-eye-line"></i></span><div><small>Spedizioni controllate</small><strong>{{ data.totals.requested }}</strong></div></article>
-      <article class="positive"><span class="daily-kpi-icon"><i class="ri-loop-right-line"></i></span><div><small>Stati aggiornati</small><strong>{{ data.totals.changed }}</strong></div></article>
-      <article class="positive"><span class="daily-kpi-icon"><i class="ri-checkbox-circle-line"></i></span><div><small>Esiti finali</small><strong>{{ data.totals.finalStates }}</strong></div></article>
-      <article class="warning"><span class="daily-kpi-icon"><i class="ri-information-line"></i></span><div><small>Senza esito</small><strong>{{ data.totals.noOutcomes }}</strong></div></article>
-      <article class="danger"><span class="daily-kpi-icon"><i class="ri-error-warning-line"></i></span><div><small>Errori</small><strong>{{ data.totals.failed }}</strong></div></article>
+      <article class="positive clickable-kpi" [class.active]="runFilter === 'changed'" tabindex="0" role="button" (click)="toggleRunFilter('changed')" (keydown.enter)="toggleRunFilter('changed')"><span class="daily-kpi-icon"><i class="ri-loop-right-line"></i></span><div><small>Stati aggiornati</small><strong>{{ data.totals.changed }}</strong></div></article>
+      <article class="positive clickable-kpi" [class.active]="runFilter === 'final'" tabindex="0" role="button" (click)="toggleRunFilter('final')" (keydown.enter)="toggleRunFilter('final')"><span class="daily-kpi-icon"><i class="ri-checkbox-circle-line"></i></span><div><small>Esiti finali</small><strong>{{ data.totals.finalStates }}</strong></div></article>
+      <article class="warning clickable-kpi" [class.active]="runFilter === 'no_outcomes'" tabindex="0" role="button" (click)="toggleRunFilter('no_outcomes')" (keydown.enter)="toggleRunFilter('no_outcomes')"><span class="daily-kpi-icon"><i class="ri-information-line"></i></span><div><small>Senza esito</small><strong>{{ data.totals.noOutcomes }}</strong></div></article>
+      <article class="danger clickable-kpi" [class.active]="runFilter === 'failed'" tabindex="0" role="button" (click)="toggleRunFilter('failed')" (keydown.enter)="toggleRunFilter('failed')"><span class="daily-kpi-icon"><i class="ri-error-warning-line"></i></span><div><small>Errori</small><strong>{{ data.totals.failed }}</strong></div></article>
+      <article class="overdue-kpi"><span class="daily-kpi-icon"><i class="ri-alarm-warning-line"></i></span><div><small>Spedizioni oltre soglia</small><strong>{{ data.staleShipmentsCount }}</strong></div></article>
     </section>
 
     <mat-card class="trinta-card to-do-list-card mb-25 bg-white border-none d-block">
@@ -68,10 +69,10 @@
 
     <mat-card class="trinta-card to-do-list-card mb-25 bg-white border-none d-block">
       <mat-card-content>
-        <div class="daily-table-heading"><div><span class="daily-section-icon"><i class="ri-list-check-3"></i></span><div><small>TRACCIAMENTO</small><h2>Dettaglio batch</h2></div></div><span class="daily-table-count">{{ data.runs.length }} registrazioni</span></div>
-        <div class="to-do-list-table">
+        <div class="daily-table-heading collapsible-heading"><div><span class="daily-section-icon"><i class="ri-list-check-3"></i></span><div><small>TRACCIAMENTO</small><h2>Dettaglio batch</h2></div></div><div class="daily-table-actions"><button *ngIf="runFilter" type="button" class="clear-run-filter" (click)="clearRunFilter()"><i class="ri-close-line"></i> Tutti i batch</button><span class="daily-table-count">{{ data.totalRuns }} registrazioni</span><button type="button" class="panel-toggle" (click)="batchPanelOpen = !batchPanelOpen" [attr.aria-expanded]="batchPanelOpen"><i [class]="batchPanelOpen ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'"></i></button></div></div>
+        <div *ngIf="batchPanelOpen" class="to-do-list-table">
           <div class="table-responsive">
-            <table mat-table [dataSource]="runDataSource" class="daily-runs-table">
+            <table mat-table [dataSource]="data.runs" class="daily-runs-table">
           <ng-container matColumnDef="startedAt"><th mat-header-cell *matHeaderCellDef>Ora</th><td mat-cell *matCellDef="let run" class="run-time">{{ run.startedAt | date:'HH:mm:ss' }}</td></ng-container>
           <ng-container matColumnDef="product"><th mat-header-cell *matHeaderCellDef>Prodotto</th><td mat-cell *matCellDef="let run"><h6>{{ run.product }}</h6></td></ng-container>
           <ng-container matColumnDef="userName"><th mat-header-cell *matHeaderCellDef>Utente</th><td mat-cell *matCellDef="let run">{{ run.userName }}</td></ng-container>
@@ -83,9 +84,51 @@
               <tr mat-header-row *matHeaderRowDef="runColumns"></tr><tr mat-row *matRowDef="let run; columns: runColumns;" class="batch-detail-row" tabindex="0" (click)="openRunDetail(run)" (keydown.enter)="openRunDetail(run)" (keydown.space)="$event.preventDefault(); openRunDetail(run)"></tr>
               <tr *matNoDataRow><td class="no-data" [attr.colspan]="runColumns.length">Nessun batch registrato nella giornata selezionata.</td></tr>
             </table>
-            <mat-paginator [pageSize]="20" [pageSizeOptions]="[20, 50, 100]"></mat-paginator>
+            <div *ngIf="data.totalRuns > data.pageSize" class="numbered-paginator" aria-label="Paginazione dettaglio batch">
+              <button type="button" (click)="goToRunPage(1)" [disabled]="data.pageIndex === 0" aria-label="Prima pagina"><i class="ri-skip-left-line"></i></button>
+              <button type="button" (click)="goToRunPage(data.pageIndex)" [disabled]="data.pageIndex === 0" aria-label="Pagina precedente"><i class="ri-arrow-left-s-line"></i></button>
+              <button *ngFor="let page of runPageNumbers" type="button" [class.active]="page === data.pageIndex + 1" (click)="goToRunPage(page)">{{ page }}</button>
+              <button type="button" (click)="goToRunPage(data.pageIndex + 2)" [disabled]="data.pageIndex + 1 >= runTotalPages" aria-label="Pagina successiva"><i class="ri-arrow-right-s-line"></i></button>
+              <button type="button" (click)="goToRunPage(runTotalPages)" [disabled]="data.pageIndex + 1 >= runTotalPages" aria-label="Ultima pagina"><i class="ri-skip-right-line"></i></button>
+            </div>
           </div>
         </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="trinta-card to-do-list-card mb-25 bg-white border-none d-block stale-shipments-card">
+      <mat-card-content>
+        <div class="daily-table-heading stale-heading collapsible-heading"><div><span class="daily-section-icon overdue-icon"><i class="ri-alarm-warning-line"></i></span><div><small>INTERVENTO POST-SPEDIZIONE</small><h2>Spedizioni oltre soglia</h2><p>Non finali da oltre 14 giorni per ROL, MOL e AGOL; 21 giorni per LOL, TOL, COL1 e COL4.</p></div></div><div class="daily-table-actions"><button mat-button type="button" class="export-stale" [disabled]="!staleData?.totalCount || staleExporting" (click)="exportStale()"><i class="ri-file-download-line"></i>{{ staleExporting ? 'Esportazione…' : 'Esporta codici per Poste' }}</button><span class="daily-table-count">{{ staleData?.totalCount || 0 }} spedizioni</span><button type="button" class="panel-toggle" (click)="stalePanelOpen = !stalePanelOpen" [attr.aria-expanded]="stalePanelOpen"><i [class]="stalePanelOpen ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'"></i></button></div></div>
+        <ng-container *ngIf="stalePanelOpen">
+          <div *ngIf="staleActionMessage" class="stale-action-message success"><i class="ri-checkbox-circle-line"></i>{{ staleActionMessage }}</div>
+          <div *ngIf="staleActionError" class="stale-action-message error"><i class="ri-error-warning-line"></i>{{ staleActionError }}</div>
+          <div class="to-do-list-table stale-table-wrap">
+          <div *ngIf="staleLoading" class="stale-loading">Caricamento spedizioni oltre soglia…</div>
+          <div *ngIf="!staleLoading" class="table-responsive">
+            <table mat-table [dataSource]="staleData?.rows || []" class="daily-runs-table stale-shipments-table">
+              <ng-container matColumnDef="product"><th mat-header-cell *matHeaderCellDef>Prodotto</th><td mat-cell *matCellDef="let shipment"><h6>{{ shipment.product }}</h6></td></ng-container>
+              <ng-container matColumnDef="code"><th mat-header-cell *matHeaderCellDef>Codice</th><td mat-cell *matCellDef="let shipment">{{ shipment.code || '—' }}</td></ng-container>
+              <ng-container matColumnDef="requestId"><th mat-header-cell *matHeaderCellDef>Request ID</th><td mat-cell *matCellDef="let shipment">{{ shipment.requestId || '—' }}</td></ng-container>
+              <ng-container matColumnDef="recipientName"><th mat-header-cell *matHeaderCellDef>Destinatario</th><td mat-cell *matCellDef="let shipment"><h6>{{ shipment.recipientName }}</h6></td></ng-container>
+              <ng-container matColumnDef="userName"><th mat-header-cell *matHeaderCellDef>Utente</th><td mat-cell *matCellDef="let shipment">{{ shipment.userName }}</td></ng-container>
+              <ng-container matColumnDef="currentState"><th mat-header-cell *matHeaderCellDef>Stato</th><td mat-cell *matCellDef="let shipment">{{ shipment.currentState }}</td></ng-container>
+              <ng-container matColumnDef="stateChangedAt"><th mat-header-cell *matHeaderCellDef>Ultimo cambio</th><td mat-cell *matCellDef="let shipment">{{ shipment.stateChangedAt | date:'dd/MM/yyyy, HH:mm' }}</td></ng-container>
+              <ng-container matColumnDef="maximumDays"><th mat-header-cell *matHeaderCellDef>Soglia</th><td mat-cell *matCellDef="let shipment">{{ shipment.maximumDays }} gg</td></ng-container>
+              <ng-container matColumnDef="elapsedDays"><th mat-header-cell *matHeaderCellDef>Fermi da</th><td mat-cell *matCellDef="let shipment"><span class="overdue-days">{{ shipment.elapsedDays }} gg</span></td></ng-container>
+              <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef></th><td mat-cell *matCellDef="let shipment" class="stale-actions"><button mat-button type="button" class="retry-status" [disabled]="!shipment.canRetry || retryingShipmentId === shipment.id" [matTooltip]="shipment.canRetry ? 'Riprova subito il recupero stato da Poste' : 'Poste non espone il recupero stato automatico per TOL'" (click)="retryShipment(shipment)"><i [class]="retryingShipmentId === shipment.id ? 'ri-loader-4-line retry-spin' : 'ri-refresh-line'"></i>{{ retryingShipmentId === shipment.id ? 'Aggiorno…' : 'Aggiorna stato' }}</button></td></ng-container>
+              <tr mat-header-row *matHeaderRowDef="staleColumns"></tr><tr mat-row *matRowDef="let shipment; columns: staleColumns;"></tr>
+              <tr *matNoDataRow><td class="no-data" [attr.colspan]="staleColumns.length">Nessuna spedizione oltre soglia.</td></tr>
+            </table>
+            <div *ngIf="staleData && staleData.totalCount > staleData.pageSize" class="numbered-paginator" aria-label="Paginazione spedizioni oltre soglia">
+              <button type="button" (click)="goToStalePage(1)" [disabled]="staleData.pageIndex === 0" aria-label="Prima pagina"><i class="ri-skip-left-line"></i></button>
+              <button type="button" (click)="goToStalePage(staleData.pageIndex)" [disabled]="staleData.pageIndex === 0" aria-label="Pagina precedente"><i class="ri-arrow-left-s-line"></i></button>
+              <button *ngFor="let page of stalePageNumbers" type="button" [class.active]="page === staleData.pageIndex + 1" (click)="goToStalePage(page)">{{ page }}</button>
+              <button type="button" (click)="goToStalePage(staleData.pageIndex + 2)" [disabled]="staleData.pageIndex + 1 >= staleTotalPages" aria-label="Pagina successiva"><i class="ri-arrow-right-s-line"></i></button>
+              <button type="button" (click)="goToStalePage(staleTotalPages)" [disabled]="staleData.pageIndex + 1 >= staleTotalPages" aria-label="Ultima pagina"><i class="ri-skip-right-line"></i></button>
+            </div>
+          </div>
+          </div>
+        </ng-container>
       </mat-card-content>
     </mat-card>
   </ng-container>

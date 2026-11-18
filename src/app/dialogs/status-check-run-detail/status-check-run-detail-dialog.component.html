@@ -46,6 +46,11 @@
       <p>{{ run.error }}</p>
     </section>
 
+    <section *ngIf="outcomeExplanation" class="outcome-explanation" [class.failed]="run.outcome === 'failed'">
+      <i [class]="run.outcome === 'failed' ? 'ri-error-warning-line' : 'ri-information-line'"></i>
+      <p>{{ outcomeExplanation }}</p>
+    </section>
+
     <section class="detail-section shipments-section">
       <div class="section-title"><i class="ri-mail-check-line"></i><div><small>SPEDIZIONI DEL BATCH</small><h2>Esiti e modifiche applicate</h2></div></div>
       <div *ngIf="loadingShipments" class="shipments-state">Caricamento delle spedizioni del batch…</div>
@@ -53,7 +58,7 @@
       <div *ngIf="!loadingShipments && !shipmentError && !details?.shipments?.length" class="shipments-state">Per questo batch storico non sono disponibili le singole spedizioni.</div>
       <div *ngIf="details?.shipments?.length" class="shipment-list">
         <article *ngFor="let shipment of details?.shipments" class="shipment-item" [class.changed]="shipment.changed">
-          <div class="shipment-title"><div><strong>{{ shipment.recipientName }}</strong><span>{{ shipment.code || ('ID ' + shipment.recipientId) }}<ng-container *ngIf="shipment.city"> · {{ shipment.city }}<ng-container *ngIf="shipment.province"> ({{ shipment.province }})</ng-container></ng-container></span></div><span class="shipment-badge" [class.no-change]="!shipment.changed">{{ shipment.changed ? 'Stato modificato' : 'Nessuna modifica' }}</span></div>
+          <div class="shipment-title"><div><strong>{{ shipment.recipientName }}</strong><span>{{ shipment.code || ('ID ' + shipment.recipientId) }}<ng-container *ngIf="shipment.city"> · {{ shipment.city }}<ng-container *ngIf="shipment.province"> ({{ shipment.province }})</ng-container></ng-container></span><span *ngIf="shipment.takenInChargeAt" class="taken-in-charge"><i class="ri-calendar-check-line"></i> Presa in carico: {{ shipment.takenInChargeAt | date:'dd/MM/yyyy, HH:mm:ss' }}</span></div><span class="shipment-badge" [class.no-change]="!shipment.changed">{{ shipment.changed ? 'Stato modificato' : 'Nessuna modifica' }}</span></div>
           <div class="shipment-statuses"><div><span>Stato precedente</span><strong>{{ shipment.previousStatusCode || '—' }}</strong><p>{{ shipment.previousMessage || 'Nessun dato precedente' }}</p></div><i class="ri-arrow-right-line"></i><div><span>Stato registrato</span><strong>{{ shipment.statusCode || '—' }}</strong><p>{{ shipment.statusMessage || 'Nessun esito ricevuto' }}</p></div></div>
         </article>
       </div>
@@ -61,6 +66,8 @@
   </mat-dialog-content>
 
   <mat-dialog-actions class="dialog-footer">
+    <span *ngIf="retryError" class="retry-error">{{ retryError }}</span>
+    <button *ngIf="canRetry" mat-button type="button" class="retry-button" [disabled]="retrying" (click)="retry()"><i class="ri-refresh-line"></i>{{ retrying ? 'Reinvio…' : 'Rinvia controllo' }}</button>
     <button mat-button type="button" class="close-button" (click)="close()">Chiudi</button>
   </mat-dialog-actions>
 </div>

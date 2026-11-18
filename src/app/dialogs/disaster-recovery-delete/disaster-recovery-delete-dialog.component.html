@@ -1,0 +1,17 @@
+<div class="delete-dialog">
+  <header>
+    <span class="delete-icon"><i class="ri-delete-bin-line"></i></span>
+    <div><small>ELIMINAZIONE BACKUP</small><h2>Eliminare questa copia?</h2></div>
+  </header>
+
+  <mat-dialog-content>
+    <p>Il backup <strong>#{{ data.id }}</strong> verrà eliminato definitivamente dai dischi <strong>B</strong> e <strong>C</strong>, quindi rimosso dallo storico.</p>
+    <div *ngIf="data.backupFile" class="backup-path"><i class="ri-file-3-line"></i><span>{{ data.backupFile }}</span></div>
+    <div class="delete-warning"><i class="ri-alert-line"></i><span>L’operazione non elimina la copia FTP e non può essere annullata.</span></div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button type="button" class="cancel-button" (click)="cancel()">Annulla</button>
+    <button mat-button type="button" class="confirm-button" (click)="confirm()"><i class="ri-delete-bin-line"></i> Elimina backup</button>
+  </mat-dialog-actions>
+</div>
