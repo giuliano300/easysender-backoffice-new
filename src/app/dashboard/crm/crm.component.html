@@ -71,11 +71,11 @@
                 <strong>{{ g?.val ?? 0 }}</strong>
                 <small>Documento validato · c.s. 11</small>
             </article>
-            <article class="kpi-card tone-processing dashboard-link" role="button" tabindex="0" (click)="goToSends(undefined, 1, [4, 5, 8])" (keydown.enter)="goToSends(undefined, 1, [4, 5, 8])" (keydown.space)="$event.preventDefault(); goToSends(undefined, 1, [4, 5, 8])">
+            <article class="kpi-card tone-processing dashboard-link" role="button" tabindex="0" (click)="goToSends(undefined, 1, [1, 4, 5, 6, 8, 9])" (keydown.enter)="goToSends(undefined, 1, [1, 4, 5, 6, 8, 9])" (keydown.space)="$event.preventDefault(); goToSends(undefined, 1, [1, 4, 5, 6, 8, 9])">
                 <span class="kpi-icon"><i class="ri-loader-4-line"></i></span>
-                <span class="kpi-label">Accettazione finale</span>
+                <span class="kpi-label">In accettazione</span>
                 <strong>{{ g?.ins ?? 0 }}</strong>
-                <small>MOL o COL · c.s. 1</small>
+                <small>In attesa di presa in carico · c.s. 1</small>
             </article>
         </div>
     </section>

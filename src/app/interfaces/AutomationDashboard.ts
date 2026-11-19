@@ -38,6 +38,7 @@ export interface AutomationSystem {
   displayName: string;
   queueName: string;
   status: string;
+  usesRabbitMq: boolean;
   automationEnabled: boolean;
   rabbitMessages: number;
   rabbitConsumers: number;

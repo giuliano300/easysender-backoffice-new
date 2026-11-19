@@ -197,9 +197,12 @@ export class SendsComponent {
     const requestedEnd = this.parseQueryDate(this.route.snapshot.queryParamMap.get('endDate'));
     const allDates = this.route.snapshot.queryParamMap.get('allDates') === 'true';
     const requestedProductTypes = this.route.snapshot.queryParamMap.get('productTypes');
+    const legacyAcceptedByPoste = this.route.snapshot.queryParamMap.get('acceptedByPoste') === 'true';
     const operationId = Number(this.route.snapshot.queryParamMap.get('operationId'));
     this.operationIdFilter = Number.isInteger(operationId) && operationId > 0 ? operationId : null;
-    this.dashboardProductTypes = requestedProductTypes
+    this.dashboardProductTypes = legacyAcceptedByPoste
+      ? [1, 4, 5, 6, 8, 9]
+      : requestedProductTypes
       ? requestedProductTypes.split(',').map(value => Number(value)).filter(Number.isInteger)
       : null;
     if (allDates) {
@@ -207,7 +210,9 @@ export class SendsComponent {
     } else if (requestedStart && requestedEnd) {
       this.form.patchValue({ start: requestedStart, end: requestedEnd });
     }
-    const requestedState = requestedStateParam === null ? null : Number(requestedStateParam);
+    const requestedState = legacyAcceptedByPoste
+      ? 1
+      : requestedStateParam === null ? null : Number(requestedStateParam);
     if (requestedState !== null && Number.isInteger(requestedState) && this.currentState.some((state: any) => state.id === requestedState)) {
       this.form.patchValue({ currentState: requestedState });
       if (requestedState === -1) {
@@ -481,7 +486,7 @@ export class SendsComponent {
   }
 
   unlockPendingSend(send: Sends): void {
-    if (send.unblocking || !send.canUnlock) return;
+    if (send.unblocking || !send.canUnlock || send.currentStateInt === 2) return;
 
     send.unblocking = true;
     this.sendService.unlockPendingSend(send.id).subscribe({
@@ -610,12 +615,28 @@ export class SendsComponent {
   }
 
   getRowClass(row: Sends): string {
+    const blueInProgressProducts = [
+      ProductTypes.Rol,
+      ProductTypes.lol,
+      ProductTypes.mol,
+      ProductTypes.col4,
+      ProductTypes.col1,
+      ProductTypes.agolB,
+      ProductTypes.agolM
+    ];
+    const isBlueInProgress =
+      (row.currentStateInt === CurrentState.inlavorazione && blueInProgressProducts.includes(row.productType)) ||
+      (row.currentStateInt === CurrentState.presaInCarico && [ProductTypes.tol, ProductTypes.vol].includes(row.productType));
+
+    if (isBlueInProgress) {
+      return 'row-processing';
+    }
+
     switch (row.currentStateInt) {
       case CurrentState.inAttesa:
-        return 'row-base';
       case CurrentState.presaInCarico:
       case CurrentState.inlavorazione:
-        return 'row-processing';
+        return 'row-base';
       case CurrentState.accettatoOnline:
       case CurrentState.documentoValidato:
         return 'row-info';
@@ -647,6 +668,10 @@ export class SendsComponent {
 
 
   checkStatus(send: any){
+    if (this.isBackofficeActionLocked(send)) {
+      return;
+    }
+
     send.loading = true;
     var response = this.recipientService.statusRetrive(send).subscribe({
       next: (res) => {
@@ -717,12 +742,12 @@ export class SendsComponent {
   }
 
   isBackofficeActionLocked(send: Sends): boolean {
-    const requiresInProgressState = [ProductTypes.mol, ProductTypes.col4, ProductTypes.col1, ProductTypes.agolB, ProductTypes.agolM]
+    const requiresInProgressState = [ProductTypes.Rol, ProductTypes.lol, ProductTypes.mol, ProductTypes.col4, ProductTypes.col1, ProductTypes.agolB, ProductTypes.agolM]
       .includes(send.productType);
 
     return requiresInProgressState
       ? send.currentStateInt === CurrentState.inlavorazione
-      : send.currentStateInt === CurrentState.presaInCarico;
+      : [CurrentState.presaInCarico, CurrentState.inlavorazione].includes(send.currentStateInt as CurrentState);
   }
 
   backofficeActionTooltip(send: Sends, action: string): string {

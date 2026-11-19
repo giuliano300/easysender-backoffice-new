@@ -174,6 +174,10 @@ export class AutomationDashboardComponent implements OnInit, OnDestroy {
   }
 
   statusDescription(system: AutomationSystem): string {
+    if (!system.usesRabbitMq) {
+      return 'Polling interno del servizio';
+    }
+
     const descriptions: Record<string, string> = {
       running: 'Consumer attivo',
       idle: 'Nessun lavoro ora',

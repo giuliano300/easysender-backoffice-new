@@ -131,8 +131,8 @@
                     {{ system.automationEnabled ? 'Attiva' : 'Sospesa' }}
                   </span>
                 </td>
-                <td class="text-right"><strong class="table-number">{{ system.rabbitMessages | number:'1.0-0' }}</strong></td>
-                <td class="text-right"><strong class="table-number">{{ system.rabbitConsumers | number:'1.0-0' }}</strong></td>
+                <td class="text-right"><strong class="table-number">{{ system.usesRabbitMq ? (system.rabbitMessages | number:'1.0-0') : '—' }}</strong></td>
+                <td class="text-right"><strong class="table-number">{{ system.usesRabbitMq ? (system.rabbitConsumers | number:'1.0-0') : '—' }}</strong></td>
               </tr>
             </tbody>
           </table>
