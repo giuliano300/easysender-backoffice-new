@@ -12,6 +12,8 @@ import { StatusCheckDaily, StatusCheckDailyRun, StatusCheckRunFilter, StatusReco
 import { StatusCheckDailyService } from '../../services/status-check-daily.service';
 import { StatusCheckRunDetailDialogComponent } from '../../dialogs/status-check-run-detail/status-check-run-detail-dialog.component';
 import { RecipientService } from '../../services/recipient.service';
+import { HistoricRecipientStatusDialogComponent } from '../../dialogs/historic-recipient-status/historic-recipient-status-dialog.component';
+import { GetDettaglioDestinatario } from '../../interfaces/GetDettaglioDestinatario';
 
 @Component({
   standalone: true,
@@ -23,7 +25,7 @@ import { RecipientService } from '../../services/recipient.service';
 export class StatusCheckDailyComponent implements OnInit, OnDestroy {
   readonly productColumns = ['product', 'batches', 'requested', 'changed', 'finalStates', 'duplicates', 'noOutcomes', 'failed'];
   readonly runColumns = ['startedAt', 'product', 'userName', 'requestedCount', 'returnedCount', 'statusChangedCount', 'finalStateCount', 'outcome'];
-  readonly staleColumns = ['product', 'code', 'requestId', 'recipientName', 'userName', 'currentState', 'stateChangedAt', 'maximumDays', 'elapsedDays', 'actions'];
+  readonly staleColumns = ['product', 'code', 'requestId', 'recipientName', 'userName', 'message', 'lastStatusAt', 'maximumDays', 'elapsedDays', 'actions'];
   data?: StatusCheckDaily;
   staleData?: StatusRecognitionIssues;
   loading = true;
@@ -43,7 +45,11 @@ export class StatusCheckDailyComponent implements OnInit, OnDestroy {
   staleActionError = '';
   private refreshTimer?: ReturnType<typeof setInterval>;
 
-  constructor(private readonly api: StatusCheckDailyService, private readonly dialog: MatDialog, private readonly recipientService: RecipientService) {}
+  constructor(
+    private readonly api: StatusCheckDailyService,
+    private readonly dialog: MatDialog,
+    private readonly recipientService: RecipientService
+  ) {}
   ngOnInit(): void {
     this.load();
     this.refreshTimer = setInterval(() => this.load(true), 20000);
@@ -166,6 +172,19 @@ export class StatusCheckDailyComponent implements OnInit, OnDestroy {
         this.retryingShipmentId = undefined;
         this.staleActionError = error?.error?.message || 'Impossibile contattare Poste per aggiornare lo stato.';
       }
+    });
+  }
+
+  openShipmentDetail(shipment: { id: number }): void {
+    this.recipientService.getDettaglioDestinatario(shipment.id).subscribe({
+      next: (detail: GetDettaglioDestinatario) => this.dialog.open(HistoricRecipientStatusDialogComponent, {
+        data: detail,
+        width: '680px',
+        maxWidth: '94vw',
+        maxHeight: '90vh',
+        panelClass: 'send-history-dialog',
+        autoFocus: false
+      })
     });
   }
 

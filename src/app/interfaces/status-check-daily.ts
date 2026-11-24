@@ -71,8 +71,8 @@ export interface StatusRecognitionIssue {
   product: string;
   recipientName: string;
   userName: string;
-  currentState: string;
-  stateChangedAt: string;
+  message: string;
+  lastStatusAt: string;
   maximumDays: number;
   elapsedDays: number;
   canRetry: boolean;

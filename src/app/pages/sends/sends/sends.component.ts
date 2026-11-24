@@ -668,10 +668,6 @@ export class SendsComponent {
 
 
   checkStatus(send: any){
-    if (this.isBackofficeActionLocked(send)) {
-      return;
-    }
-
     send.loading = true;
     var response = this.recipientService.statusRetrive(send).subscribe({
       next: (res) => {

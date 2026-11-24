@@ -1,0 +1,33 @@
+<section class="page-head-card poste-page-head">
+  <div><span class="page-eyebrow">CENTRALE OPERATIVA</span><h1>Diagnostica Poste</h1><p>Controlla anomalie, risposte e singole lavorazioni Poste.</p></div>
+  <div class="health-card" [ngClass]="issues.length ? 'has-issues' : 'healthy'"><i [class]="issues.length ? 'ri-alarm-warning-line' : 'ri-shield-check-line'"></i><div><strong>{{ issues.length || 'OK' }}</strong><small>{{ issues.length ? 'anomalie attive' : 'tutto operativo' }}</small></div></div>
+</section>
+
+<section class="trinta-card poste-card incident-card" [ngClass]="issues.length ? 'has-issues' : 'healthy'"><div class="card-inner">
+  <div class="card-heading"><span class="heading-icon"><i [class]="issues.length ? 'ri-error-warning-line' : 'ri-checkbox-circle-line'"></i></span><div><h2>{{ issues.length ? 'Intervento richiesto' : 'Nessuna anomalia attiva' }}</h2><p>{{ issues.length ? 'Servizi, API o heartbeat da verificare.' : 'API, servizi e heartbeat risultano raggiungibili.' }}</p></div></div>
+  <div class="incident-list" *ngIf="issues.length"><div *ngFor="let issue of issues"><strong>{{ issue.displayName }}</strong><span>{{ issue.detail }}</span></div></div>
+</div></section>
+
+<section class="trinta-card poste-card"><div class="card-inner">
+  <div class="card-heading"><span class="heading-icon"><i class="ri-play-circle-line"></i></span><div><h2>Esegui funzione su spedizione</h2><p>Il comando viene inviato esclusivamente all’ID indicato.</p></div></div>
+  <div class="command-form">
+    <label class="command-field"><span>ID spedizione</span><input type="number" inputmode="numeric" [(ngModel)]="recipientId" (change)="loadRecipient()" placeholder="es. 3909093"></label>
+    <label class="command-field"><span>Funzione Poste</span><select [(ngModel)]="selectedAction"><option value="">Seleziona funzione</option><option *ngFor="let action of availableActions" [value]="action.action">{{ action.label }}</option></select></label>
+    <button type="button" class="command-submit" [disabled]="submitting" (click)="execute()"><i class="ri-send-plane-2-line"></i>{{ submitting ? 'Invio…' : 'Esegui e registra' }}</button>
+  </div>
+  <div class="recipient-preview" *ngIf="recipient"><strong>{{ recipient.product }}</strong><span>Stato {{ recipient.currentState }}</span><span *ngIf="recipient.code">Codice {{ recipient.code }}</span><span *ngIf="recipient.requestId">Richiesta {{ recipient.requestId }}</span><span *ngIf="recipient.message">{{ recipient.message }}</span></div>
+  <p class="command-note"><i class="ri-shield-check-line"></i>Nessun claim Poste viene eliminato: non vengono creati invii duplicati.</p>
+  <p class="feedback success" *ngIf="success">{{ success }}</p><p class="feedback error" *ngIf="error">{{ error }}</p>
+</div></section>
+
+<section class="trinta-card poste-card history-card"><div class="card-inner">
+  <div class="card-heading"><span class="heading-icon"><i class="ri-file-list-3-line"></i></span><div><h2>Risposte e comandi recenti</h2><p>Aggiornamento automatico ogni 10 secondi. Ogni esito è stampabile.</p></div></div>
+  <div class="history-list" *ngIf="actions.length"><article class="history-row" *ngFor="let action of actions">
+    <div><span class="meta">Ora</span><span class="value">{{ action.requestedAt | date:'dd/MM HH:mm:ss' }}</span></div><div><span class="meta">ID</span><span class="value history-id">{{ action.recipientId }}</span></div><div><span class="meta">Prodotto</span><span class="value">{{ action.product }}</span></div><div><span class="meta">Funzione</span><span class="value">{{ action.action }}</span></div><div><span class="meta">Esito</span><span class="value"><span class="status-badge" [ngClass]="action.status">{{ statusLabel(action.status) }}</span></span></div><div class="history-action"><button type="button" class="print-button" (click)="print(action)"><i class="ri-printer-line"></i> Stampa</button></div>
+  </article></div><div class="empty" *ngIf="!actions.length">Nessun comando registrato.</div>
+</div></section>
+
+<section class="trinta-card poste-card automations-card"><div class="card-inner">
+  <div class="card-heading"><span class="heading-icon"><i class="ri-settings-3-line"></i></span><div><h2>Gestione automazioni</h2><p>Orari, sospensione, riavvio, code RabbitMQ e stato dei servizi.</p></div></div>
+  <div class="automations-link"><div><strong>Sistemi automatici</strong><span>Apri il controllo completo per intervenire sui servizi.</span></div><a routerLink="/dashboard/sistemi"><i class="ri-arrow-right-line"></i> Apri sistemi</a></div>
+</div></section>

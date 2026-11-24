@@ -23,34 +23,11 @@
         <div class="sidebar-inner">
             <div class="sidebar-menu">
                 <div class="sidebar-menu-list">
-                    <span class="sub-title text-body">
-                        PANORAMICA
-                    </span>
                     <a routerLink="/dashboard" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                         <i-feather name="home"></i-feather>
                         <span class="title">
                             Dashboard
                         </span>
-                    </a>
-                    <a routerLink="/dashboard/sistemi" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                        <i-feather name="activity"></i-feather>
-                        <span class="title">
-                            Sistemi
-                        </span>
-                    </a>
-                    <a routerLink="/esiti-giornalieri" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                        <i-feather name="file-text"></i-feather>
-                        <span class="title">Esiti giornalieri</span>
-                    </a>
-                    <a routerLink="/disaster-recovery" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                        <i-feather name="shield"></i-feather>
-                        <span class="title">
-                            Disaster recovery
-                        </span>
-                    </a>
-                    <a routerLink="/aggiornamento-cap" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                        <i-feather name="map-pin"></i-feather>
-                        <span class="title">Aggiornamento CAP</span>
                     </a>
                     <span class="sub-title text-body">
                         INVII
@@ -89,6 +66,29 @@
                     <a routerLink="/users" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                         <i-feather name="users"></i-feather>
                         <span class="title">Utenti</span>
+                    </a>
+                    <span class="sub-title text-body">
+                        AUTOMAZIONI
+                    </span>
+                    <a routerLink="/dashboard/sistemi" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i-feather name="activity"></i-feather>
+                        <span class="title">Sistemi</span>
+                    </a>
+                    <a routerLink="/diagnostica-poste" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i-feather name="settings"></i-feather>
+                        <span class="title">Diagnostica Poste</span>
+                    </a>
+                    <a routerLink="/esiti-giornalieri" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i-feather name="file-text"></i-feather>
+                        <span class="title">Esiti giornalieri</span>
+                    </a>
+                    <a routerLink="/disaster-recovery" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i-feather name="shield"></i-feather>
+                        <span class="title">Disaster recovery</span>
+                    </a>
+                    <a routerLink="/aggiornamento-cap" class="sidebar-menu-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i-feather name="map-pin"></i-feather>
+                        <span class="title">Aggiornamento CAP</span>
                     </a>
                     <a class="sidebar-menu-link" (click)="logout()" href="">
                         <i-feather name="Lock"></i-feather>

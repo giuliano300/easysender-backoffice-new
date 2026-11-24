@@ -49,6 +49,72 @@
 .daily-runs-table .mat-mdc-header-cell, .daily-runs-table .mat-mdc-cell { min-width: 0; overflow-wrap: anywhere; white-space: normal; }
 .daily-runs-table .batch-detail-row { cursor: pointer; }
 .daily-runs-table .batch-detail-row:focus-visible { position: relative; z-index: 1; outline: 2px solid var(--manager-accent-strong); outline-offset: -2px; }
-.stale-shipments-card { margin-bottom: 25px !important; }.stale-heading { align-items: flex-start; }.stale-heading p { margin: 3px 0 0; color: var(--manager-muted); font-size: 11px; line-height: 1.45; }.overdue-icon { background: #fff5df; color: #a96b00; }.export-stale { min-height: 32px; padding: 0 10px !important; border: 1px solid var(--manager-accent-strong) !important; border-radius: 6px !important; color: #fff !important; background: var(--manager-accent-strong) !important; font-size: 11px; font-weight: 700; }.export-stale i { margin-right: 5px; font-size: 14px; }.export-stale:disabled { opacity: .55; }.stale-action-message { display: flex; align-items: center; gap: 6px; margin: 0 0 10px; padding: 9px 11px; border: 1px solid; font-size: 11px; }.stale-action-message.success { border-color: #b9e5ca; color: #167047; background: #f1fbf5; }.stale-action-message.error { border-color: #efc3c3; color: #a52929; background: #fff7f7; }.stale-loading { padding: 35px; color: var(--manager-muted); font-size: 12px; text-align: center; }.stale-shipments-table { width: 100%; table-layout: fixed; }.stale-shipments-table .mat-column-product { width: 6%; }.stale-shipments-table .mat-column-code { width: 11%; }.stale-shipments-table .mat-column-requestId { width: 12%; }.stale-shipments-table .mat-column-recipientName { width: 13%; }.stale-shipments-table .mat-column-userName { width: 13%; }.stale-shipments-table .mat-column-currentState { width: 10%; }.stale-shipments-table .mat-column-stateChangedAt { width: 10%; }.stale-shipments-table .mat-column-maximumDays { width: 6%; }.stale-shipments-table .mat-column-elapsedDays { width: 7%; }.stale-shipments-table .mat-column-actions { width: 12%; }.overdue-days { color: #b42318; font-weight: 750; white-space: nowrap; }.stale-actions { text-align: right !important; }.retry-status { min-width: 110px; min-height: 29px; padding: 0 7px !important; border: 1px solid var(--manager-accent-strong) !important; border-radius: 5px !important; color: var(--manager-accent-strong) !important; background: #fff !important; font-size: 10px; font-weight: 700; white-space: nowrap; }.retry-status:hover { background: var(--manager-soft) !important; }.retry-status:disabled { border-color: var(--manager-border) !important; color: var(--manager-muted) !important; background: var(--manager-surface) !important; }.retry-status i { margin-right: 4px; font-size: 13px; }.retry-spin { display: inline-block; animation: daily-spin .8s linear infinite; }
+.stale-shipments-card { margin-bottom: 25px !important; }.stale-heading { align-items: flex-start; }.stale-heading p { margin: 3px 0 0; color: var(--manager-muted); font-size: 11px; line-height: 1.45; }.overdue-icon { background: #fff5df; color: #a96b00; }.export-stale { min-height: 32px; padding: 0 10px !important; border: 1px solid var(--manager-accent-strong) !important; border-radius: 6px !important; color: #fff !important; background: var(--manager-accent-strong) !important; font-size: 11px; font-weight: 700; }.export-stale i { margin-right: 5px; font-size: 14px; }.export-stale:disabled { opacity: .55; }.stale-action-message { display: flex; align-items: center; gap: 6px; margin: 0 0 10px; padding: 9px 11px; border: 1px solid; font-size: 11px; }.stale-action-message.success { border-color: #b9e5ca; color: #167047; background: #f1fbf5; }.stale-action-message.error { border-color: #efc3c3; color: #a52929; background: #fff7f7; }.stale-loading { padding: 35px; color: var(--manager-muted); font-size: 12px; text-align: center; }.stale-shipments-table { width: 100%; table-layout: fixed; }.stale-shipments-table .mat-column-product { width: 6%; }.stale-shipments-table .mat-column-code { width: 10%; }.stale-shipments-table .mat-column-requestId { width: 11%; }.stale-shipments-table .mat-column-recipientName { width: 12%; }.stale-shipments-table .mat-column-userName { width: 12%; }.stale-shipments-table .mat-column-message { width: 15%; }.stale-shipments-table .mat-column-lastStatusAt { width: 11%; }.stale-shipments-table .mat-column-maximumDays { width: 6%; }.stale-shipments-table .mat-column-elapsedDays { width: 6%; }.stale-shipments-table .mat-column-actions { width: 11%; }.stale-message { overflow: hidden; text-overflow: ellipsis; white-space: nowrap !important; }.overdue-days { color: #b42318; font-weight: 750; white-space: nowrap; }.stale-actions { text-align: right !important; }.retry-status { min-width: 110px; min-height: 29px; padding: 0 7px !important; border: 1px solid var(--manager-accent-strong) !important; border-radius: 5px !important; color: var(--manager-accent-strong) !important; background: #fff !important; font-size: 10px; font-weight: 700; white-space: nowrap; }.retry-status:hover { background: var(--manager-soft) !important; }.retry-status:disabled { border-color: var(--manager-border) !important; color: var(--manager-muted) !important; background: var(--manager-surface) !important; }.retry-status i { margin-right: 4px; font-size: 13px; }.retry-spin { display: inline-block; animation: daily-spin .8s linear infinite; }
 .numbered-paginator { display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 13px 4px 1px; }.numbered-paginator button { display: grid; width: 31px; height: 29px; place-items: center; padding: 0; border: 1px solid var(--manager-border); border-radius: 4px; color: var(--manager-muted); background: var(--manager-surface); font-size: 11px; font-weight: 600; cursor: pointer; }.numbered-paginator button:hover:not(:disabled), .numbered-paginator button.active { border-color: var(--manager-accent-strong); color: #fff; background: var(--manager-accent-strong); }.numbered-paginator button:disabled { opacity: .42; cursor: default; }.numbered-paginator i { font-size: 16px; }
-@media (max-width: 767px) { .stale-heading { flex-direction: column; }.stale-heading .daily-table-actions { width: 100%; justify-content: space-between; }.stale-shipments-table .mat-column-product { --mobile-label: 'Prodotto'; }.stale-shipments-table .mat-column-code { --mobile-label: 'Codice'; }.stale-shipments-table .mat-column-requestId { --mobile-label: 'Request ID'; }.stale-shipments-table .mat-column-recipientName { --mobile-label: 'Destinatario'; }.stale-shipments-table .mat-column-userName { --mobile-label: 'Utente'; }.stale-shipments-table .mat-column-currentState { --mobile-label: 'Stato'; }.stale-shipments-table .mat-column-stateChangedAt { --mobile-label: 'Ultimo cambio'; }.stale-shipments-table .mat-column-maximumDays { --mobile-label: 'Soglia'; }.stale-shipments-table .mat-column-elapsedDays { --mobile-label: 'Fermi da'; }.stale-shipments-table .mat-column-actions { --mobile-label: 'Azione'; }.stale-actions { text-align: left !important; } }
+@media (max-width: 767px) { .stale-heading { flex-direction: column; }.stale-heading .daily-table-actions { width: 100%; justify-content: space-between; }.stale-shipments-table .mat-column-product { --mobile-label: 'Prodotto'; }.stale-shipments-table .mat-column-code { --mobile-label: 'Codice'; }.stale-shipments-table .mat-column-requestId { --mobile-label: 'Request ID'; }.stale-shipments-table .mat-column-recipientName { --mobile-label: 'Destinatario'; }.stale-shipments-table .mat-column-userName { --mobile-label: 'Utente'; }.stale-shipments-table .mat-column-message { --mobile-label: 'Messaggio'; }.stale-shipments-table .mat-column-lastStatusAt { --mobile-label: 'Ultimo aggiornamento'; }.stale-shipments-table .mat-column-maximumDays { --mobile-label: 'Soglia'; }.stale-shipments-table .mat-column-elapsedDays { --mobile-label: 'Fermi da'; }.stale-shipments-table .mat-column-actions { --mobile-label: 'Azione'; }.stale-actions { text-align: left !important; } }
+
+/* Queste tre tabelle usano Material ma hanno layout e larghezze proprie: su telefono
+   vengono sempre rese card, senza affidarsi alle sole regole comuni. */
+@media (max-width: 767px) {
+  .status-check-daily-page .to-do-list-table .table-responsive { width: 100%; overflow: visible !important; }
+  .status-check-daily-page .daily-product-table,
+  .status-check-daily-page .daily-runs-table,
+  .status-check-daily-page .stale-shipments-table {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: auto !important;
+    border-spacing: 0 !important;
+  }
+  .status-check-daily-page .daily-product-table .mat-mdc-header-row,
+  .status-check-daily-page .daily-runs-table .mat-mdc-header-row,
+  .status-check-daily-page .stale-shipments-table .mat-mdc-header-row { display: none !important; }
+  .status-check-daily-page .daily-product-table tbody,
+  .status-check-daily-page .daily-runs-table tbody,
+  .status-check-daily-page .stale-shipments-table tbody { display: grid !important; gap: 10px; }
+  .status-check-daily-page .daily-product-table .mat-mdc-row,
+  .status-check-daily-page .daily-runs-table .mat-mdc-row,
+  .status-check-daily-page .stale-shipments-table .mat-mdc-row {
+    display: block !important;
+    height: auto !important;
+    border: 1px solid var(--manager-border) !important;
+    border-radius: 0 !important;
+    background: var(--manager-surface) !important;
+    box-shadow: none !important;
+  }
+  .status-check-daily-page .daily-product-table .mat-mdc-cell,
+  .status-check-daily-page .daily-runs-table .mat-mdc-cell,
+  .status-check-daily-page .stale-shipments-table .mat-mdc-cell {
+    display: grid !important;
+    grid-template-columns: minmax(102px, 40%) minmax(0, 1fr) !important;
+    align-items: center;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 12px 13px !important;
+    border-bottom: 1px solid var(--manager-border) !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-align: right !important;
+  }
+  .status-check-daily-page .daily-product-table .mat-mdc-cell::before,
+  .status-check-daily-page .daily-runs-table .mat-mdc-cell::before,
+  .status-check-daily-page .stale-shipments-table .mat-mdc-cell::before {
+    content: var(--mobile-label, 'Dettaglio');
+    color: var(--manager-muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-align: left;
+    text-transform: uppercase;
+  }
+  .status-check-daily-page .daily-product-table .mat-mdc-cell:last-child,
+  .status-check-daily-page .daily-runs-table .mat-mdc-cell:last-child,
+  .status-check-daily-page .stale-shipments-table .mat-mdc-cell:last-child { border-bottom: 0 !important; }
+  .status-check-daily-page .daily-product-table h6,
+  .status-check-daily-page .daily-runs-table h6 { text-align: right !important; }
+  .status-check-daily-page .stale-message { max-width: none; overflow: visible; text-overflow: clip; white-space: normal !important; }
+  .status-check-daily-page .stale-actions { text-align: right !important; }
+  .status-check-daily-page .retry-status { min-width: 0; }
+  .status-check-daily-page .numbered-paginator { justify-content: center; flex-wrap: wrap; padding: 14px 0 0; }
+}

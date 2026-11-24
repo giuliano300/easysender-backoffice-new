@@ -32,7 +32,7 @@ export class AutomationDashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.load();
-    this.intervalId = setInterval(() => this.load(), 5000);
+    this.intervalId = setInterval(() => this.load(), 60000);
   }
 
   ngOnDestroy(): void {
@@ -42,11 +42,17 @@ export class AutomationDashboardComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
+    const scrollX = typeof window === 'undefined' ? 0 : window.scrollX;
+    const scrollY = typeof window === 'undefined' ? 0 : window.scrollY;
     this.automationDashboardService.getDashboard().subscribe({
       next: data => {
         this.dashboard = data;
         this.loading = false;
         this.error = '';
+        // Il refresh non deve riportare l'operatore all'inizio della pagina.
+        if (typeof window !== 'undefined') {
+          requestAnimationFrame(() => window.scrollTo(scrollX, scrollY));
+        }
       },
       error: () => {
         this.loading = false;

@@ -1597,4 +1597,42 @@ body .main-content .to-do-list-table .mat-column-ctrl.action button.mat-mdc-butt
     body .main-content .trinta-card.to-do-list-card .to-do-list-table table.mat-mdc-table .mat-mdc-cell {
         padding: 16px 18px !important;
     }
+
+    /* Tabelle HTML semplici: su telefono ogni riga diventa una card leggibile. */
+    .main-content .to-do-list-table > table:not(.mat-mdc-table) {
+        display: block;
+        width: 100% !important;
+        min-width: 0 !important;
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+    .main-content .to-do-list-table > table:not(.mat-mdc-table) thead { display: none; }
+    .main-content .to-do-list-table > table:not(.mat-mdc-table) tbody { display: grid; gap: 10px; }
+    .main-content .to-do-list-table > table:not(.mat-mdc-table) tbody tr { display: block; border: 1px solid var(--manager-border); background: var(--manager-surface) !important; }
+    .main-content .to-do-list-table > table:not(.mat-mdc-table) tbody td[data-label] {
+        display: grid !important;
+        grid-template-columns: minmax(104px, 40%) minmax(0, 1fr);
+        gap: 10px;
+        align-items: center;
+        min-width: 0;
+        max-width: none !important;
+        padding: 12px 13px !important;
+        border: 0 !important;
+        border-bottom: 1px solid var(--manager-border) !important;
+        overflow: visible !important;
+        text-align: right !important;
+        white-space: normal !important;
+    }
+    .main-content .to-do-list-table > table:not(.mat-mdc-table) tbody td[data-label]::before {
+        color: var(--manager-muted);
+        content: attr(data-label);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .055em;
+        text-align: left;
+        text-transform: uppercase;
+    }
+    .main-content .to-do-list-table > table:not(.mat-mdc-table) tbody td[data-label]:last-child { border-bottom: 0 !important; }
+    .main-content .to-do-list-table > table:not(.mat-mdc-table) tbody td.no-data { display: block !important; padding: 20px 12px !important; text-align: center !important; }
+    .main-content .to-do-list-table { overflow: visible !important; }
 }

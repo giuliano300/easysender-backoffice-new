@@ -47,14 +47,14 @@
         <div><strong>In attesa del primo heartbeat</strong><span>Pubblica le automazioni aggiornate e riavviale: i cicli compariranno qui automaticamente.</span></div>
       </div>
       <div class="monitoring-table-wrap" *ngIf="heartbeatsOpened && heartbeatChecks.length">
-        <table class="heartbeat-table">
+          <table class="heartbeat-table responsive-monitoring-table">
           <thead><tr><th>Fase</th><th>Stato</th><th>Ultimo battito</th><th>Dettaglio</th></tr></thead>
           <tbody>
             <tr *ngFor="let check of heartbeatChecks" [class.heartbeat-problem]="check.status !== 'healthy'">
-              <td><strong>{{ heartbeatLabel(check) }}</strong></td>
-              <td><span class="heartbeat-state" [class.problem]="check.status !== 'healthy'"><i [class]="check.status === 'healthy' ? 'ri-checkbox-circle-line' : 'ri-error-warning-line'"></i>{{ check.status === 'healthy' ? 'Attivo' : (check.status === 'stale' ? 'Bloccato' : 'Errore') }}</span></td>
-              <td>{{ check.checkedAtUtc | date:'dd/MM/yyyy HH:mm:ss' }}</td>
-              <td>{{ check.detail || '-' }}</td>
+              <td data-label="Fase"><strong>{{ heartbeatLabel(check) }}</strong></td>
+              <td data-label="Stato"><span class="heartbeat-state" [class.problem]="check.status !== 'healthy'"><i [class]="check.status === 'healthy' ? 'ri-checkbox-circle-line' : 'ri-error-warning-line'"></i>{{ check.status === 'healthy' ? 'Attivo' : (check.status === 'stale' ? 'Bloccato' : 'Errore') }}</span></td>
+              <td data-label="Ultimo battito">{{ check.checkedAtUtc | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+              <td data-label="Dettaglio">{{ check.detail || '-' }}</td>
             </tr>
           </tbody>
         </table>
@@ -98,7 +98,7 @@
           <span class="service-count">{{ group.systems.length }} servizi</span>
         </header>
         <div class="monitoring-table-wrap">
-          <table class="systems-table">
+          <table class="systems-table responsive-monitoring-table">
             <thead>
               <tr>
                 <th>Servizio</th>
@@ -110,7 +110,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let system of group.systems">
-                <td>
+                <td data-label="Servizio">
                   <div class="system-main">
                     <span class="status-dot" [ngClass]="system.status"></span>
                     <div>
@@ -119,20 +119,20 @@
                     </div>
                   </div>
                 </td>
-                <td>
+                <td data-label="Stato">
                   <span class="status-pill" [ngClass]="system.status" [title]="statusDescription(system)">
                     {{ statusLabel(system.status) }}
                     <small>{{ statusDescription(system) }}</small>
                   </span>
                 </td>
-                <td>
+                <td data-label="Automazione">
                   <span class="automation-status-pill" [class.suspended]="!system.automationEnabled">
                     <i [class]="system.automationEnabled ? 'ri-checkbox-circle-line' : 'ri-pause-circle-line'"></i>
                     {{ system.automationEnabled ? 'Attiva' : 'Sospesa' }}
                   </span>
                 </td>
-                <td class="text-right"><strong class="table-number">{{ system.usesRabbitMq ? (system.rabbitMessages | number:'1.0-0') : '—' }}</strong></td>
-                <td class="text-right"><strong class="table-number">{{ system.usesRabbitMq ? (system.rabbitConsumers | number:'1.0-0') : '—' }}</strong></td>
+                <td data-label="Messaggi RabbitMQ" class="text-right"><strong class="table-number">{{ system.usesRabbitMq ? (system.rabbitMessages | number:'1.0-0') : '—' }}</strong></td>
+                <td data-label="Consumer RabbitMQ" class="text-right"><strong class="table-number">{{ system.usesRabbitMq ? (system.rabbitConsumers | number:'1.0-0') : '—' }}</strong></td>
               </tr>
             </tbody>
           </table>
@@ -150,7 +150,7 @@
         </header>
         <div class="empty" *ngIf="d.posteCallClaims.length === 0">Nessuna chiamata Poste registrata.</div>
         <div class="monitoring-table-wrap" *ngIf="d.posteCallClaims.length > 0">
-        <table>
+        <table class="responsive-monitoring-table">
           <thead>
             <tr>
               <th>Prodotto</th>
@@ -162,11 +162,11 @@
           </thead>
           <tbody>
             <tr *ngFor="let row of d.posteCallClaims">
-              <td>{{ row.product }}</td>
-              <td>{{ row.step }}</td>
-              <td class="text-right">{{ row.total | number:'1.0-0' }}</td>
-              <td class="text-right">{{ row.last24h | number:'1.0-0' }}</td>
-              <td>{{ row.lastCreatedAt ? (row.lastCreatedAt | date:'dd/MM/yyyy HH:mm') : '-' }}</td>
+              <td data-label="Prodotto">{{ row.product }}</td>
+              <td data-label="Fase">{{ row.step }}</td>
+              <td data-label="Totali" class="text-right">{{ row.total | number:'1.0-0' }}</td>
+              <td data-label="Ultime 24 ore" class="text-right">{{ row.last24h | number:'1.0-0' }}</td>
+              <td data-label="Ultima chiamata">{{ row.lastCreatedAt ? (row.lastCreatedAt | date:'dd/MM/yyyy HH:mm') : '-' }}</td>
             </tr>
           </tbody>
         </table>
@@ -182,7 +182,7 @@
         </header>
         <div class="empty" *ngIf="d.productErrors.length === 0">Nessun errore registrato.</div>
         <div class="monitoring-table-wrap" *ngIf="d.productErrors.length > 0">
-        <table>
+        <table class="responsive-monitoring-table">
           <thead>
             <tr>
               <th>Prodotto</th>
@@ -192,9 +192,9 @@
           </thead>
           <tbody>
             <tr *ngFor="let row of d.productErrors">
-              <td>{{ row.product }}</td>
-              <td class="text-right danger-text">{{ row.totalErrors | number:'1.0-0' }}</td>
-              <td class="text-right danger-text">{{ row.errors24h | number:'1.0-0' }}</td>
+              <td data-label="Prodotto">{{ row.product }}</td>
+              <td data-label="Errori totali" class="text-right danger-text">{{ row.totalErrors | number:'1.0-0' }}</td>
+              <td data-label="Errori ultime 24 ore" class="text-right danger-text">{{ row.errors24h | number:'1.0-0' }}</td>
             </tr>
           </tbody>
         </table>

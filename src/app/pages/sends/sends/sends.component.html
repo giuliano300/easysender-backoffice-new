@@ -388,10 +388,10 @@
                                         mat-button
                                         class="p-0 min-w-auto lh-1 h-auto"
                                         (click)="$event.stopPropagation(); checkStatus(element)" 
-                                        [matTooltip]="backofficeActionTooltip(element, 'Aggiorna stato spedizione')"
+                                        matTooltip="Aggiorna stato spedizione"
                                         matTooltipClass="mat-tooltip"
                                         matTooltipPosition="below"
-                                        [disabled]="element.loading || isBackofficeActionLocked(element)">
+                                        [disabled]="element.loading">
 
                                     <!-- Spinner se in loading -->
                                     <mat-progress-spinner *ngIf="element.loading"

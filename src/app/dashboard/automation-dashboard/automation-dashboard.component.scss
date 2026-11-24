@@ -633,4 +633,24 @@ table {
   .broker-meta { align-items: flex-start; flex-direction: column; gap: 3px !important; }
   .product-card header { align-items: flex-start; }
   .table-grid { grid-template-columns: 1fr; }
+  .monitoring-table-wrap, .schedule-table-wrap { overflow: visible !important; border: 0; background: transparent; }
+  .responsive-monitoring-table, .schedule-table { display: block; width: 100%; min-width: 0 !important; }
+  .responsive-monitoring-table thead, .schedule-table thead { display: none; }
+  .responsive-monitoring-table tbody, .schedule-table tbody { display: grid; gap: 10px; }
+  .responsive-monitoring-table tbody tr, .schedule-table tbody tr { display: block; border: 1px solid var(--manager-border); background: var(--manager-surface); }
+  .responsive-monitoring-table tbody td, .schedule-table tbody td { display: grid !important; grid-template-columns: minmax(105px, 40%) minmax(0, 1fr); gap: 10px; align-items: center; padding: 11px 12px !important; border: 0 !important; border-bottom: 1px solid var(--manager-border) !important; text-align: right !important; white-space: normal !important; }
+  .responsive-monitoring-table tbody td::before { content: attr(data-label); color: var(--manager-muted); font-size: 10px; font-weight: 700; letter-spacing: .055em; text-align: left; text-transform: uppercase; }
+  .responsive-monitoring-table tbody tr td:last-child, .schedule-table tbody tr td:last-child { border-bottom: 0 !important; }
+  .system-main { min-width: 0; justify-content: flex-end; text-align: right; }
+  .system-main small { overflow-wrap: anywhere; }
+  .schedule-table tbody td:nth-child(1)::before { content: 'Fase'; }
+  .schedule-table tbody td:nth-child(2)::before { content: 'Stato'; }
+  .schedule-table tbody td:nth-child(3)::before { content: 'Da'; }
+  .schedule-table tbody td:nth-child(4)::before { content: 'A'; }
+  .schedule-table tbody td:nth-child(5)::before { content: 'Ogni'; }
+  .schedule-table tbody td:nth-child(6)::before { content: 'Elementi'; }
+  .schedule-table tbody td:nth-child(7)::before { content: 'Azioni'; }
+  .schedule-table tbody td::before { color: var(--manager-muted); font-size: 10px; font-weight: 700; letter-spacing: .055em; text-align: left; text-transform: uppercase; }
+  .schedule-table input { max-width: 150px; justify-self: end; }
+  .schedule-actions { display: flex !important; flex-wrap: wrap; justify-content: flex-end; }
 }
