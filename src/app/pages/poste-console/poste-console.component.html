@@ -12,18 +12,18 @@
   <div class="card-heading"><span class="heading-icon"><i class="ri-play-circle-line"></i></span><div><h2>Esegui funzione su spedizione</h2><p>Il comando viene inviato esclusivamente all’ID indicato.</p></div></div>
   <div class="command-form">
     <label class="command-field"><span>ID spedizione</span><input type="number" inputmode="numeric" [(ngModel)]="recipientId" (change)="loadRecipient()" placeholder="es. 3909093"></label>
-    <label class="command-field"><span>Funzione Poste</span><select [(ngModel)]="selectedAction"><option value="">Seleziona funzione</option><option *ngFor="let action of availableActions" [value]="action.action">{{ action.label }}</option></select></label>
+    <label class="command-field"><span>Funzione Poste</span><select [(ngModel)]="selectedAction" [disabled]="!recipient"><option value="">{{ recipient ? 'Seleziona funzione' : 'Inserisci prima un ID spedizione' }}</option><option *ngFor="let action of availableActions" [value]="action.action">{{ action.label }}</option></select></label>
     <button type="button" class="command-submit" [disabled]="submitting" (click)="execute()"><i class="ri-send-plane-2-line"></i>{{ submitting ? 'Invio…' : 'Esegui e registra' }}</button>
   </div>
   <div class="recipient-preview" *ngIf="recipient"><strong>{{ recipient.product }}</strong><span>Stato {{ recipient.currentState }}</span><span *ngIf="recipient.code">Codice {{ recipient.code }}</span><span *ngIf="recipient.requestId">Richiesta {{ recipient.requestId }}</span><span *ngIf="recipient.message">{{ recipient.message }}</span></div>
-  <p class="command-note"><i class="ri-shield-check-line"></i>Nessun claim Poste viene eliminato: non vengono creati invii duplicati.</p>
+  <p class="command-note"><i class="ri-shield-check-line"></i>Inserisci l’ID per vedere solo le funzioni compatibili. Nessun claim Poste viene eliminato.</p>
   <p class="feedback success" *ngIf="success">{{ success }}</p><p class="feedback error" *ngIf="error">{{ error }}</p>
 </div></section>
 
 <section class="trinta-card poste-card history-card"><div class="card-inner">
   <div class="card-heading"><span class="heading-icon"><i class="ri-file-list-3-line"></i></span><div><h2>Risposte e comandi recenti</h2><p>Aggiornamento automatico ogni 10 secondi. Ogni esito è stampabile.</p></div></div>
   <div class="history-list" *ngIf="actions.length"><article class="history-row" *ngFor="let action of actions">
-    <div><span class="meta">Ora</span><span class="value">{{ action.requestedAt | date:'dd/MM HH:mm:ss' }}</span></div><div><span class="meta">ID</span><span class="value history-id">{{ action.recipientId }}</span></div><div><span class="meta">Prodotto</span><span class="value">{{ action.product }}</span></div><div><span class="meta">Funzione</span><span class="value">{{ action.action }}</span></div><div><span class="meta">Esito</span><span class="value"><span class="status-badge" [ngClass]="action.status">{{ statusLabel(action.status) }}</span></span></div><div class="history-action"><button type="button" class="print-button" (click)="print(action)"><i class="ri-printer-line"></i> Stampa</button></div>
+    <div><span class="meta">Ora</span><span class="value">{{ action.requestedAt | date:'dd/MM HH:mm:ss' }}</span></div><div><span class="meta">ID</span><span class="value history-id">{{ action.recipientId }}</span></div><div><span class="meta">Prodotto</span><span class="value">{{ action.product }}</span></div><div><span class="meta">Funzione</span><span class="value">{{ action.action }}</span></div><div><span class="meta">Esito</span><span class="value"><span class="status-badge" [ngClass]="action.status">{{ statusLabel(action.status) }}</span></span></div><div class="history-action"><button type="button" class="print-button" (click)="openResponse(action)"><i class="ri-file-search-line"></i> Vedi risposta</button></div>
   </article></div><div class="empty" *ngIf="!actions.length">Nessun comando registrato.</div>
 </div></section>
 
@@ -31,3 +31,30 @@
   <div class="card-heading"><span class="heading-icon"><i class="ri-settings-3-line"></i></span><div><h2>Gestione automazioni</h2><p>Orari, sospensione, riavvio, code RabbitMQ e stato dei servizi.</p></div></div>
   <div class="automations-link"><div><strong>Sistemi automatici</strong><span>Apri il controllo completo per intervenire sui servizi.</span></div><a routerLink="/dashboard/sistemi"><i class="ri-arrow-right-line"></i> Apri sistemi</a></div>
 </div></section>
+
+<div class="poste-confirm-backdrop" *ngIf="confirmingAction" (click)="cancelConfirmation()">
+  <section class="poste-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="poste-confirm-title" (click)="$event.stopPropagation()">
+    <header>
+      <span class="poste-confirm-icon"><i class="ri-send-plane-2-line"></i></span>
+      <div><span class="poste-confirm-eyebrow">CONFERMA OPERAZIONE</span><h2 id="poste-confirm-title">{{ pendingActionLabel }}</h2></div>
+    </header>
+    <p>Stai per eseguire una funzione Poste su una sola spedizione.</p>
+    <dl>
+      <div><dt>Spedizione</dt><dd>ID {{ recipientId }}</dd></div>
+      <div *ngIf="recipient"><dt>Prodotto</dt><dd>{{ recipient.product }}</dd></div>
+      <div *ngIf="recipient"><dt>Stato corrente</dt><dd>{{ recipient.currentState }}</dd></div>
+    </dl>
+    <div class="poste-confirm-note"><i class="ri-information-line"></i><span>L’operazione viene registrata. Non elimina claim Poste e non crea invii duplicati.</span></div>
+    <footer><button type="button" class="poste-confirm-cancel" (click)="cancelConfirmation()">Annulla</button><button type="button" class="poste-confirm-submit" (click)="confirmExecute()"><i class="ri-play-line"></i> Conferma ed esegui</button></footer>
+  </section>
+</div>
+
+<div class="poste-confirm-backdrop response-backdrop" *ngIf="selectedResponse" (click)="closeResponse()">
+  <section class="poste-response-dialog" role="dialog" aria-modal="true" aria-labelledby="poste-response-title" (click)="$event.stopPropagation()">
+    <header><div><span class="poste-confirm-eyebrow">RISPOSTA REGISTRATA</span><h2 id="poste-response-title">{{ selectedResponse.product }} · {{ selectedResponse.action }}</h2><p>ID spedizione {{ selectedResponse.recipientId }} · {{ selectedResponse.requestedAt | date:'dd/MM/yyyy HH:mm:ss' }}</p></div><button type="button" class="response-close" aria-label="Chiudi" (click)="closeResponse()"><i class="ri-close-line"></i></button></header>
+    <div class="response-status"><span class="status-badge" [ngClass]="selectedResponse.status">{{ statusLabel(selectedResponse.status) }}</span><span *ngIf="selectedResponse.completedAt">Terminata {{ selectedResponse.completedAt | date:'dd/MM/yyyy HH:mm:ss' }}</span></div>
+    <section><h3>Richiesta</h3><pre>{{ pretty(selectedResponse.requestPayload) }}</pre></section>
+    <section><h3>Risposta Poste</h3><pre>{{ pretty(selectedResponse.responsePayload || selectedResponse.error) }}</pre></section>
+    <footer><button type="button" class="poste-confirm-cancel" (click)="closeResponse()">Chiudi</button><button type="button" class="poste-confirm-submit" (click)="print(selectedResponse)"><i class="ri-printer-line"></i> Stampa risposta</button></footer>
+  </section>
+</div>
