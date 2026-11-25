@@ -105,7 +105,7 @@
                         </th>
                         <td mat-cell *matCellDef="let element" class="pl-0">
                             <div class="position-relative">
-                                <h6 class="mt-0 mb-0">
+                                <h6 class="mt-0 mb-0 report-client" [matTooltip]="element.userComplete" matTooltipPosition="above">
                                     {{element.userComplete}}
                                 </h6>
                             </div>
@@ -188,7 +188,8 @@
 
                 </table>
             </div>
-            <mat-paginator [pageSizeOptions]="[20, 50, 100]"></mat-paginator>
+            <mat-paginator [pageSize]="50" [pageSizeOptions]="[20, 50, 100]"></mat-paginator>
+            <div class="report-grand-total" *ngIf="!firstLoading"><strong>Totale generale</strong><span>Invii: <b>{{ totaleInvii | number }}</b></span><span>GED: <b>{{ totaleGed | number }}</b></span><span>GED Poste: <b>{{ totaleGedPoste | number }}</b></span><span>Costo totale: <b>{{ costoTotale | number:'1.2-2' }} €</b></span><small>Tutti i risultati dei filtri applicati</small></div>
         </div>
     </mat-card-content>
 </mat-card>

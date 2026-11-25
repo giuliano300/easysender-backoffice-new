@@ -384,3 +384,4 @@ button.filter {
         font-weight: 600;
     }
 }
+.report-grand-total { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:10px 24px; padding:16px; border-top:1px solid var(--manager-border); color:var(--manager-ink); font-size:13px; }.report-grand-total > strong { margin-right:auto; }.report-grand-total b { color:var(--manager-accent-strong); }.report-grand-total small { flex-basis:100%; color:var(--manager-muted); font-size:11px; text-align:right; }

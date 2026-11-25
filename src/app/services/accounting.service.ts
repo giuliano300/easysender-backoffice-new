@@ -31,5 +31,8 @@ export class AccountingService {
   }
 
   createPosition(payload: unknown): Observable<{ id: number }> { return this.http.post<{ id: number }>(this.apiUrl, payload); }
+  updatePosition(id: number, payload: unknown): Observable<void> { return this.http.put<void>(`${this.apiUrl}/${id}`, payload); }
+  deletePosition(id: number): Observable<void> { return this.http.delete<void>(`${this.apiUrl}/${id}`); }
   addMovement(positionId: number, payload: unknown): Observable<void> { return this.http.post<void>(`${this.apiUrl}/${positionId}/Movements`, payload); }
+  deleteMovement(positionId: number, movementId: number): Observable<void> { return this.http.delete<void>(`${this.apiUrl}/${positionId}/Movements/${movementId}`); }
 }

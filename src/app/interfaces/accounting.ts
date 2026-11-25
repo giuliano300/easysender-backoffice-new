@@ -12,6 +12,7 @@ export interface AccountingPosition {
   createdAt: string;
   notes?: string | null;
   isPaid: boolean;
+  closed: boolean;
 }
 
 export interface AccountingMovement {

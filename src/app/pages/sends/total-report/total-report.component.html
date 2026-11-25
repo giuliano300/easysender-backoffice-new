@@ -306,7 +306,8 @@
 
                 </table>
             </div>
-            <mat-paginator [pageSizeOptions]="[20, 50, 100]"></mat-paginator>
+            <mat-paginator [pageSize]="50" [pageSizeOptions]="[20, 50, 100]"></mat-paginator>
+            <div class="report-grand-total" *ngIf="!firstLoading"><strong>Totale generale</strong><span>Invii: <b>{{ totaleInvii | number }}</b></span><span>Costo totale: <b>{{ costoTotale | number:'1.2-2' }} €</b></span><small>Tutti i risultati dei filtri applicati</small></div>
         </div>
     </mat-card-content>
 </mat-card>

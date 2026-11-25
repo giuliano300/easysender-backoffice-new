@@ -104,6 +104,8 @@ export class ReportComponent {
   totaleInvii: number = 0;
 
   costoTotale: number = 0;
+  get totaleGed(): number { return this.reports.reduce((sum, row) => sum + (Number(row.ged) || 0), 0); }
+  get totaleGedPoste(): number { return this.reports.reduce((sum, row) => sum + (Number(row.gedPoste) || 0), 0); }
 
   dataSource = new MatTableDataSource<Reports>(this.reports);
 
