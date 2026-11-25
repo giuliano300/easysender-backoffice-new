@@ -21,10 +21,11 @@
 </div></section>
 
 <section class="trinta-card poste-card history-card"><div class="card-inner">
-  <div class="card-heading"><span class="heading-icon"><i class="ri-file-list-3-line"></i></span><div><h2>Risposte e comandi recenti</h2><p>Aggiornamento automatico ogni 10 secondi. Ogni esito è stampabile.</p></div></div>
-  <div class="history-list" *ngIf="actions.length"><article class="history-row" *ngFor="let action of actions">
+  <div class="card-heading"><span class="heading-icon"><i class="ri-file-list-3-line"></i></span><div><h2>Risposte e comandi recenti</h2><p>Ultimi 100 comandi manuali, per tutte le spedizioni. Aggiornamento ogni 10 secondi.</p></div></div>
+  <div class="history-list" *ngIf="actions.length"><article class="history-row" *ngFor="let action of pagedActions">
     <div><span class="meta">Ora</span><span class="value">{{ action.requestedAt | date:'dd/MM HH:mm:ss' }}</span></div><div><span class="meta">ID</span><span class="value history-id">{{ action.recipientId }}</span></div><div><span class="meta">Prodotto</span><span class="value">{{ action.product }}</span></div><div><span class="meta">Funzione</span><span class="value">{{ action.action }}</span></div><div><span class="meta">Esito</span><span class="value"><span class="status-badge" [ngClass]="action.status">{{ statusLabel(action.status) }}</span></span></div><div class="history-action"><button type="button" class="print-button" (click)="openResponse(action)"><i class="ri-file-search-line"></i> Vedi risposta</button></div>
   </article></div><div class="empty" *ngIf="!actions.length">Nessun comando registrato.</div>
+  <nav class="history-pagination" *ngIf="actions.length" aria-label="Pagine comandi recenti"><span>{{ actions.length }} comandi · pagina {{ historyPage }} di {{ historyPages }}</span><div><button type="button" (click)="setHistoryPage(1)" [disabled]="historyPage === 1" aria-label="Prima pagina">«</button><button type="button" (click)="setHistoryPage(historyPage - 1)" [disabled]="historyPage === 1" aria-label="Pagina precedente">‹</button><button type="button" *ngFor="let page of historyPageNumbers" (click)="setHistoryPage(page)" [class.active]="historyPage === page" [attr.aria-current]="historyPage === page ? 'page' : null">{{ page }}</button><button type="button" (click)="setHistoryPage(historyPage + 1)" [disabled]="historyPage === historyPages" aria-label="Pagina successiva">›</button><button type="button" (click)="setHistoryPage(historyPages)" [disabled]="historyPage === historyPages" aria-label="Ultima pagina">»</button></div></nav>
 </div></section>
 
 <section class="trinta-card poste-card automations-card"><div class="card-inner">

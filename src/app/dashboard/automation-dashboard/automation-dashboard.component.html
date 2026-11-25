@@ -72,10 +72,10 @@
     <mat-progress-bar *ngIf="settingsLoading" mode="indeterminate"></mat-progress-bar>
     <div class="error-box" *ngIf="settingsError">{{ settingsError }}</div>
     <div class="schedule-groups" *ngIf="!settingsLoading && settings.length">
-      <mat-card class="trinta-card schedule-card bg-white border-none d-block" *ngFor="let group of groupedSettings">
+      <mat-card class="trinta-card schedule-card bg-white border-none d-block" *ngFor="let group of groupedSettings; trackBy: trackSettingGroup">
         <mat-card-content><header><h3>{{ group.service }}</h3><span>{{ group.settings.length }} fasi</span></header>
           <div class="schedule-table-wrap"><table class="schedule-table"><thead><tr><th>Fase</th><th>Stato</th><th>Da</th><th>A</th><th>Ogni</th><th>Elementi</th><th></th></tr></thead>
-            <tbody><tr *ngFor="let setting of group.settings" [class.suspended]="!setting.enabled"><td><strong>{{ setting.phase }}</strong></td>
+            <tbody><tr *ngFor="let setting of group.settings; trackBy: trackSetting" [class.suspended]="!setting.enabled"><td><strong>{{ setting.phase }}</strong></td>
               <td class="automation-state"><button type="button" class="state-button" [class.off]="!setting.enabled" (click)="toggleSetting(setting)" [disabled]="savingKey === setting.automationKey">{{ setting.enabled ? 'Sospendi' : 'Riprendi' }}</button></td>
               <td><input type="time" [value]="setting.startTime || ''" (change)="setTime(setting, 'startTime', $any($event.target).value)"></td>
               <td><input type="time" [value]="setting.endTime || ''" (change)="setTime(setting, 'endTime', $any($event.target).value)"></td>
@@ -89,7 +89,7 @@
   </section>
 
   <section class="product-grid">
-    <mat-card class="trinta-card product-card bg-white border-none d-block" *ngFor="let group of groupedSystems">
+    <mat-card class="trinta-card product-card bg-white border-none d-block" *ngFor="let group of groupedSystems; trackBy: trackSystemGroup">
       <mat-card-content>
         <header>
           <div>

@@ -16,6 +16,8 @@ import { WatchdogStatus } from '../../interfaces/Watchdog';
 export class PosteConsoleComponent implements OnInit, OnDestroy {
   definitions: PosteManualActionDefinition[] = [];
   actions: PosteManualAction[] = [];
+  historyPage = 1;
+  readonly historyPageSize = 10;
   recipientId: number | null = null;
   selectedAction = '';
   loading = true;
@@ -45,12 +47,20 @@ export class PosteConsoleComponent implements OnInit, OnDestroy {
 
   get availableActions(): PosteManualActionDefinition[] { return this.recipient ? this.definitions : []; }
 
+  get historyPages(): number { return Math.max(1, Math.ceil(this.actions.length / this.historyPageSize)); }
+  get historyPageNumbers(): number[] { return Array.from({ length: this.historyPages }, (_, i) => i + 1); }
+  get pagedActions(): PosteManualAction[] {
+    const start = (this.historyPage - 1) * this.historyPageSize;
+    return this.actions.slice(start, start + this.historyPageSize);
+  }
+  setHistoryPage(page: number): void { this.historyPage = Math.max(1, Math.min(page, this.historyPages)); }
+
   get issues() {
     return (this.watchdog?.checks ?? []).filter(check => check.status !== 'healthy');
   }
 
   refresh(): void {
-    this.actionsService.history(this.recipientId ?? undefined).subscribe({ next: rows => this.actions = rows });
+    this.actionsService.history().subscribe({ next: rows => { this.actions = rows; this.setHistoryPage(this.historyPage); } });
     this.watchdogService.getStatus().subscribe({ next: status => this.watchdog = status });
   }
 

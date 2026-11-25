@@ -66,8 +66,9 @@
   </mat-dialog-content>
 
   <mat-dialog-actions class="dialog-footer">
+    <span *ngIf="retryMessage" class="retry-success" role="status">{{ retryMessage }}</span>
     <span *ngIf="retryError" class="retry-error">{{ retryError }}</span>
-    <button *ngIf="canRetry" mat-button type="button" class="retry-button" [disabled]="retrying" (click)="retry()"><i class="ri-refresh-line"></i>{{ retrying ? 'Reinvio…' : 'Rinvia controllo' }}</button>
+    <button *ngIf="canRetry" mat-button type="button" class="retry-button" [disabled]="retrying || retrySucceeded" (click)="retry()"><i class="ri-refresh-line"></i>{{ retrying ? 'Reinvio…' : retrySucceeded ? 'Reinvio richiesto' : 'Rinvia controllo' }}</button>
     <button mat-button type="button" class="close-button" (click)="close()">Chiudi</button>
   </mat-dialog-actions>
 </div>

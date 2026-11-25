@@ -19,6 +19,7 @@ export class StatusCheckRunDetailDialogComponent implements OnInit {
   retrying = false;
   retryMessage = '';
   retryError = '';
+  retrySucceeded = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public readonly run: StatusCheckDailyRun,
@@ -48,7 +49,7 @@ export class StatusCheckRunDetailDialogComponent implements OnInit {
   }
 
   close(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(this.retrySucceeded);
   }
 
   get canRetry(): boolean {
@@ -56,15 +57,19 @@ export class StatusCheckRunDetailDialogComponent implements OnInit {
   }
 
   retry(): void {
-    if (!this.canRetry || this.retrying) return;
+    if (!this.canRetry || this.retrying || this.retrySucceeded) return;
     this.retrying = true;
     this.retryMessage = '';
     this.retryError = '';
     this.api.retry(this.run.id).subscribe({
       next: result => {
         this.retrying = false;
-        this.retryMessage = `${result.queuedRecipients} spedizioni reinviate al controllo stati.`;
-        this.dialogRef.close(true);
+        if (!result.queuedRecipients) {
+          this.retryError = `Nessuna spedizione disponibile per il controllo. Escluse ${result.excludedFinalRecipients} già in stato finale.`;
+          return;
+        }
+        this.retrySucceeded = true;
+        this.retryMessage = `${result.queuedRecipients} spedizioni abilitate a un nuovo controllo.${result.excludedFinalRecipients ? ` ${result.excludedFinalRecipients} già finali escluse.` : ''} ${result.manualRunRequested ? 'Richiesto un nuovo ciclo: verifica il risultato in un nuovo batch.' : 'Il ciclo manuale non è configurato: il controllo dipende dalla pianificazione.'} L’esito precedente resta nello storico.`;
       },
       error: error => {
         this.retrying = false;
