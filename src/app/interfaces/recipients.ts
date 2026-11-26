@@ -39,6 +39,7 @@ export interface recipients {
   lastStatusCheckDate?: string | null;
   inProcessStepStato?: boolean | null;
   finalState?: boolean | null;
+  finalStateReason?: string | null;
   tag1?: string | null;
   tag2?: string | null;
   tag3?: string | null;

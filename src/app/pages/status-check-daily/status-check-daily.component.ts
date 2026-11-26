@@ -9,7 +9,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
 import { StatusCheckDaily, StatusCheckDailyRun, StatusCheckRunFilter, StatusRecognitionIssues } from '../../interfaces/status-check-daily';
-import { StatusCheckDailyService } from '../../services/status-check-daily.service';
+import { AgolCommunication, StatusCheckDailyService } from '../../services/status-check-daily.service';
 import { StatusCheckRunDetailDialogComponent } from '../../dialogs/status-check-run-detail/status-check-run-detail-dialog.component';
 import { RecipientService } from '../../services/recipient.service';
 import { HistoricRecipientStatusDialogComponent } from '../../dialogs/historic-recipient-status/historic-recipient-status-dialog.component';
@@ -26,6 +26,22 @@ export class StatusCheckDailyComponent implements OnInit, OnDestroy {
   readonly productColumns = ['product', 'batches', 'requested', 'changed', 'finalStates', 'duplicates', 'noOutcomes', 'failed'];
   readonly runColumns = ['startedAt', 'product', 'userName', 'requestedCount', 'returnedCount', 'statusChangedCount', 'finalStateCount', 'outcome'];
   readonly staleColumns = ['product', 'code', 'requestId', 'recipientName', 'userName', 'message', 'lastStatusAt', 'maximumDays', 'elapsedDays', 'actions'];
+  readonly communicationColumns = ['objectType', 'shipmentCode', 'trackingCode', 'recipientName', 'userName', 'latestMessage', 'shipmentDate', 'status'];
+  communications: AgolCommunication[] = [];
+  communicationsTotal = 0;
+  communicationsPage = 0;
+  communicationsPageSize = 20;
+  communicationsError = '';
+  communicationsLoaded = false;
+  communicationsPanelOpen = true;
+  deposited: AgolCommunication[] = [];
+  depositedTotal = 0;
+  depositedPage = 0;
+  depositedPageSize = 20;
+  depositedLoaded = false;
+  depositedError = '';
+  depositedPanelOpen = true;
+  readonly depositedColumns = ['shipmentCode', 'recipientName', 'userName', 'trackingCode', 'latestOutcomeAt', 'shipmentDate', 'notification'];
   data?: StatusCheckDaily;
   staleData?: StatusRecognitionIssues;
   loading = true;
@@ -52,7 +68,7 @@ export class StatusCheckDailyComponent implements OnInit, OnDestroy {
   ) {}
   ngOnInit(): void {
     this.load();
-    this.refreshTimer = setInterval(() => this.load(true), 20000);
+    this.refreshTimer = setInterval(() => this.load(true), 60000);
   }
 
   ngOnDestroy(): void {
@@ -65,17 +81,61 @@ export class StatusCheckDailyComponent implements OnInit, OnDestroy {
       this.error = '';
     }
     this.api.get(this.selectedDate, this.pageIndex, this.pageSize, this.runFilter).subscribe({
-      next: value => { this.data = value; this.loading = false; this.loadStale(); },
+      next: value => { if (this.staleData) value.staleShipmentsCount = this.staleData.totalCount; this.data = value; this.loading = false; },
       error: () => {
         this.loading = false;
         if (!silent) this.error = 'Impossibile leggere il riepilogo. Verificare che lo script SQL e le automazioni aggiornate siano pubblicati.';
       }
     });
+    this.loadStale();
+    this.loadCommunications();
+    this.loadDeposited();
   }
 
   onDateChange(): void {
     this.pageIndex = 0;
     this.load();
+  }
+
+  loadCommunications(): void {
+    this.api.getAgolCommunications(this.communicationsPage, this.communicationsPageSize).subscribe({
+      next: result => { this.communications = result.data; this.communicationsTotal = result.totalCount; this.communicationsError = ''; this.communicationsLoaded = true; },
+      error: () => { this.communicationsError = 'Impossibile caricare le comunicazioni AGOL. Verificare API e script SQL.'; this.communicationsLoaded = true; }
+    });
+  }
+
+  onCommunicationsPage(event: PageEvent): void { this.communicationsPage = event.pageIndex; this.communicationsPageSize = event.pageSize; this.loadCommunications(); }
+
+  loadDeposited(): void {
+    this.api.getAgolDeposited(this.depositedPage, this.depositedPageSize).subscribe({
+      next: result => { this.deposited = result.data; this.depositedTotal = result.totalCount; this.depositedError = ''; this.depositedLoaded = true; },
+      error: () => { this.depositedError = 'Impossibile caricare gli atti in giacenza.'; this.depositedLoaded = true; }
+    });
+  }
+  onDepositedPage(event: PageEvent): void { this.depositedPage = event.pageIndex; this.depositedPageSize = event.pageSize; this.loadDeposited(); }
+  get depositedTotalPages(): number { return Math.max(1, Math.ceil(this.depositedTotal / this.depositedPageSize)); }
+  get depositedPageNumbers(): number[] {
+    const first = Math.max(1, Math.min(this.depositedPage - 1, this.depositedTotalPages - 4));
+    return Array.from({ length: Math.min(this.depositedTotalPages, first + 4) - first + 1 }, (_, i) => first + i);
+  }
+  goToDepositedPage(page: number): void {
+    const target = Math.min(Math.max(1, page), this.depositedTotalPages) - 1;
+    if (target === this.depositedPage) return;
+    this.depositedPage = target;
+    this.loadDeposited();
+  }
+
+  get communicationsTotalPages(): number { return Math.max(1, Math.ceil(this.communicationsTotal / this.communicationsPageSize)); }
+  get communicationsPageNumbers(): number[] {
+    const first = Math.max(1, Math.min(this.communicationsPage - 1, this.communicationsTotalPages - 4));
+    const last = Math.min(this.communicationsTotalPages, first + 4);
+    return Array.from({ length: last - first + 1 }, (_, index) => first + index);
+  }
+  goToCommunicationsPage(page: number): void {
+    const target = Math.min(Math.max(1, page), this.communicationsTotalPages) - 1;
+    if (target === this.communicationsPage) return;
+    this.communicationsPage = target;
+    this.loadCommunications();
   }
 
   onPageChange(event: PageEvent): void {
@@ -131,7 +191,7 @@ export class StatusCheckDailyComponent implements OnInit, OnDestroy {
   loadStale(): void {
     this.staleLoading = true;
     this.api.getStale(this.stalePageIndex, this.stalePageSize).subscribe({
-      next: value => { this.staleData = value; this.staleLoading = false; },
+      next: value => { this.staleData = value; if (this.data) this.data.staleShipmentsCount = value.totalCount; this.staleLoading = false; },
       error: () => { this.staleLoading = false; }
     });
   }

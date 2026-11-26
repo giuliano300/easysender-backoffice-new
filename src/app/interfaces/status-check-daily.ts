@@ -28,6 +28,7 @@ export interface StatusCheckDailyRun {
 }
 
 export interface StatusCheckDaily {
+  shipmentSummary?: { total: number; final: number; nonFinal: number; };
   date: string;
   from: string;
   to: string;

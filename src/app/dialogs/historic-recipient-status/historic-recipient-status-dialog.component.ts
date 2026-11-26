@@ -9,11 +9,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-send-dialog',
-  imports: [MatDialogModule, MatTableModule, MatPaginatorModule, MatSortModule, MatInputModule, MatFormFieldModule, MatIconModule, MatCardModule, NgIf],
+  imports: [MatDialogModule, MatTableModule, MatPaginatorModule, MatSortModule, MatInputModule, MatFormFieldModule, MatIconModule, MatCardModule, MatTooltipModule, NgIf],
   templateUrl: './historic-recipient-status-dialog.component.html',
   styleUrl: './historic-recipient-status-dialog.component.scss'
 })
@@ -27,8 +28,18 @@ export class HistoricRecipientStatusDialogComponent {
   displayedColumns: string[] = ['insertDate', 'message'];
 
   get sortedStatuses() {
-    return [...(this.data.historicRecipientStatuses ?? [])]
-      .sort((a, b) => new Date(b.insertDate).getTime() - new Date(a.insertDate).getTime());
+    const statuses = [...(this.data.historicRecipientStatuses ?? [])]
+      .sort((a, b) => new Date(b.outcomeDate || b.insertDate).getTime() - new Date(a.outcomeDate || a.insertDate).getTime() || new Date(b.insertDate).getTime() - new Date(a.insertDate).getTime());
+    const index = statuses.findIndex(item => this.isFinalStatus(item));
+    if (index > 0) statuses.unshift(...statuses.splice(index, 1));
+    return statuses;
+  }
+
+  isFinalStatus(item: { code?: string | null; message?: string | null; objectType?: string | null }): boolean {
+    const recipient = this.data.recipient;
+    return recipient.finalState === true && recipient.finalStateReason !== 'expired_90_days'
+      && !!item.code && item.code === recipient.statoMarker && item.message === recipient.message
+      && (![6, 9].includes(recipient.productType) || item.objectType === 'AG');
   }
 
   formatDateTime(value: string): string {

@@ -2,6 +2,23 @@
 .daily-hero-date { display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; border: 1px solid rgba(255,255,255,.18); border-radius: 10px; color: #fff; font-size: 12px; font-weight: 600; background: rgba(255,255,255,.11); }
 .daily-hero-date i { font-size: 16px; }
 
+.shipment-overview { margin: 0 0 16px; }
+.shipment-overview-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.shipment-overview-grid article { display: flex; align-items: center; gap: 12px; min-width: 0; min-height: 76px; padding: 14px; border: 1px solid var(--manager-border); border-radius: 10px; background: var(--manager-surface); box-shadow: 0 3px 12px rgba(18, 45, 58, .035); }
+.shipment-overview-grid .overview-icon { display: grid; flex: 0 0 38px; width: 38px; height: 38px; place-items: center; border-radius: 9px; background: var(--action-filter-bg-soft); color: var(--manager-accent-strong); font-size: 19px; }
+.shipment-overview-grid article div { min-width: 0; }
+.shipment-overview-grid article div > span { display: block; color: var(--manager-muted); font-size: 11px; line-height: 1.3; }
+.shipment-overview-grid strong { display: block; margin-top: 5px; color: var(--manager-ink); font-size: 21px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
+.shipment-overview-grid .overview-final .overview-icon { background: #eaf7ef; color: #19724b; }
+.shipment-overview-grid .overview-pending .overview-icon { background: #eef5ff; color: #356ca5; }
+.shipment-overview-grid .overview-overdue .overview-icon { background: #fff5df; color: #a96b00; }
+@media (max-width: 600px) {
+  .shipment-overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .shipment-overview-grid article { gap: 9px; min-height: 70px; padding: 11px; }
+  .shipment-overview-grid .overview-icon { flex-basis: 32px; width: 32px; height: 32px; font-size: 16px; }
+  .shipment-overview-grid strong { font-size: 18px; }
+}
+
 .daily-filter-card { margin-bottom: 13px !important; }
 .daily-filter-body { display: flex; align-items: end; gap: 12px; padding: 3px 1px 0; }
 .daily-date-control { display: grid; gap: 6px; min-width: 236px; }
@@ -13,7 +30,7 @@
 .daily-filter-body .filter i { margin-right: 5px; font-size: 15px; }
 .daily-filter-body .filter i.ri-loader-4-line { display: inline-block; animation: daily-spin .8s linear infinite; }
 
-.daily-kpis { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; margin: 0 0 13px; }
+.daily-kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 0 0 13px; }
 .daily-kpis article { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 13px 12px; border: 1px solid var(--manager-border); border-radius: 10px; background: var(--manager-surface); box-shadow: 0 3px 12px rgba(18, 45, 58, .035); }
 .daily-kpis .clickable-kpi { cursor: pointer; transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease; }
 .daily-kpis .clickable-kpi:hover, .daily-kpis .clickable-kpi.active { border-color: var(--manager-accent-strong); box-shadow: 0 5px 16px rgba(18, 45, 58, .10); transform: translateY(-1px); }
@@ -32,6 +49,17 @@
 .daily-table-actions { display: inline-flex; align-items: center; gap: 8px; }.clear-run-filter { display: inline-flex; align-items: center; gap: 3px; min-height: 28px; padding: 0 8px; border: 1px solid var(--manager-border); border-radius: 6px; color: var(--manager-muted); background: var(--manager-surface); font-size: 10px; font-weight: 600; cursor: pointer; }.clear-run-filter:hover { border-color: var(--action-filter-border); color: var(--manager-accent-strong); background: var(--manager-soft); }
 .daily-table-heading > div { display: flex; align-items: center; gap: 9px; }.daily-section-icon { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 9px; background: var(--action-filter-bg-soft); color: var(--manager-accent-strong); font-size: 17px; }
 .daily-table-heading small { display: block; margin-bottom: 1px; color: var(--manager-accent-strong); font-size: 9px; font-weight: 700; letter-spacing: .08em; }.daily-table-heading h2 { margin: 0; color: var(--manager-ink); font-size: 15px; font-weight: 600; }.daily-table-count { color: var(--manager-muted); font-size: 11px; white-space: nowrap; }
+.communications-heading { align-items: flex-start; margin-bottom: 12px; }
+.communications-heading p { max-width: 680px; margin: 4px 0 0; color: var(--manager-muted); font-size: 11px; line-height: 1.5; }
+.communications-heading > div:first-child { align-items: flex-start; }
+.communications-empty { display: flex; align-items: center; gap: 12px; margin: 0 4px 4px; padding: 20px; border: 1px solid var(--manager-border); border-radius: 6px; color: var(--manager-muted); background: var(--manager-surface); font-size: 12px; }
+.communications-empty-icon { display: grid; flex: 0 0 36px; width: 36px; height: 36px; place-items: center; border-radius: 9px; color: var(--manager-accent-strong); background: var(--action-filter-bg-soft); font-size: 18px; }
+.communications-empty strong { color: var(--manager-ink); font-size: 12px; font-weight: 600; }
+.communications-empty p { margin: 3px 0 0; font-size: 11px; line-height: 1.4; }
+.communications-table { width: 100%; }
+.communication-status { display: inline-block; padding: 4px 8px; border-radius: 4px; color: var(--manager-muted); background: var(--manager-soft); font-size: 11px; font-weight: 600; }
+.communication-status.is-pending { color: #966100; background: #fff5df; }
+.communication-status.is-completed { color: #19724b; background: #eaf7ef; }
 .daily-product-table h6, .daily-runs-table h6 { margin: 0; }.daily-product-table .no-data, .daily-runs-table .no-data { padding: 30px !important; color: var(--manager-muted); text-align: center; }.daily-product-table .text-danger { color: #b42318 !important; font-weight: 700; }.run-time { color: var(--manager-muted) !important; font-variant-numeric: tabular-nums; }
 .outcome { display: inline-flex; align-items: center; min-height: 25px; padding: 3px 8px; border-radius: 6px; background: #eaf7ef; color: #19724b; font-size: 11px; font-weight: 700; white-space: nowrap; }.outcome.empty-outcome { background: #fff5df; color: #a96b00; }.outcome.failed { background: #fdf0f1; color: #b42318; }
 .loading-state { padding: 45px; color: var(--manager-muted); text-align: center; }.alert-message.error { margin-bottom: 13px; color: #b42318; }
@@ -117,4 +145,23 @@
   .status-check-daily-page .stale-actions { text-align: right !important; }
   .status-check-daily-page .retry-status { min-width: 0; }
   .status-check-daily-page .numbered-paginator { justify-content: center; flex-wrap: wrap; padding: 14px 0 0; }
+}
+
+@media (max-width: 767px) {
+  .status-check-daily-page .communications-table { display: block !important; width: 100% !important; min-width: 0 !important; }
+  .status-check-daily-page .communications-table .mat-mdc-header-row { display: none !important; }
+  .status-check-daily-page .communications-table tbody { display: grid !important; gap: 10px; }
+  .status-check-daily-page .communications-table .mat-mdc-row { display: block !important; height: auto !important; border: 1px solid var(--manager-border); }
+  .status-check-daily-page .communications-table .mat-mdc-cell { display: grid !important; grid-template-columns: minmax(102px, 40%) minmax(0, 1fr); width: 100% !important; min-width: 0 !important; padding: 12px 13px !important; text-align: right; white-space: normal; overflow-wrap: anywhere; }
+  .status-check-daily-page .communications-table .mat-mdc-cell::before { content: var(--label); color: var(--manager-muted); font-size: 10px; font-weight: 700; text-align: left; text-transform: uppercase; }
+  .communications-table .mat-column-objectType { --label: 'Tipo'; }
+  .communications-table .mat-column-shipmentCode { --label: 'Atto'; }
+  .communications-table .mat-column-trackingCode { --label: 'Codice comunicazione'; }
+  .communications-table .mat-column-recipientName { --label: 'Destinatario'; }
+  .communications-table .mat-column-userName { --label: 'Utente'; }
+  .communications-table .mat-column-latestMessage { --label: 'Ultimo esito'; }
+  .communications-table .mat-column-latestOutcomeAt { --label: 'Consegna CAD'; }
+  .communications-table .mat-column-notification { --label: 'Notifica'; }
+  .communications-table .mat-column-shipmentDate { --label: 'Spedizione atto'; }
+  .communications-table .mat-column-status { --label: 'Monitoraggio'; }
 }

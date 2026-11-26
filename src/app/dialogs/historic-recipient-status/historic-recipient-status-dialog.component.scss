@@ -40,3 +40,4 @@
 .dialog-footer { min-height: 64px; margin: 0; padding: 10px 22px !important; justify-content: flex-end; flex: 0 0 auto; border-top: 1px solid var(--manager-border); background: var(--manager-surface); }
 .close-button { min-width: 110px; min-height: 42px; border: 1px solid var(--manager-border) !important; border-radius: 12px !important; background: var(--manager-surface) !important; color: var(--manager-ink) !important; font-size: 12px; font-weight: 600; }
 @media (max-width: 560px) { .dialog-header { padding: 18px; } .dialog-icon { display: none; } .recipient-strip { grid-template-columns: 1fr 1fr; } .recipient-strip > div { border-bottom: 1px solid var(--manager-border); } .recipient-strip > div:first-child { grid-column: 1 / -1; } .recipient-strip > div:nth-child(2) { border-bottom: 0; } .recipient-strip > div:last-child { border-bottom: 0; } .dialog-content { padding: 16px 17px 6px !important; } }
+.timeline-card p.final-outcome { font-weight:700; }
